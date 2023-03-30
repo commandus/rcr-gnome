@@ -1,6 +1,7 @@
 #include <iostream>
 #include <sstream>
 #include <gdk/gdkkeysyms.h>
+#include <gtkmm.h>
 
 #include "top-window.h"
 
@@ -31,96 +32,73 @@ OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION \n\
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN \n\
 THE SOFTWARE."
 
-TopWindow::TopWindow()
-{
-}
-
+/**
+ *
+ * @param cobject
+ * @param refBuilder
+ */
 TopWindow::TopWindow (BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder> &refBuilder)
-	: Gtk::Window(cobject), mRefBuilder (refBuilder)
+	: client(nullptr), mLastSymbol("D"),
+    Gtk::Window(cobject), mRefBuilder (refBuilder)
 {
-	mRefBuilder->get_widget("searchEntry", mEntryMessage);
+    mRefBuilder->get_widget("bRefresh", mButtonRefresh);
+	mRefBuilder->get_widget("entrySearch", mEntryQuery);
+    mRefBuilder->get_widget("entryHost", mEntryHost);
+    mRefBuilder->get_widget("cbSymbol", mComboBoxSymbol);
+    mComboBoxSymbol->signal_changed().connect(sigc::mem_fun(*this, &TopWindow::onSymbolSelected));
+    mButtonRefresh->signal_clicked().connect(sigc::mem_fun(*this, &TopWindow::onRefresh));
 
 	mRefActionGroup = Gio::SimpleActionGroup::create();
 	mRefActionGroup->add_action("quit",
 		sigc::mem_fun(*this, &TopWindow::onFileQuit));
+
 	mRefActionGroup->add_action("about",
 		sigc::mem_fun(*this, &TopWindow::onHelpAbout));
-	insert_action_group("wpn", mRefActionGroup);
+	insert_action_group("rcr", mRefActionGroup);
  
-	mRefBuilder->get_widget("treeviewBox", mTreeViewClient);
+	mRefBuilder->get_widget("tvBox", mTreeViewBox);
+    mRefBuilder->get_widget("tvCard", mTreeViewCard);
 
-	mRefListStoreClient = Glib::RefPtr<Gtk::ListStore>::cast_static(mRefBuilder->get_object("liststoreClient"));
-	mRefListStoreMessage = Glib::RefPtr<Gtk::ListStore>::cast_static(mRefBuilder->get_object("liststoreMessage"));
+    mRefListStoreSymbol = Glib::RefPtr<Gtk::ListStore>::cast_static(mRefBuilder->get_object("liststoreSymbol"));
+    mRefListStoreBox = Glib::RefPtr<Gtk::ListStore>::cast_static(mRefBuilder->get_object("liststoreBox"));
+    mRefListStoreCard = Glib::RefPtr<Gtk::ListStore>::cast_static(mRefBuilder->get_object("liststoreCard"));
 
-	mRefTreeModelFilterMessage = Gtk::TreeModelFilter::create(mRefListStoreMessage);
-	mRefTreeModelFilterMessage->set_visible_func(
-	[this] (const Gtk::TreeModel::const_iterator& it) -> bool
-	{
+    // 0 name 1 boxname 2 properties 3 id 4 qty 5 rem 6 boxid
+    mRefTreeModelFilterCard = Gtk::TreeModelFilter::create(mRefListStoreCard);
+	mRefTreeModelFilterCard->set_visible_func(
+	[this] (const Gtk::TreeModel::const_iterator& it) -> bool {
 		Gtk::TreeModel::Row row = *it;
-		Glib::ustring from;
-		row.get_value(3, from);
-		Gtk::TreeModel::iterator iter = mTreeViewSelectionClient->get_selected();
+		uint64_t boxId;
+		row.get_value(6, boxId);
+		Gtk::TreeModel::iterator iter = mTreeViewSelectionBox->get_selected();
 		if (iter) {
 			Gtk::TreeModel::Row row = *iter;
-			Glib::ustring key;
-			row.get_value(2, key);
-			return key == from || key == "*";
+			uint64_t box;
+			row.get_value(2, box); // 2- box
+			return box == boxId || box == 0;
 		}
 		return true;
 	});
-	
-	// mTreeViewMessage->set_model(mRefTreeModelFilterMessage);
+	mTreeViewCard->set_model(mRefTreeModelFilterCard);
 
-	mTreeViewSelectionClient = Glib::RefPtr<Gtk::TreeSelection>::cast_static(mRefBuilder->get_object("treeviewSelectionClient"));
-	mTreeViewSelectionClient->signal_changed().connect(
-			sigc::bind <Glib::RefPtr<Gtk::TreeSelection>> (sigc::mem_fun(*this, &TopWindow::onClientSelected), mTreeViewSelectionClient));
+	mTreeViewSelectionBox = Glib::RefPtr<Gtk::TreeSelection>::cast_static(mRefBuilder->get_object("tvsBox"));
+	mTreeViewSelectionBox->signal_changed().connect(
+			sigc::bind <Glib::RefPtr<Gtk::TreeSelection>> (sigc::mem_fun(*this, &TopWindow::onBoxSelected), mTreeViewSelectionBox));
 
-	mTreeViewSelectionMessage = Glib::RefPtr<Gtk::TreeSelection>::cast_static(mRefBuilder->get_object("treeviewSelectionMessage"));
-	mTreeViewSelectionMessage->signal_changed().connect(
-			sigc::bind <Glib::RefPtr<Gtk::TreeSelection>> (sigc::mem_fun(*this, &TopWindow::onMessageSelected), mTreeViewSelectionMessage));
-	
 	add_events(Gdk::KEY_PRESS_MASK);
 
-	mFileFilterWPN = Gtk::FileFilter::create();
-	mFileFilterWPN->set_name("wpn client files");
-	mFileFilterWPN->add_mime_type("application/javascript");
+    mFileFilterXLSX = Gtk::FileFilter::create();
+	mFileFilterXLSX->set_name("Excel xlsx");
+	mFileFilterXLSX->add_mime_type("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 }
 
-/**
- * Columns:
- * 0  name
- * 1  id
- * 2  publicKey
- */
-void TopWindow::onClientSelected(
+void TopWindow::onBoxSelected(
 	Glib::RefPtr<Gtk::TreeSelection> selection
 ) {
 	// reload message tree view
-	mRefTreeModelFilterMessage->refilter();
+	mRefTreeModelFilterCard->refilter();
 }
 
-/**
- * Columns:
- * 0  message
- * 1  msg NULL
- * 2  persistent_id
- * 3  from
- * 4  appName
- * 5  appId
- * 6  sent
- * 7  title
- * 8  icon
- * 9  sound
- * 10 link
- * 11 linkType
- * 12 category
- * 13 extra
- * 14 data
- * 15 urgency
- * 16 timeout
- * 17 fromId
- * 18 fromName
- */
 void TopWindow::onMessageSelected(
 	Glib::RefPtr<Gtk::TreeSelection> selection
 ) {
@@ -138,67 +116,20 @@ void TopWindow::onMessageSelected(
 	}
 }
 
-void TopWindow::onButtonClickSend() {
-	// get message text to be send
-	std::string v = "";
-	if (mEntryMessage) {
-		v = mEntryMessage->get_text();
-	}
-	// nothing to do
-	if (v.empty())
-		return;
-	// clear edit control
-	mEntryMessage->set_text("");
-	// smth wrong
-	if (!mRefListStoreMessage)
-		return;
-	Gtk::TreeModel::Row row = *mRefListStoreMessage->append();
-	row.set_value <Glib::ustring>(0, v); 
-	// row.set_value <Glib::rustring>(1, msg);
-}
-
 TopWindow::~TopWindow() {
+    if (client) {
+        delete client;
+        client = nullptr;
+    }
 }
-
-/**
-void TopWindow::loadClients(
-	Glib::RefPtr<Gtk::ListStore> listStore,
-	ConfigFile *config
-) 
-{
-	if (!listStore)
-		return;
-	listStore->clear();
-	if (!config)
-		return;
-
-	Gtk::TreeModel::Row row = *listStore->append();
-	row.set_value <Glib::ustring>(0, DEF_NAME_ALL);
-	row.set_value(1, 0);
-	row.set_value <Glib::ustring>(2, "*");
-
-	for (std::vector<Subscription>::const_iterator it(config->subscriptions->list.begin()); it!= config->subscriptions->list.end(); ++it) {
-		Gtk::TreeModel::Row row = *listStore->append();
-		std::string name;
-		name = it->getName();
-		if (name.empty())
-			name = "noname";
-		std::stringstream n;
-		n << it->getWpnKeys().id << "(" << name << ")";
-		row.set_value <Glib::ustring>(0, n.str());
-		guint64 id = it->getWpnKeys().id;
-		row.set_value(1, id);
-		row.set_value <Glib::ustring>(2, it->getWpnKeys().getPublicKey());
-	}
-}
- */
 
 bool TopWindow::on_key_press_event(GdkEventKey* event)
 {
 	switch (event->keyval)
 	{
 		case GDK_KEY_Return:
-			this->onButtonClickSend();
+			// TODO send
+            searchCard(mEntryQuery->get_text(), mLastSymbol);
 			break;
 		default:
 			return Gtk::Window::on_key_press_event(event);
@@ -210,8 +141,8 @@ void TopWindow::onHelpAbout()
 {
 	mAboutDialog = new Gtk::AboutDialog();
 	mAboutDialog->set_transient_for(*this);
-	mAboutDialog->set_logo(Gdk::Pixbuf::create_from_resource("/../glade/ic_launcher.png", -1, 40, true));
-	mAboutDialog->set_program_name("wpn for Linux desktop");
+	mAboutDialog->set_logo(Gdk::Pixbuf::create_from_resource("/ic_launcher.png", -1, 40, true));
+	mAboutDialog->set_program_name("rcr for Gnome");
 	std::string v;
 #ifdef HAVE_CONFIG_H
 	v = PACKAGE_STRING;
@@ -242,21 +173,6 @@ void TopWindow::onFileQuit()
 	hide();
 }
 
-/**
- * 
- * https://stackoverflow.com/questions/12774207/fastest-way-to-check-if-a-file-exist-using-standard-c-c11-c
- */
-inline bool fileExists
-(
-	const std::string& fn
-) {
-	struct stat buffer;   
-	return (stat (fn.c_str(), &buffer) == 0); 
-}
-
-// libwpnpp.a
-std::string getDefaultConfigFileName(const std::string &filename);
-
 void TopWindow::onAboutDialogResponse(int responseId)
 {
 	switch (responseId) {
@@ -268,4 +184,52 @@ void TopWindow::onAboutDialogResponse(int responseId)
 		default:
 			break;
 	}
+}
+
+void TopWindow::onRefresh() {
+    std::string host = mEntryHost->get_text();
+    if (client)
+        delete client;
+    client = new GRcrClient(host);
+
+    mComboBoxSymbol->unset_model();
+    mTreeViewBox->unset_model();
+    client->loadSymbols(mRefListStoreSymbol);
+    mComboBoxSymbol->set_model(mRefListStoreSymbol);
+
+    selectSymbol(mLastSymbol);
+    client->loadBoxes(mRefListStoreBox);
+    mTreeViewBox->set_model(mRefListStoreBox);
+}
+
+void TopWindow::selectSymbol(
+    const std::string &symbol
+) {
+    auto children = mRefListStoreSymbol->children();
+    auto c = 0;
+    for (auto iter = children.begin(), end = children.end(); iter != end; ++iter) {
+        std::string sym;
+        iter->get_value(2, sym);
+        std::cerr << sym << std::endl;
+        if (sym == symbol)
+            break;
+        c++;
+    }
+    mComboBoxSymbol->set_active(c);
+}
+
+void TopWindow::onSymbolSelected() {
+    std::string sym;
+    mComboBoxSymbol->get_active()->get_value(2, sym);
+    mLastSymbol = sym;
+}
+
+void TopWindow::searchCard(
+    const std::string &q,
+    const std::string &symbol
+)
+{
+    mTreeViewCard->unset_model();
+    client->query(q, symbol, mRefListStoreCard);
+    mTreeViewCard->set_model(mRefListStoreCard);
 }

@@ -37,6 +37,7 @@ void RcrApplication::createTopWindow()
 	// Load the Glade file and instiate its widgets:
 	TopWindow* topWindow = 0;
 	mRefBuilder->get_widget_derived("topWindow", topWindow);
+    // topWindow->set_icon_name("ic_launcher.png");
 
 	// Make sure that the application runs for as long this window is still open:
 	add_window(*topWindow);

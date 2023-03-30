@@ -3,7 +3,7 @@
     <gresource prefix="/">
         <file>rcr-gnome.glade</file>
     </gresource>
-    <gresource prefix="/">
+    <gresource prefix="">
         <file>ic_launcher.png</file>
     </gresource>
 </gresources>

@@ -2,12 +2,56 @@
 <!-- Generated with glade 3.38.2 -->
 <interface>
   <requires lib="gtk+" version="3.24"/>
-  <object class="GtkMenu">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
+  <object class="GtkListStore" id="liststoreBox">
+    <columns>
+      <!-- column-name name -->
+      <column type="gchararray"/>
+      <!-- column-name id -->
+      <column type="gulong"/>
+      <!-- column-name box -->
+      <column type="gulong"/>
+    </columns>
+  </object>
+  <object class="GtkListStore" id="liststoreCard">
+    <columns>
+      <!-- column-name name -->
+      <column type="gchararray"/>
+      <!-- column-name nominal -->
+      <column type="gchararray"/>
+      <!-- column-name properties -->
+      <column type="gchararray"/>
+      <!-- column-name boxname -->
+      <column type="gchararray"/>
+      <!-- column-name quantity -->
+      <column type="gulong"/>
+      <!-- column-name id -->
+      <column type="gulong"/>
+      <!-- column-name remarks -->
+      <column type="gchararray"/>
+      <!-- column-name boxid -->
+      <column type="gulong"/>
+    </columns>
+  </object>
+  <object class="GtkListStore" id="liststoreSymbol">
+    <columns>
+      <!-- column-name description -->
+      <column type="gchararray"/>
+      <!-- column-name id -->
+      <column type="gulong"/>
+      <!-- column-name sym -->
+      <column type="gchararray"/>
+      <!-- column-name unit -->
+      <column type="gchararray"/>
+      <!-- column-name pow10 -->
+      <column type="gulong"/>
+    </columns>
   </object>
   <object class="GtkWindow" id="topWindow">
     <property name="can-focus">False</property>
+    <property name="title" translatable="yes">rcr</property>
+    <property name="default-width">640</property>
+    <property name="default-height">480</property>
+    <property name="icon-name">applications-engineering</property>
     <child>
       <object class="GtkPaned">
         <property name="visible">True</property>
@@ -28,12 +72,14 @@
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <child>
-                      <object class="GtkImageMenuItem">
+                      <object class="GtkImageMenuItem" id="quit">
                         <property name="label">gtk-quit</property>
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
+                        <property name="action-name">rcr.quit</property>
                         <property name="use-underline">True</property>
                         <property name="use-stock">True</property>
+                        <property name="always-show-image">True</property>
                       </object>
                     </child>
                   </object>
@@ -51,12 +97,14 @@
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <child>
-                      <object class="GtkImageMenuItem">
+                      <object class="GtkImageMenuItem" id="about">
                         <property name="label">gtk-about</property>
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
+                        <property name="action-name">rcr.about</property>
                         <property name="use-underline">True</property>
                         <property name="use-stock">True</property>
+                        <property name="always-show-image">True</property>
                       </object>
                     </child>
                   </object>
@@ -73,12 +121,108 @@
           <object class="GtkPaned">
             <property name="visible">True</property>
             <property name="can-focus">True</property>
+            <property name="orientation">vertical</property>
             <child>
-              <object class="GtkTreeView" id="treeviewBox">
+              <object class="GtkPaned">
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
-                <child internal-child="selection">
-                  <object class="GtkTreeSelection"/>
+                <property name="margin-bottom">61</property>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="orientation">vertical</property>
+                    <child>
+                      <object class="GtkListBox" id="listboxComponent">
+                        <property name="width-request">200</property>
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <child>
+                          <object class="GtkEntry" id="entryHost">
+                            <property name="visible">True</property>
+                            <property name="can-focus">True</property>
+                            <property name="text" translatable="yes">localhost</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkButton" id="bRefresh">
+                            <property name="label" translatable="yes">Refresh</property>
+                            <property name="visible">True</property>
+                            <property name="can-focus">True</property>
+                            <property name="receives-default">True</property>
+                            <signal name="clicked" handler="bRefreshClick" object="entryHost" swapped="no"/>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkComboBox" id="cbSymbol">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="model">liststoreSymbol</property>
+                            <child>
+                              <object class="GtkCellRendererText" id="crSymbolName"/>
+                              <attributes>
+                                <attribute name="text">0</attribute>
+                              </attributes>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">2</property>
+                          </packing>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkSearchEntry" id="entrySearch">
+                        <property name="height-request">32</property>
+                        <property name="visible">True</property>
+                        <property name="can-focus">True</property>
+                        <property name="valign">start</property>
+                        <property name="primary-icon-name">edit-find-symbolic</property>
+                        <property name="primary-icon-activatable">False</property>
+                        <property name="primary-icon-sensitive">False</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">2</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="resize">True</property>
+                    <property name="shrink">True</property>
+                  </packing>
                 </child>
               </object>
               <packing>
@@ -90,18 +234,64 @@
               <object class="GtkPaned">
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
-                <property name="orientation">vertical</property>
+                <child>
+                  <object class="GtkScrolledWindow">
+                    <property name="visible">True</property>
+                    <property name="can-focus">True</property>
+                    <property name="shadow-type">in</property>
+                    <property name="min-content-width">180</property>
+                    <child>
+                      <object class="GtkTreeView" id="tvBox">
+                        <property name="visible">True</property>
+                        <property name="can-focus">True</property>
+                        <property name="model">liststoreBox</property>
+                        <child internal-child="selection">
+                          <object class="GtkTreeSelection" id="tvsBox"/>
+                        </child>
+                        <child>
+                          <object class="GtkTreeViewColumn">
+                            <property name="title" translatable="yes">Box</property>
+                            <child>
+                              <object class="GtkCellRendererText"/>
+                              <attributes>
+                                <attribute name="text">0</attribute>
+                              </attributes>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="resize">False</property>
+                    <property name="shrink">True</property>
+                  </packing>
+                </child>
                 <child>
                   <object class="GtkPaned">
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="orientation">vertical</property>
                     <child>
-                      <object class="GtkMenuButton">
+                      <object class="GtkPaned">
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
-                        <property name="focus-on-click">False</property>
-                        <property name="receives-default">True</property>
+                        <property name="orientation">vertical</property>
+                        <child>
+                          <object class="GtkMenuButton">
+                            <property name="visible">True</property>
+                            <property name="can-focus">True</property>
+                            <property name="focus-on-click">False</property>
+                            <property name="receives-default">True</property>
+                            <child>
+                              <placeholder/>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="resize">False</property>
+                            <property name="shrink">True</property>
+                          </packing>
+                        </child>
                         <child>
                           <placeholder/>
                         </child>
@@ -112,28 +302,71 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkSearchEntry" id="searchEntry">
+                      <object class="GtkScrolledWindow">
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
-                        <property name="primary-icon-name">edit-find-symbolic</property>
-                        <property name="primary-icon-activatable">False</property>
-                        <property name="primary-icon-sensitive">False</property>
+                        <property name="shadow-type">in</property>
+                        <property name="min-content-width">300</property>
+                        <child>
+                          <object class="GtkTreeView" id="tvCard">
+                            <property name="visible">True</property>
+                            <property name="can-focus">True</property>
+                            <property name="model">liststoreCard</property>
+                            <child internal-child="selection">
+                              <object class="GtkTreeSelection" id="treeviewselectionCard"/>
+                            </child>
+                            <child>
+                              <object class="GtkTreeViewColumn" id="tvcQName">
+                                <property name="title" translatable="yes">Name</property>
+                                <child>
+                                  <object class="GtkCellRendererText" id="crQuantityName"/>
+                                  <attributes>
+                                    <attribute name="text">0</attribute>
+                                  </attributes>
+                                </child>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkTreeViewColumn" id="tvcQBox">
+                                <property name="title" translatable="yes">Box</property>
+                                <child>
+                                  <object class="GtkCellRendererText" id="crQuantityBox"/>
+                                  <attributes>
+                                    <attribute name="text">1</attribute>
+                                  </attributes>
+                                </child>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkTreeViewColumn" id="tvcQProperties">
+                                <property name="title" translatable="yes">Properties</property>
+                                <child>
+                                  <object class="GtkCellRendererText" id="crQuantityProperties"/>
+                                  <attributes>
+                                    <attribute name="text">2</attribute>
+                                  </attributes>
+                                </child>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkTreeViewColumn" id="tvcQQuantity">
+                                <property name="title" translatable="yes">Quantity</property>
+                                <child>
+                                  <object class="GtkCellRendererText" id="crQuantityQuantity"/>
+                                  <attributes>
+                                    <attribute name="text">4</attribute>
+                                  </attributes>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
                       </object>
                       <packing>
                         <property name="resize">True</property>
                         <property name="shrink">True</property>
                       </packing>
                     </child>
-                  </object>
-                  <packing>
-                    <property name="resize">False</property>
-                    <property name="shrink">True</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkListBox">
-                    <property name="visible">True</property>
-                    <property name="can-focus">False</property>
                   </object>
                   <packing>
                     <property name="resize">True</property>

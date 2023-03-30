@@ -35,6 +35,6 @@
 
 int main(int argc, char *argv[])
 {
-	Glib::RefPtr<RcrApplication> app = RcrApplication::create();
+    Glib::RefPtr<RcrApplication> app = RcrApplication::create();
 	return app->run(argc, argv);
 }
