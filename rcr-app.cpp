@@ -34,7 +34,7 @@ void RcrApplication::on_activate()
 
 void RcrApplication::createTopWindow()
 {
-	// Load the Glade file and instiate its widgets:
+	// Load the Glade file and instate its widgets:
 	TopWindow* topWindow = 0;
 	mRefBuilder->get_widget_derived("topWindow", topWindow);
     // topWindow->set_icon_name("ic_launcher.png");
@@ -43,7 +43,7 @@ void RcrApplication::createTopWindow()
 	add_window(*topWindow);
 	// Delete the window when it is hidden.
 	topWindow->signal_hide().connect(sigc::bind<Gtk::Window*>(
-	sigc::mem_fun(*this, &RcrApplication::onWindowHide), topWindow));
+	    sigc::mem_fun(*this, &RcrApplication::onWindowHide), topWindow));
 	topWindow->show_all();
 }
 

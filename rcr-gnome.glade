@@ -80,8 +80,24 @@
                         <property name="always-show-image">True</property>
                       </object>
                     </child>
+                    <child>
+                      <object class="GtkSeparatorMenuItem">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                      </object>
+                    </child>
                   </object>
                 </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkImageMenuItem" id="menu_file_connect">
+                <property name="label">gtk-connect</property>
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="action-name">rcr.connect</property>
+                <property name="use-underline">True</property>
+                <property name="use-stock">True</property>
               </object>
             </child>
             <child>
@@ -400,5 +416,15 @@
         </child>
       </object>
     </child>
+  </object>
+  <object class="GtkTreeStore" id="treestoreBox">
+    <columns>
+      <!-- column-name name -->
+      <column type="gchararray"/>
+      <!-- column-name id -->
+      <column type="gulong"/>
+      <!-- column-name box -->
+      <column type="gulong"/>
+    </columns>
   </object>
 </interface>

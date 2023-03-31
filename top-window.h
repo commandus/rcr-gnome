@@ -16,10 +16,10 @@ protected:
 	bool on_key_press_event(GdkEventKey *event) override;
 	void onHelpAbout();
 	void onFileQuit();
-    void onRefresh();
+    void onFileConnect();
 	void onBoxSelected(Glib::RefPtr<Gtk::TreeSelection> selection);
     void onSymbolSelected();
-	void onMessageSelected(Glib::RefPtr<Gtk::TreeSelection> selection);
+	void onCardSelected(Glib::RefPtr<Gtk::TreeSelection> selection);
 	void onAboutDialogResponse(int responseId);
 private:
     std::string mLastSymbol;    ///< default "D"
@@ -27,7 +27,7 @@ private:
     GRcrClient *client;
 
     Glib::RefPtr<Gtk::ListStore> mRefListStoreSymbol;
-    Glib::RefPtr<Gtk::ListStore> mRefListStoreBox;
+    Glib::RefPtr<Gtk::TreeStore> mRefTreeStoreBox;
     Glib::RefPtr<Gtk::ListStore> mRefListStoreCard;
 
     Gtk::AboutDialog *mAboutDialog;

@@ -43,17 +43,19 @@ TopWindow::TopWindow (BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder> 
 	: client(nullptr), mLastSymbol("D"),
     Gtk::Window(cobject), mRefBuilder (refBuilder)
 {
+
     mRefBuilder->get_widget("bRefresh", mButtonRefresh);
 	mRefBuilder->get_widget("entrySearch", mEntryQuery);
     mRefBuilder->get_widget("entryHost", mEntryHost);
     mRefBuilder->get_widget("cbSymbol", mComboBoxSymbol);
     mComboBoxSymbol->signal_changed().connect(sigc::mem_fun(*this, &TopWindow::onSymbolSelected));
-    mButtonRefresh->signal_clicked().connect(sigc::mem_fun(*this, &TopWindow::onRefresh));
+    mButtonRefresh->signal_clicked().connect(sigc::mem_fun(*this, &TopWindow::onFileConnect));
 
 	mRefActionGroup = Gio::SimpleActionGroup::create();
+    mRefActionGroup->add_action("connect",
+        sigc::mem_fun(*this, &TopWindow::onFileConnect));
 	mRefActionGroup->add_action("quit",
 		sigc::mem_fun(*this, &TopWindow::onFileQuit));
-
 	mRefActionGroup->add_action("about",
 		sigc::mem_fun(*this, &TopWindow::onHelpAbout));
 	insert_action_group("rcr", mRefActionGroup);
@@ -62,7 +64,7 @@ TopWindow::TopWindow (BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder> 
     mRefBuilder->get_widget("tvCard", mTreeViewCard);
 
     mRefListStoreSymbol = Glib::RefPtr<Gtk::ListStore>::cast_static(mRefBuilder->get_object("liststoreSymbol"));
-    mRefListStoreBox = Glib::RefPtr<Gtk::ListStore>::cast_static(mRefBuilder->get_object("liststoreBox"));
+    mRefTreeStoreBox = Glib::RefPtr<Gtk::TreeStore>::cast_static(mRefBuilder->get_object("treestoreBox"));
     mRefListStoreCard = Glib::RefPtr<Gtk::ListStore>::cast_static(mRefBuilder->get_object("liststoreCard"));
 
     // 0 name 1 boxname 2 properties 3 id 4 qty 5 rem 6 boxid
@@ -77,12 +79,6 @@ TopWindow::TopWindow (BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder> 
             Gtk::TreeModel::Row row = *iter;
             uint64_t box;
             row.get_value(2, box); // 2- box
-
-            bool v = StockOperation::isBoxInBoxes(boxId, box);
-            if (!v)
-                std::cerr << "invisible boxId " << StockOperation::boxes2string(boxId)
-                     << " in a box " << StockOperation::boxes2string(box) << std::endl;
-
             return StockOperation::isBoxInBoxes(boxId, box);
         }
 		return true;
@@ -99,6 +95,9 @@ TopWindow::TopWindow (BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder> 
     mFileFilterXLSX = Gtk::FileFilter::create();
 	mFileFilterXLSX->set_name("Excel xlsx");
 	mFileFilterXLSX->add_mime_type("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+
+    onFileConnect();
+
 }
 
 void TopWindow::onBoxSelected(
@@ -108,19 +107,25 @@ void TopWindow::onBoxSelected(
 	mRefTreeModelFilterCard->refilter();
 }
 
-void TopWindow::onMessageSelected(
+void TopWindow::onCardSelected(
 	Glib::RefPtr<Gtk::TreeSelection> selection
 ) {
 	if (selection) {
 		Gtk::TreeModel::iterator iter = selection->get_selected();
 		if (iter) {
 			Gtk::TreeModel::Row row = *iter;
-			Glib::ustring v;
-			row.get_value(0, v);
-			Glib::ustring fromName;
-			row.get_value(18, fromName);
-			guint64 fromId;
-			row.get_value(17, fromId);
+			std::string name;
+			row.get_value(0, name);
+            std::string nominal;
+			row.get_value(1, nominal);
+            std::string properties;
+            row.get_value(2, properties);
+            std::string boxname;
+            row.get_value(3, boxname);
+            uint64_t qty;
+            row.get_value(4, qty);
+            uint64_t box;
+            row.get_value(5, box);
 		}
 	}
 }
@@ -195,7 +200,7 @@ void TopWindow::onAboutDialogResponse(int responseId)
 	}
 }
 
-void TopWindow::onRefresh() {
+void TopWindow::onFileConnect() {
     std::string host = mEntryHost->get_text();
     if (client)
         delete client;
@@ -207,8 +212,9 @@ void TopWindow::onRefresh() {
     mComboBoxSymbol->set_model(mRefListStoreSymbol);
 
     selectSymbol(mLastSymbol);
-    client->loadBoxes(mRefListStoreBox);
-    mTreeViewBox->set_model(mRefListStoreBox);
+    client->loadBoxes(mRefTreeStoreBox);
+    mTreeViewBox->set_model(mRefTreeStoreBox);
+    mTreeViewBox->expand_all();
 }
 
 void TopWindow::selectSymbol(

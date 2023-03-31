@@ -48,18 +48,18 @@ GRcrClient::~GRcrClient()
 }
 
 void GRcrClient::loadBoxes(
-    Glib::RefPtr<Gtk::ListStore> listStore
+    Glib::RefPtr<Gtk::TreeStore> treeStore
 )
 {
-    if (!listStore)
+    if (!treeStore)
         return;
-    listStore->clear();
+    treeStore->clear();
 
     // root element
-    Gtk::TreeModel::Row row = *listStore->append();
-    row.set_value <Glib::ustring>(0, DEF_NAME_ALL);
-    row.set_value(1, 0);
-    row.set_value(2, 0);
+    Gtk::TreeModel::Row rootRow = *treeStore->append();
+    rootRow.set_value <Glib::ustring>(0, DEF_NAME_ALL);
+    rootRow.set_value(1, 0);
+    rootRow.set_value(2, 0);
 
     grpc::ClientContext context;
     rcr::BoxRequest request;
@@ -75,9 +75,18 @@ void GRcrClient::loadBoxes(
         std::cerr << "Error: " << status.error_code() << " " << status.error_message() << std::endl;
     }
 
+    auto root = rootRow->children();
+    // response.box() must be ordered
+    BoxArray lastBox = {0, 0, 0, 0 };
+
     for (auto it = response.box().begin(); it != response.box().end(); ++it) {
-        Gtk::TreeModel::Row row = *listStore->append();
-        row.set_value(0, StockOperation::boxes2string(it->box_id()));
+        uint64_t bid = it->box_id();
+        BoxArray currentBox;
+        int bc = StockOperation::box2Array(currentBox, bid);    // 0- no box, 1..3
+
+
+        Gtk::TreeModel::Row row = *treeStore->append(root);
+        row.set_value(0, StockOperation::boxes2string(bid));
         row.set_value(1, it->id());
         row.set_value(2, it->box_id());
     }

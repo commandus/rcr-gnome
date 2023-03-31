@@ -30,7 +30,7 @@ public:
     );
     virtual ~GRcrClient();
     void loadSymbols(Glib::RefPtr<Gtk::ListStore> target);
-    void loadBoxes(Glib::RefPtr<Gtk::ListStore> target);
+    void loadBoxes(Glib::RefPtr<Gtk::TreeStore> treeStore);
 
     int findSymbol(const std::string &symbol);
     COMPONENT findSymbol(uint64_t symbolId);
