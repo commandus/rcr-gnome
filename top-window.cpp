@@ -4,6 +4,8 @@
 #include <gtkmm.h>
 
 #include "top-window.h"
+#include "RCQuery.h"
+#include "string-helper.h"
 
 #define DEF_NAME_ALL	"All"
 
@@ -72,13 +74,20 @@ TopWindow::TopWindow (BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder> 
 		row.get_value(6, boxId);
 		Gtk::TreeModel::iterator iter = mTreeViewSelectionBox->get_selected();
 		if (iter) {
-			Gtk::TreeModel::Row row = *iter;
-			uint64_t box;
-			row.get_value(2, box); // 2- box
-			return box == boxId || box == 0;
-		}
+            Gtk::TreeModel::Row row = *iter;
+            uint64_t box;
+            row.get_value(2, box); // 2- box
+
+            bool v = StockOperation::isBoxInBoxes(boxId, box);
+            if (!v)
+                std::cerr << "invisible boxId " << StockOperation::boxes2string(boxId)
+                     << " in a box " << StockOperation::boxes2string(box) << std::endl;
+
+            return StockOperation::isBoxInBoxes(boxId, box);
+        }
 		return true;
 	});
+
 	mTreeViewCard->set_model(mRefTreeModelFilterCard);
 
 	mTreeViewSelectionBox = Glib::RefPtr<Gtk::TreeSelection>::cast_static(mRefBuilder->get_object("tvsBox"));
@@ -95,7 +104,7 @@ TopWindow::TopWindow (BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder> 
 void TopWindow::onBoxSelected(
 	Glib::RefPtr<Gtk::TreeSelection> selection
 ) {
-	// reload message tree view
+	// reload card tree view
 	mRefTreeModelFilterCard->refilter();
 }
 
@@ -228,7 +237,15 @@ void TopWindow::searchCard(
     const std::string &symbol
 )
 {
+    COMPONENT component;
+    RCQuery query(ML_RU, q, component);
+
+    query.componentName = toUpperCase(query.componentName);
+    if (query.componentName.find('*') == std::string::npos)
+        query.componentName += "*";
     mTreeViewCard->unset_model();
-    client->query(q, symbol, mRefListStoreCard);
-    mTreeViewCard->set_model(mRefListStoreCard);
+
+    client->query(query.toString(), symbol, mRefListStoreCard);
+
+    mTreeViewCard->set_model(mRefTreeModelFilterCard);
 }

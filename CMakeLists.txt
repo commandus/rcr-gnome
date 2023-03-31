@@ -47,7 +47,10 @@ set(GEN_GRPC_SRC ${GEN}/rcr.grpc.pb.cc ${GEN}/rcr.pb.cc)
 # rcr-gnome
 #
 set(RCR_GNOME_SRC rcr-gnome.cpp rcr-app.cpp top-window.cpp
-	third-party/rcr/string-helper.cpp third-party/rcr/MeasureUnit.cpp third-party/rcr/StockOperation.cpp third-party/rcr/QueryProperties.cpp
+	third-party/rcr/string-helper.cpp third-party/rcr/MeasureUnit.cpp
+		third-party/rcr/StockOperation.cpp
+		third-party/rcr/QueryProperties.cpp
+		third-party/rcr/RCQuery.cpp
 	${GEN_GRPC_SRC}
 	${GEN_SRC}
 		GRcrClient.cpp GRcrClient.h)
