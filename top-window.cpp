@@ -210,7 +210,6 @@ void TopWindow::selectSymbol(
     for (auto iter = children.begin(), end = children.end(); iter != end; ++iter) {
         std::string sym;
         iter->get_value(2, sym);
-        std::cerr << sym << std::endl;
         if (sym == symbol)
             break;
         c++;

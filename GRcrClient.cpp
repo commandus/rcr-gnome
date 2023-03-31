@@ -59,8 +59,7 @@ void GRcrClient::loadBoxes(
     Gtk::TreeModel::Row row = *listStore->append();
     row.set_value <Glib::ustring>(0, DEF_NAME_ALL);
     row.set_value(1, 0);
-    row.set_value <Glib::ustring>(2, "*");
-    row.set_value <Glib::ustring>(3, "");
+    row.set_value(2, 0);
 
     grpc::ClientContext context;
     rcr::BoxRequest request;
@@ -156,12 +155,19 @@ void GRcrClient::query(
 
     for (auto it = response.cards().cards().begin(); it != response.cards().cards().end(); ++it) {
         for (auto p = it->packages().begin(); p != it->packages().end(); ++p) {
+            std::string nominal = MeasureUnit::value(ML_RU, findSymbol(it->card().symbol_id()), it->card().nominal());
+            if (nominal.find('0') == 0)
+                nominal = "";
+            std::cerr << "box: " << p->box()
+                << " " << StockOperation::boxes2string(p->box()) << std::endl;
             Gtk::TreeModel::Row row = *listStore->append();
             row.set_value(0, it->card().name());
-            row.set_value(1, MeasureUnit::value(ML_RU, findSymbol(it->card().symbol_id()), it->card().nominal()));
+            row.set_value(1, nominal);
             row.set_value(2, properties2string(dictionaries, it->properties()));
             row.set_value(3, StockOperation::boxes2string(p->box()));
             row.set_value(4, p->qty());
+            row.set_value(5, p->id());
+            row.set_value(6, p->box());
         }
     }
 }

@@ -22,13 +22,11 @@
       <column type="gchararray"/>
       <!-- column-name boxname -->
       <column type="gchararray"/>
-      <!-- column-name quantity -->
-      <column type="gulong"/>
+      <!-- column-name qty -->
+      <column type="glong"/>
       <!-- column-name id -->
       <column type="gulong"/>
-      <!-- column-name remarks -->
-      <column type="gchararray"/>
-      <!-- column-name boxid -->
+      <!-- column-name box -->
       <column type="gulong"/>
     </columns>
   </object>
@@ -244,7 +242,7 @@
                       <object class="GtkTreeView" id="tvBox">
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
-                        <property name="model">liststoreBox</property>
+                        <property name="model">liststoreCard</property>
                         <child internal-child="selection">
                           <object class="GtkTreeSelection" id="tvsBox"/>
                         </child>
@@ -311,12 +309,12 @@
                           <object class="GtkTreeView" id="tvCard">
                             <property name="visible">True</property>
                             <property name="can-focus">True</property>
-                            <property name="model">liststoreCard</property>
                             <child internal-child="selection">
                               <object class="GtkTreeSelection" id="treeviewselectionCard"/>
                             </child>
                             <child>
                               <object class="GtkTreeViewColumn" id="tvcQName">
+                                <property name="resizable">True</property>
                                 <property name="title" translatable="yes">Name</property>
                                 <child>
                                   <object class="GtkCellRendererText" id="crQuantityName"/>
@@ -327,10 +325,11 @@
                               </object>
                             </child>
                             <child>
-                              <object class="GtkTreeViewColumn" id="tvcQBox">
-                                <property name="title" translatable="yes">Box</property>
+                              <object class="GtkTreeViewColumn" id="crNominal">
+                                <property name="resizable">True</property>
+                                <property name="title" translatable="yes">Nominal</property>
                                 <child>
-                                  <object class="GtkCellRendererText" id="crQuantityBox"/>
+                                  <object class="GtkCellRendererText" id="crNominal1"/>
                                   <attributes>
                                     <attribute name="text">1</attribute>
                                   </attributes>
@@ -339,6 +338,7 @@
                             </child>
                             <child>
                               <object class="GtkTreeViewColumn" id="tvcQProperties">
+                                <property name="resizable">True</property>
                                 <property name="title" translatable="yes">Properties</property>
                                 <child>
                                   <object class="GtkCellRendererText" id="crQuantityProperties"/>
@@ -349,7 +349,20 @@
                               </object>
                             </child>
                             <child>
+                              <object class="GtkTreeViewColumn" id="tvcQBox">
+                                <property name="resizable">True</property>
+                                <property name="title" translatable="yes">Box</property>
+                                <child>
+                                  <object class="GtkCellRendererText" id="crQuantityBox"/>
+                                  <attributes>
+                                    <attribute name="text">3</attribute>
+                                  </attributes>
+                                </child>
+                              </object>
+                            </child>
+                            <child>
                               <object class="GtkTreeViewColumn" id="tvcQQuantity">
+                                <property name="resizable">True</property>
                                 <property name="title" translatable="yes">Quantity</property>
                                 <child>
                                   <object class="GtkCellRendererText" id="crQuantityQuantity"/>
