@@ -2,10 +2,13 @@
 // Created by andrei on 29.03.23.
 //
 
+#define DEBUG
+
 #include <sstream>
 #include "GRcrClient.h"
 
 #include "StockOperation.h"
+#include "string-helper.h"
 
 #define DEF_NAME_ALL "All"
 
@@ -55,11 +58,12 @@ void GRcrClient::loadBoxes(
         return;
     treeStore->clear();
 
+    Gtk::TreeModel::Row topRows[5];
     // root element
-    Gtk::TreeModel::Row rootRow = *treeStore->append();
-    rootRow.set_value <Glib::ustring>(0, DEF_NAME_ALL);
-    rootRow.set_value(1, 0);
-    rootRow.set_value(2, 0);
+    topRows[0] = *treeStore->append();
+    topRows[0].set_value <Glib::ustring>(0, DEF_NAME_ALL);
+    topRows[0].set_value(1, 0);
+    topRows[0].set_value(2, 0);
 
     grpc::ClientContext context;
     rcr::BoxRequest request;
@@ -75,20 +79,27 @@ void GRcrClient::loadBoxes(
         std::cerr << "Error: " << status.error_code() << " " << status.error_message() << std::endl;
     }
 
-    auto root = rootRow->children();
     // response.box() must be ordered
     BoxArray lastBox = {0, 0, 0, 0 };
-
     for (auto it = response.box().begin(); it != response.box().end(); ++it) {
         uint64_t bid = it->box_id();
         BoxArray currentBox;
         int bc = StockOperation::box2Array(currentBox, bid);    // 0- no box, 1..3
-
-
-        Gtk::TreeModel::Row row = *treeStore->append(root);
-        row.set_value(0, StockOperation::boxes2string(bid));
-        row.set_value(1, it->id());
-        row.set_value(2, it->box_id());
+        Gtk::TreeModel::Row row;
+        for (int i = 3; i >= 0; i--) {
+            if (currentBox.a[i] != lastBox.a[i]) {
+                // 0xffff000000000000
+                // 0xffffffff00000000
+                // 0xffffffffffff0000
+                // 0xffffffffffffffff
+                uint64_t b = bid & (0xffffffffffffffff << (16 * i));
+                topRows[4 - i] = *treeStore->append(topRows[3 - i].children());
+                topRows[4 - i].set_value(0, StockOperation::boxes2string(b));
+                topRows[4 - i].set_value(1, 0);
+                topRows[4 - i].set_value(2, b);
+                lastBox.a[i] = currentBox.a[i];
+            }
+        }
     }
 }
 
@@ -153,6 +164,10 @@ void GRcrClient::query(
     request.mutable_list()->set_offset(0);
     request.mutable_list()->set_size(100);
 
+#ifdef DEBUG
+    std::cerr << pb2JsonString(request) << std::endl;
+#endif
+
     rcr::CardQueryResponse response;
 
     grpc::Status status = stub->cardQuery(&context, request, &response);
@@ -167,8 +182,6 @@ void GRcrClient::query(
             std::string nominal = MeasureUnit::value(ML_RU, findSymbol(it->card().symbol_id()), it->card().nominal());
             if (nominal.find('0') == 0)
                 nominal = "";
-            std::cerr << "box: " << p->box()
-                << " " << StockOperation::boxes2string(p->box()) << std::endl;
             Gtk::TreeModel::Row row = *listStore->append();
             row.set_value(0, it->card().name());
             row.set_value(1, nominal);

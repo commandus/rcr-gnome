@@ -49,5 +49,6 @@ void RcrApplication::createTopWindow()
 
 void RcrApplication::onWindowHide(Gtk::Window* window)
 {
+    ((TopWindow*) window)->saveSettings();
 	delete window;
 }

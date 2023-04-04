@@ -1,11 +1,10 @@
-#include <iostream>
-#include <sstream>
 #include <gdk/gdkkeysyms.h>
 #include <gtkmm.h>
 
 #include "top-window.h"
 #include "RCQuery.h"
 #include "string-helper.h"
+#include "utilfile.h"
 
 #define DEF_NAME_ALL	"All"
 
@@ -34,38 +33,61 @@ OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION \n\
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN \n\
 THE SOFTWARE."
 
+void TopWindow::bindWidgets() {
+    mRefBuilder->get_widget("bRefresh", mButtonRefresh);
+    mRefBuilder->get_widget("entryQuery", mEntryQuery);
+    mRefBuilder->get_widget("entryHost", mEntryHost);
+    mRefBuilder->get_widget("cbSymbol", mComboBoxSymbol);
+    mComboBoxSymbol->signal_changed().connect(sigc::mem_fun(*this, &TopWindow::onSymbolSelected));
+    mButtonRefresh->signal_clicked().connect(sigc::mem_fun(*this, &TopWindow::onFileConnect));
+
+    mRefActionGroup = Gio::SimpleActionGroup::create();
+    mRefActionGroup->add_action("connect",
+                                sigc::mem_fun(*this, &TopWindow::onFileConnect));
+    mRefActionGroup->add_action("quit",
+                                sigc::mem_fun(*this, &TopWindow::onFileQuit));
+    mRefActionGroup->add_action("about",
+                                sigc::mem_fun(*this, &TopWindow::onHelpAbout));
+    insert_action_group("rcr", mRefActionGroup);
+
+    mRefBuilder->get_widget("tvBox", mTreeViewBox);
+    mRefBuilder->get_widget("tvCard", mTreeViewCard);
+
+    mRefListStoreSymbol = Glib::RefPtr<Gtk::ListStore>::cast_static(mRefBuilder->get_object("liststoreSymbol"));
+    mRefTreeStoreBox = Glib::RefPtr<Gtk::TreeStore>::cast_static(mRefBuilder->get_object("treestoreBox"));
+    mRefListStoreCard = Glib::RefPtr<Gtk::ListStore>::cast_static(mRefBuilder->get_object("liststoreCard"));
+
+    mTreeViewSelectionBox = Glib::RefPtr<Gtk::TreeSelection>::cast_static(mRefBuilder->get_object("tvsBox"));
+}
+
+void TopWindow::loadSettings() {
+    settings = new RcrSettings("", getCurrentDir().c_str(), "rcr.json");
+    int idx = 0;
+    if (idx >= settings->settings.service_size()) {
+        // default;
+        mEntryHost->set_text("localhost");
+        mEntryQuery->set_text("");
+        return;
+    }
+    const rcr::ServiceSettings s = settings->settings.service(0);
+    mEntryHost->set_text(s.addr());
+    mEntryQuery->set_text(s.last_query());
+}
+
+void TopWindow::saveSettings() {
+    settings->save();
+}
+
 /**
  *
  * @param cobject
  * @param refBuilder
  */
 TopWindow::TopWindow (BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder> &refBuilder)
-	: client(nullptr), mLastSymbol("D"),
+	: client(nullptr),
     Gtk::Window(cobject), mRefBuilder (refBuilder)
 {
-
-    mRefBuilder->get_widget("bRefresh", mButtonRefresh);
-	mRefBuilder->get_widget("entrySearch", mEntryQuery);
-    mRefBuilder->get_widget("entryHost", mEntryHost);
-    mRefBuilder->get_widget("cbSymbol", mComboBoxSymbol);
-    mComboBoxSymbol->signal_changed().connect(sigc::mem_fun(*this, &TopWindow::onSymbolSelected));
-    mButtonRefresh->signal_clicked().connect(sigc::mem_fun(*this, &TopWindow::onFileConnect));
-
-	mRefActionGroup = Gio::SimpleActionGroup::create();
-    mRefActionGroup->add_action("connect",
-        sigc::mem_fun(*this, &TopWindow::onFileConnect));
-	mRefActionGroup->add_action("quit",
-		sigc::mem_fun(*this, &TopWindow::onFileQuit));
-	mRefActionGroup->add_action("about",
-		sigc::mem_fun(*this, &TopWindow::onHelpAbout));
-	insert_action_group("rcr", mRefActionGroup);
- 
-	mRefBuilder->get_widget("tvBox", mTreeViewBox);
-    mRefBuilder->get_widget("tvCard", mTreeViewCard);
-
-    mRefListStoreSymbol = Glib::RefPtr<Gtk::ListStore>::cast_static(mRefBuilder->get_object("liststoreSymbol"));
-    mRefTreeStoreBox = Glib::RefPtr<Gtk::TreeStore>::cast_static(mRefBuilder->get_object("treestoreBox"));
-    mRefListStoreCard = Glib::RefPtr<Gtk::ListStore>::cast_static(mRefBuilder->get_object("liststoreCard"));
+    bindWidgets();
 
     // 0 name 1 boxname 2 properties 3 id 4 qty 5 rem 6 boxid
     mRefTreeModelFilterCard = Gtk::TreeModelFilter::create(mRefListStoreCard);
@@ -83,10 +105,8 @@ TopWindow::TopWindow (BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder> 
         }
 		return true;
 	});
-
 	mTreeViewCard->set_model(mRefTreeModelFilterCard);
 
-	mTreeViewSelectionBox = Glib::RefPtr<Gtk::TreeSelection>::cast_static(mRefBuilder->get_object("tvsBox"));
 	mTreeViewSelectionBox->signal_changed().connect(
 			sigc::bind <Glib::RefPtr<Gtk::TreeSelection>> (sigc::mem_fun(*this, &TopWindow::onBoxSelected), mTreeViewSelectionBox));
 
@@ -96,15 +116,25 @@ TopWindow::TopWindow (BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder> 
 	mFileFilterXLSX->set_name("Excel xlsx");
 	mFileFilterXLSX->add_mime_type("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 
+    loadSettings();
     onFileConnect();
-
 }
 
 void TopWindow::onBoxSelected(
 	Glib::RefPtr<Gtk::TreeSelection> selection
 ) {
-	// reload card tree view
-	mRefTreeModelFilterCard->refilter();
+    Gtk::TreeModel::iterator iter = selection->get_selected();
+    if (iter) {
+        Gtk::TreeModel::Row row = *iter;
+        uint64_t b;
+        row.get_value(2, b);
+        // save
+        settings->settings.mutable_service(settings->selected)->set_last_box(b);
+        // saveSettings();
+        doQuery();
+        // doQery or reload card tree view if not- uncomment below line
+        mRefTreeModelFilterCard->refilter();
+    }
 }
 
 void TopWindow::onCardSelected(
@@ -139,11 +169,10 @@ TopWindow::~TopWindow() {
 
 bool TopWindow::on_key_press_event(GdkEventKey* event)
 {
-	switch (event->keyval)
-	{
+	switch (event->keyval) {
 		case GDK_KEY_Return:
 			// TODO send
-            searchCard(mEntryQuery->get_text(), mLastSymbol);
+            doQuery();
 			break;
 		default:
 			return Gtk::Window::on_key_press_event(event);
@@ -211,10 +240,13 @@ void TopWindow::onFileConnect() {
     client->loadSymbols(mRefListStoreSymbol);
     mComboBoxSymbol->set_model(mRefListStoreSymbol);
 
-    selectSymbol(mLastSymbol);
+    selectSymbol(settings->settings.service(settings->selected).last_component_symbol());
     client->loadBoxes(mRefTreeStoreBox);
     mTreeViewBox->set_model(mRefTreeStoreBox);
     mTreeViewBox->expand_all();
+
+    selectBox(settings->settings.service(settings->selected).last_box());
+
 }
 
 void TopWindow::selectSymbol(
@@ -232,10 +264,28 @@ void TopWindow::selectSymbol(
     mComboBoxSymbol->set_active(c);
 }
 
+void TopWindow::selectBox(
+    const uint64_t boxId
+)
+{
+    auto children = mRefTreeStoreBox->children();
+    auto c = 0;
+
+    for (auto iter = children.begin(), end = children.end(); iter != end; ++iter) {
+        uint64_t b;
+        iter->get_value(2, b);
+        if (b == boxId) {
+            mTreeViewSelectionBox->select(iter);
+            break;
+        }
+        c++;
+    }
+}
+
 void TopWindow::onSymbolSelected() {
     std::string sym;
     mComboBoxSymbol->get_active()->get_value(2, sym);
-    mLastSymbol = sym;
+    settings->settings.mutable_service(settings->selected)->set_last_component_symbol(sym);
 }
 
 void TopWindow::searchCard(
@@ -251,7 +301,18 @@ void TopWindow::searchCard(
         query.componentName += "*";
     mTreeViewCard->unset_model();
 
-    client->query(query.toString(), symbol, mRefListStoreCard);
+    std::string qs = query.toString();
+    uint64_t b = settings->settings.service(settings->selected).last_box();
+    if (b)
+        qs += " " + StockOperation::boxes2string(b);
+
+        client->query(qs, symbol, mRefListStoreCard);
 
     mTreeViewCard->set_model(mRefTreeModelFilterCard);
+
+    settings->settings.mutable_service(settings->selected)->set_last_query(q);
+}
+
+void TopWindow::doQuery() {
+    searchCard(mEntryQuery->get_text(), settings->settings.service(settings->selected).last_component_symbol());
 }

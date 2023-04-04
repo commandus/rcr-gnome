@@ -5,13 +5,20 @@
 #include <gtkmm.h>
 
 #include "GRcrClient.h"
+#include "RcrSettings.h"
 
 using namespace std::placeholders; // for `_1`
 
 class TopWindow: public Gtk::Window {
 public:
+    char **argv;
+
 	TopWindow(BaseObjectType*, const Glib::RefPtr<Gtk::Builder>&);
 	virtual ~TopWindow();
+
+    void loadSettings();
+    void saveSettings();
+
 protected:
 	bool on_key_press_event(GdkEventKey *event) override;
 	void onHelpAbout();
@@ -22,8 +29,7 @@ protected:
 	void onCardSelected(Glib::RefPtr<Gtk::TreeSelection> selection);
 	void onAboutDialogResponse(int responseId);
 private:
-    std::string mLastSymbol;    ///< default "D"
-
+    RcrSettings *settings;
     GRcrClient *client;
 
     Glib::RefPtr<Gtk::ListStore> mRefListStoreSymbol;
@@ -48,7 +54,12 @@ private:
     Glib::RefPtr<Gtk::TreeModelFilter> mRefTreeModelFilterCard;
 
     void selectSymbol(const std::string &symbol);
+    void selectBox(const uint64_t boxId);
     void searchCard(const std::string &query, const std::string &symbol);
+
+    void bindWidgets();
+
+    void doQuery();
 };
 
 #endif

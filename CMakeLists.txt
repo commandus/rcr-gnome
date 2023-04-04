@@ -38,7 +38,7 @@ find_package(Threads REQUIRED)
 find_package(Protobuf REQUIRED)
 find_package(gRPC REQUIRED)
 
-set(RCR_INCLUDE_DIR "third-party/rcr")
+set(RCR_INCLUDE_DIR "third-party/rcr" )
 
 set(GEN ${RCR_INCLUDE_DIR}/gen)
 set(GEN_GRPC_SRC ${GEN}/rcr.grpc.pb.cc ${GEN}/rcr.pb.cc)
@@ -47,16 +47,17 @@ set(GEN_GRPC_SRC ${GEN}/rcr.grpc.pb.cc ${GEN}/rcr.pb.cc)
 # rcr-gnome
 #
 set(RCR_GNOME_SRC rcr-gnome.cpp rcr-app.cpp top-window.cpp
+	third-party/config-filename.cpp third-party/utilfile.cpp third-party/utilstring.cpp
 	third-party/rcr/string-helper.cpp third-party/rcr/MeasureUnit.cpp
-		third-party/rcr/StockOperation.cpp
-		third-party/rcr/QueryProperties.cpp
-		third-party/rcr/RCQuery.cpp
+	third-party/rcr/StockOperation.cpp
+	third-party/rcr/QueryProperties.cpp
+	third-party/rcr/RCQuery.cpp
 	${GEN_GRPC_SRC}
 	${GEN_SRC}
-		GRcrClient.cpp GRcrClient.h)
+	GRcrClient.cpp GRcrClient.h RcrSettings.cpp)
 add_executable(rcr-gnome ${RCR_GNOME_SRC})
 target_link_libraries(rcr-gnome PRIVATE ${ICU_LIBS} gRPC::grpc++ ${Protobuf_LIBRARIES} ${ICU_LIBS} ${XLSX_LIBS})
-target_include_directories(rcr-gnome PRIVATE ${RCR_INCLUDE_DIR} ${GTK_INCLUDE_DIRS})
+target_include_directories(rcr-gnome PRIVATE "third-party" ${RCR_INCLUDE_DIR} ${GTK_INCLUDE_DIRS})
 
 #
 # Generate resource file

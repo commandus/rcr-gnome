@@ -217,7 +217,7 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkSearchEntry" id="entrySearch">
+                      <object class="GtkSearchEntry" id="entryQuery">
                         <property name="height-request">32</property>
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
