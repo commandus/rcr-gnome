@@ -30,7 +30,9 @@ public:
     );
     virtual ~GRcrClient();
     void loadSymbols(Glib::RefPtr<Gtk::ListStore> target);
-    void loadBoxes(Glib::RefPtr<Gtk::TreeStore> treeStore);
+    bool loadBoxes(
+        Glib::RefPtr<Gtk::TreeStore> treeStore
+    );
 
     int findSymbol(const std::string &symbol);
     COMPONENT findSymbol(uint64_t symbolId);
@@ -45,6 +47,12 @@ public:
         const rcr::DictionariesResponse &dictionaries,
         const google::protobuf::RepeatedPtrField<::rcr::PropertyWithName> &properties
     );
+
+    void reorderBoxesByBoxId(rcr::BoxResponse &response);
+
+    void reorderDisctionaries(rcr::DictionariesResponse &value);
+
+    void reorderCards(rcr::CardQueryResponse &value);
 };
 
 #endif //RCR_GNOME_GRCRCLIENT_H

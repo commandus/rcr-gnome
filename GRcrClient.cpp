@@ -50,12 +50,13 @@ GRcrClient::~GRcrClient()
 {
 }
 
-void GRcrClient::loadBoxes(
+bool GRcrClient::loadBoxes(
     Glib::RefPtr<Gtk::TreeStore> treeStore
 )
 {
+    const Gtk::TreeModel::iterator *r = nullptr;
     if (!treeStore)
-        return;
+        return false;
     treeStore->clear();
 
     Gtk::TreeModel::Row topRows[5];
@@ -77,30 +78,41 @@ void GRcrClient::loadBoxes(
     grpc::Status status = stub->getBox(&context, request, &response);
     if (!status.ok()) {
         std::cerr << "Error: " << status.error_code() << " " << status.error_message() << std::endl;
+        return false;
     }
 
+    // just make sure is box ordered
+    reorderBoxesByBoxId(response);
+
     // response.box() must be ordered
-    BoxArray lastBox = {0, 0, 0, 0 };
+    BoxArray lastBox = {0xffff, 0xffff, 0xffff, 0xffff };
     for (auto it = response.box().begin(); it != response.box().end(); ++it) {
         uint64_t bid = it->box_id();
         BoxArray currentBox;
         int bc = StockOperation::box2Array(currentBox, bid);    // 0- no box, 1..3
         Gtk::TreeModel::Row row;
+
+        bool forceFill = false;
         for (int i = 3; i >= 0; i--) {
-            if (currentBox.a[i] != lastBox.a[i]) {
+            if (currentBox.a[i] == 0)
+                break;
+            if ((currentBox.a[i] != lastBox.a[i]) || forceFill) {
                 // 0xffff000000000000
                 // 0xffffffff00000000
                 // 0xffffffffffff0000
                 // 0xffffffffffffffff
                 uint64_t b = bid & (0xffffffffffffffff << (16 * i));
-                topRows[4 - i] = *treeStore->append(topRows[3 - i].children());
-                topRows[4 - i].set_value(0, StockOperation::boxes2string(b));
-                topRows[4 - i].set_value(1, 0);
-                topRows[4 - i].set_value(2, b);
+                const Gtk::TreeModel::iterator &bb = treeStore->append(topRows[3 - i].children());
+                bb->set_value(0, StockOperation::boxes2string(b));
+                bb->set_value(1, 0);
+                bb->set_value(2, b);
+                topRows[4 - i] = *bb;
                 lastBox.a[i] = currentBox.a[i];
+                forceFill = true;
             }
         }
     }
+    return true;
 }
 
 void GRcrClient::loadSymbols(
@@ -118,6 +130,9 @@ void GRcrClient::loadSymbols(
     row.set_value <Glib::ustring>(2, "");
     row.set_value <Glib::ustring>(3, "");
     row.set_value <ulong>(4, 0);
+
+    // just make sure is symbols ordered
+    reorderDisctionaries(dictionaries);
 
     for (auto it = dictionaries.symbol().begin(); it != dictionaries.symbol().end(); ++it) {
         Gtk::TreeModel::Row row = *listStore->append();
@@ -164,7 +179,7 @@ void GRcrClient::query(
     request.mutable_list()->set_offset(0);
     request.mutable_list()->set_size(100);
 
-#ifdef DEBUG
+#if CMAKE_BUILD_TYPE == Debug
     std::cerr << pb2JsonString(request) << std::endl;
 #endif
 
@@ -176,6 +191,8 @@ void GRcrClient::query(
     }
 
     listStore->clear();
+
+    reorderCards(response);
 
     for (auto it = response.cards().cards().begin(); it != response.cards().cards().end(); ++it) {
         for (auto p = it->packages().begin(); p != it->packages().end(); ++p) {
@@ -204,4 +221,37 @@ std::string GRcrClient::properties2string(
         ss << p->value() <<  " ";
     }
     return ss.str();
+}
+
+void GRcrClient::reorderBoxesByBoxId(
+    rcr::BoxResponse &boxes
+) {
+    std::sort(boxes.mutable_box()->begin(), boxes.mutable_box()->end(),
+              [] (const rcr::Box& a, const rcr::Box& b){
+            return a.box_id() < b.box_id();
+    });
+}
+
+void GRcrClient::reorderDisctionaries(
+    rcr::DictionariesResponse &value
+) {
+    std::sort(value.mutable_symbol()->begin(), value.mutable_symbol()->end(),
+      [] (const rcr::Symbol& a, const rcr::Symbol& b){
+          return a.sym() < b.sym();
+    });
+    std::sort(value.mutable_operation()->begin(), value.mutable_operation()->end(),
+    [] (const rcr::Operation& a, const rcr::Operation& b){
+      return a.symbol() < b.symbol();
+    });
+    std::sort(value.mutable_property_type()->begin(), value.mutable_property_type()->end(),
+    [] (const rcr::PropertyType& a, const rcr::PropertyType& b){
+      return a.description() < b.description();
+    });
+}
+
+void GRcrClient::reorderCards(rcr::CardQueryResponse &value) {
+    std::sort(value.mutable_cards()->mutable_cards()->begin(), value.mutable_cards()->mutable_cards()->end(),
+        [] (const rcr::CardNPropetiesPackages& a, const rcr::CardNPropetiesPackages& b){
+          return a.card().name() < b.card().name();
+        });
 }

@@ -34,13 +34,10 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN \n\
 THE SOFTWARE."
 
 void TopWindow::bindWidgets() {
-    mRefBuilder->get_widget("bRefresh", mButtonRefresh);
     mRefBuilder->get_widget("entryQuery", mEntryQuery);
-    mRefBuilder->get_widget("entryHost", mEntryHost);
     mRefBuilder->get_widget("cbSymbol", mComboBoxSymbol);
-    mComboBoxSymbol->signal_changed().connect(sigc::mem_fun(*this, &TopWindow::onSymbolSelected));
-    mButtonRefresh->signal_clicked().connect(sigc::mem_fun(*this, &TopWindow::onFileConnect));
 
+    mComboBoxSymbol->signal_changed().connect(sigc::mem_fun(*this, &TopWindow::onSymbolSelected));
     mRefActionGroup = Gio::SimpleActionGroup::create();
     mRefActionGroup->add_action("connect",
                                 sigc::mem_fun(*this, &TopWindow::onFileConnect));
@@ -51,6 +48,7 @@ void TopWindow::bindWidgets() {
     insert_action_group("rcr", mRefActionGroup);
 
     mRefBuilder->get_widget("tvBox", mTreeViewBox);
+
     mRefBuilder->get_widget("tvCard", mTreeViewCard);
 
     mRefListStoreSymbol = Glib::RefPtr<Gtk::ListStore>::cast_static(mRefBuilder->get_object("liststoreSymbol"));
@@ -58,20 +56,19 @@ void TopWindow::bindWidgets() {
     mRefListStoreCard = Glib::RefPtr<Gtk::ListStore>::cast_static(mRefBuilder->get_object("liststoreCard"));
 
     mTreeViewSelectionBox = Glib::RefPtr<Gtk::TreeSelection>::cast_static(mRefBuilder->get_object("tvsBox"));
+    mTreeViewSelectionCard = Glib::RefPtr<Gtk::TreeSelection>::cast_static(mRefBuilder->get_object("tvsCard"));
 }
 
 void TopWindow::loadSettings() {
     settings = new RcrSettings("", getCurrentDir().c_str(), "rcr.json");
-    int idx = 0;
-    if (idx >= settings->settings.service_size()) {
-        // default;
-        mEntryHost->set_text("localhost");
+    settings->selected = 0;
+    if (settings->selected >= settings->settings.service_size()) {
+        // default
+        settings->selected = 0;
         mEntryQuery->set_text("");
         return;
     }
-    const rcr::ServiceSettings s = settings->settings.service(0);
-    mEntryHost->set_text(s.addr());
-    mEntryQuery->set_text(s.last_query());
+    mEntryQuery->set_text(settings->settings.service(settings->selected).last_query());
 }
 
 void TopWindow::saveSettings() {
@@ -87,8 +84,8 @@ TopWindow::TopWindow (BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder> 
 	: client(nullptr),
     Gtk::Window(cobject), mRefBuilder (refBuilder)
 {
+    createCardWindow();
     bindWidgets();
-
     // 0 name 1 boxname 2 properties 3 id 4 qty 5 rem 6 boxid
     mRefTreeModelFilterCard = Gtk::TreeModelFilter::create(mRefListStoreCard);
 	mRefTreeModelFilterCard->set_visible_func(
@@ -105,7 +102,13 @@ TopWindow::TopWindow (BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder> 
         }
 		return true;
 	});
-	mTreeViewCard->set_model(mRefTreeModelFilterCard);
+
+	mTreeViewCard->set_model(Glib::RefPtr<Gtk::TreeModelSort>(Gtk::TreeModelSort::create(mRefTreeModelFilterCard)));
+    mTreeViewCard->get_column(0)->set_sort_column(0);
+    mTreeViewCard->get_column(1)->set_sort_column(1);
+    mTreeViewCard->get_column(2)->set_sort_column(2);
+    mTreeViewCard->get_column(3)->set_sort_column(3);
+    mTreeViewCard->get_column(4)->set_sort_column(4);
 
 	mTreeViewSelectionBox->signal_changed().connect(
 			sigc::bind <Glib::RefPtr<Gtk::TreeSelection>> (sigc::mem_fun(*this, &TopWindow::onBoxSelected), mTreeViewSelectionBox));
@@ -171,8 +174,11 @@ bool TopWindow::on_key_press_event(GdkEventKey* event)
 {
 	switch (event->keyval) {
 		case GDK_KEY_Return:
-			// TODO send
-            doQuery();
+            if (mTreeViewCard->is_focus()) {
+                editCard();
+            } else {
+                doQuery();
+            }
 			break;
 		default:
 			return Gtk::Window::on_key_press_event(event);
@@ -230,10 +236,9 @@ void TopWindow::onAboutDialogResponse(int responseId)
 }
 
 void TopWindow::onFileConnect() {
-    std::string host = mEntryHost->get_text();
     if (client)
         delete client;
-    client = new GRcrClient(host);
+    client = new GRcrClient(settings->settings.service(settings->selected).addr());
 
     mComboBoxSymbol->unset_model();
     mTreeViewBox->unset_model();
@@ -246,7 +251,6 @@ void TopWindow::onFileConnect() {
     mTreeViewBox->expand_all();
 
     selectBox(settings->settings.service(settings->selected).last_box());
-
 }
 
 void TopWindow::selectSymbol(
@@ -264,21 +268,54 @@ void TopWindow::selectSymbol(
     mComboBoxSymbol->set_active(c);
 }
 
+static bool findBox(
+    GtkTreeModel *m,
+    GtkTreeIter *it,
+    uint64_t boxId,
+    std::function<void (GtkTreeIter *it)> cb
+)
+{
+    bool valid = true;
+    int c = 0;
+    while (valid) {
+        uint64_t b;
+        gtk_tree_model_get(m, it, 2, &b, -1);
+
+        if (b == boxId) {
+            cb(it);
+            return true;
+        }
+        GtkTreeIter itc;
+        bool validChild = gtk_tree_model_iter_children(m, &itc, it);
+        while (validChild) {
+            if (findBox(m, &itc, boxId, cb))
+                return false;
+            validChild = gtk_tree_model_iter_next(m, &itc);
+        }
+        c++;
+        valid = gtk_tree_model_iter_next(m, it);
+    }
+    return false;
+}
+
 void TopWindow::selectBox(
     const uint64_t boxId
 )
 {
-    auto children = mRefTreeStoreBox->children();
-    auto c = 0;
-
-    for (auto iter = children.begin(), end = children.end(); iter != end; ++iter) {
-        uint64_t b;
-        iter->get_value(2, b);
-        if (b == boxId) {
-            mTreeViewSelectionBox->select(iter);
-            break;
+    GtkTreeModel *m = gtk_tree_view_get_model(mTreeViewBox->gobj());
+    GtkTreeIter it;
+    bool valid = gtk_tree_model_get_iter_first(m, &it);
+    if (valid) {
+        auto s = mTreeViewSelectionBox;
+        auto b = mTreeViewBox;
+        if (findBox(m, &it, boxId, [b, s](GtkTreeIter *it){
+            s->select((const Gtk::TreeIter&) it);
+            Gtk::TreeViewColumn fc;
+        })) {
+#if CMAKE_BUILD_TYPE == Debug
+            std::cerr << "Selected box " << StockOperation::boxes2string(boxId) << std::endl;
+#endif
         }
-        c++;
     }
 }
 
@@ -308,11 +345,56 @@ void TopWindow::searchCard(
 
         client->query(qs, symbol, mRefListStoreCard);
 
-    mTreeViewCard->set_model(mRefTreeModelFilterCard);
+    mTreeViewCard->set_model(Glib::RefPtr<Gtk::TreeModelSort>(Gtk::TreeModelSort::create(mRefTreeModelFilterCard)));
 
     settings->settings.mutable_service(settings->selected)->set_last_query(q);
 }
 
 void TopWindow::doQuery() {
     searchCard(mEntryQuery->get_text(), settings->settings.service(settings->selected).last_component_symbol());
+}
+
+void TopWindow::createCardWindow() {
+    mRefBuilder->get_widget_derived("cardWindow", cardWindow);
+    cardWindow->signal_hide().connect(sigc::bind<Gtk::Window *>(
+            sigc::mem_fun(*this, &TopWindow::onHideCardWindow), cardWindow));
+    // cardWindow->set_modal();
+}
+
+void TopWindow::onHideCardWindow(Gtk::Window *window) {
+    Gtk::TreeModel::iterator iter = mTreeViewSelectionCard->get_selected();
+    if (!iter)
+        return;
+    // update
+    // show main window
+}
+
+void TopWindow::editCard() {
+    Gtk::TreeModel::iterator iter = mTreeViewSelectionCard->get_selected();
+    if (!iter)
+        return;
+    Gtk::TreeModel::Row row = *iter;
+    std::string name, nominal, properties, boxname;
+    uint64_t qty, id, box;
+    row.get_value(0, name);
+    row.get_value(1, nominal);
+    row.get_value(2, properties);
+    row.get_value(3, boxname);
+    row.get_value(4, qty);
+    row.get_value(5, id);
+    row.get_value(6, box);
+    editCard(name, nominal, properties, boxname, qty, id, box, false);
+}
+
+void TopWindow::editCard(
+    const std::string &name,
+    const std::string &nominal,
+    const std::string &properties,
+    const std::string &boxName,
+    uint64_t qty,
+    uint64_t id,
+    uint64_t boxId,
+    bool isNew
+) {
+    cardWindow->show_all();
 }

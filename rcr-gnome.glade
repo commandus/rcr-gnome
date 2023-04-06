@@ -2,15 +2,250 @@
 <!-- Generated with glade 3.38.2 -->
 <interface>
   <requires lib="gtk+" version="3.24"/>
-  <object class="GtkListStore" id="liststoreBox">
-    <columns>
-      <!-- column-name name -->
-      <column type="gchararray"/>
-      <!-- column-name id -->
-      <column type="gulong"/>
-      <!-- column-name box -->
-      <column type="gulong"/>
-    </columns>
+  <object class="GtkWindow" id="cardWindow">
+    <property name="width-request">640</property>
+    <property name="can-focus">False</property>
+    <child>
+      <object class="GtkPaned">
+        <property name="visible">True</property>
+        <property name="can-focus">True</property>
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkToolbar">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <child>
+              <object class="GtkToolButton" id="bCardSave">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="action-name">rcr.cardsave</property>
+                <property name="label" translatable="yes">Save</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToolButton" id="bCardRm">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="action-name">rcr.cardrm</property>
+                <property name="label" translatable="yes">Remove</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToolButton" id="bCardCancel">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="action-name">rcr.cardcancel</property>
+                <property name="label" translatable="yes">Cancel</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="resize">False</property>
+            <property name="shrink">True</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkPaned">
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <child>
+              <object class="GtkBox">
+                <property name="width-request">200</property>
+                <property name="height-request">400</property>
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="margin-left">42</property>
+                <property name="margin-right">42</property>
+                <property name="margin-start">42</property>
+                <property name="margin-end">42</property>
+                <property name="margin-top">42</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="GtkLabel" id="lComponent">
+                    <property name="name">lBox</property>
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="halign">start</property>
+                    <property name="label" translatable="yes">Component</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkComboBox" id="cbComponent">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="model">liststoreComponent</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="lNominal">
+                    <property name="name">lBox</property>
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="halign">start</property>
+                    <property name="label" translatable="yes">Nominal</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkPaned">
+                    <property name="visible">True</property>
+                    <property name="can-focus">True</property>
+                    <child>
+                      <object class="GtkEntry" id="entryNominal">
+                        <property name="visible">True</property>
+                        <property name="can-focus">True</property>
+                      </object>
+                      <packing>
+                        <property name="resize">False</property>
+                        <property name="shrink">True</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkComboBox" id="cbMeasure">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="model">liststoreMeasure</property>
+                      </object>
+                      <packing>
+                        <property name="resize">True</property>
+                        <property name="shrink">True</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">3</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="lName">
+                    <property name="name">lBox</property>
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="halign">start</property>
+                    <property name="label" translatable="yes">Name</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">4</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkEntry" id="entryName">
+                    <property name="visible">True</property>
+                    <property name="can-focus">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">5</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="name">lBox</property>
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="halign">start</property>
+                    <property name="label" translatable="yes">Box</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">6</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkEntry" id="entryBox">
+                    <property name="visible">True</property>
+                    <property name="can-focus">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">7</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="lQuantity">
+                    <property name="name">lBox</property>
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="halign">start</property>
+                    <property name="label" translatable="yes">Quantity</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">8</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkEntry" id="entryQuantity">
+                    <property name="visible">True</property>
+                    <property name="can-focus">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">9</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="resize">True</property>
+                <property name="shrink">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkTreeView" id="tvProperty">
+                <property name="width-request">400</property>
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="model">liststoreProperty</property>
+                <property name="search-column">0</property>
+              </object>
+              <packing>
+                <property name="resize">True</property>
+                <property name="shrink">True</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="resize">True</property>
+            <property name="shrink">True</property>
+          </packing>
+        </child>
+      </object>
+    </child>
   </object>
   <object class="GtkListStore" id="liststoreCard">
     <columns>
@@ -30,6 +265,30 @@
       <column type="gulong"/>
     </columns>
   </object>
+  <object class="GtkListStore" id="liststoreComponent">
+    <columns>
+      <!-- column-name key -->
+      <column type="gchararray"/>
+      <!-- column-name value -->
+      <column type="gchararray"/>
+    </columns>
+  </object>
+  <object class="GtkListStore" id="liststoreMeasure">
+    <columns>
+      <!-- column-name key -->
+      <column type="gchararray"/>
+      <!-- column-name value -->
+      <column type="gchararray"/>
+    </columns>
+  </object>
+  <object class="GtkListStore" id="liststoreProperty">
+    <columns>
+      <!-- column-name key -->
+      <column type="gchararray"/>
+      <!-- column-name value -->
+      <column type="gchararray"/>
+    </columns>
+  </object>
   <object class="GtkListStore" id="liststoreSymbol">
     <columns>
       <!-- column-name description -->
@@ -45,6 +304,8 @@
     </columns>
   </object>
   <object class="GtkWindow" id="topWindow">
+    <property name="width-request">640</property>
+    <property name="height-request">480</property>
     <property name="can-focus">False</property>
     <property name="title" translatable="yes">rcr</property>
     <property name="default-width">640</property>
@@ -70,14 +331,12 @@
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <child>
-                      <object class="GtkImageMenuItem" id="quit">
-                        <property name="label">gtk-quit</property>
+                      <object class="GtkMenuItem" id="quit">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="action-name">rcr.quit</property>
+                        <property name="label">gtk-quit</property>
                         <property name="use-underline">True</property>
-                        <property name="use-stock">True</property>
-                        <property name="always-show-image">True</property>
                       </object>
                     </child>
                     <child>
@@ -91,13 +350,12 @@
               </object>
             </child>
             <child>
-              <object class="GtkImageMenuItem" id="menu_file_connect">
-                <property name="label">gtk-connect</property>
+              <object class="GtkMenuItem" id="menu_file_connect">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <property name="action-name">rcr.connect</property>
+                <property name="label">Connect</property>
                 <property name="use-underline">True</property>
-                <property name="use-stock">True</property>
               </object>
             </child>
             <child>
@@ -111,14 +369,12 @@
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <child>
-                      <object class="GtkImageMenuItem" id="about">
-                        <property name="label">gtk-about</property>
+                      <object class="GtkMenuItem" id="about">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="action-name">rcr.about</property>
+                        <property name="label">gtk-about</property>
                         <property name="use-underline">True</property>
-                        <property name="use-stock">True</property>
-                        <property name="always-show-image">True</property>
                       </object>
                     </child>
                   </object>
@@ -140,98 +396,32 @@
               <object class="GtkPaned">
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
-                <property name="margin-bottom">61</property>
                 <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <object class="GtkBox">
+                  <object class="GtkComboBox" id="cbSymbol">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
-                    <property name="orientation">vertical</property>
+                    <property name="model">liststoreSymbol</property>
                     <child>
-                      <object class="GtkListBox" id="listboxComponent">
-                        <property name="width-request">200</property>
-                        <property name="visible">True</property>
-                        <property name="can-focus">False</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">0</property>
-                      </packing>
+                      <object class="GtkCellRendererText" id="crSymbolName"/>
+                      <attributes>
+                        <attribute name="text">0</attribute>
+                      </attributes>
                     </child>
-                    <child>
-                      <object class="GtkBox">
-                        <property name="visible">True</property>
-                        <property name="can-focus">False</property>
-                        <child>
-                          <object class="GtkEntry" id="entryHost">
-                            <property name="visible">True</property>
-                            <property name="can-focus">True</property>
-                            <property name="text" translatable="yes">localhost</property>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">0</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkButton" id="bRefresh">
-                            <property name="label" translatable="yes">Refresh</property>
-                            <property name="visible">True</property>
-                            <property name="can-focus">True</property>
-                            <property name="receives-default">True</property>
-                            <signal name="clicked" handler="bRefreshClick" object="entryHost" swapped="no"/>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">1</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkComboBox" id="cbSymbol">
-                            <property name="visible">True</property>
-                            <property name="can-focus">False</property>
-                            <property name="model">liststoreSymbol</property>
-                            <child>
-                              <object class="GtkCellRendererText" id="crSymbolName"/>
-                              <attributes>
-                                <attribute name="text">0</attribute>
-                              </attributes>
-                            </child>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">2</property>
-                          </packing>
-                        </child>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">1</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkSearchEntry" id="entryQuery">
-                        <property name="height-request">32</property>
-                        <property name="visible">True</property>
-                        <property name="can-focus">True</property>
-                        <property name="valign">start</property>
-                        <property name="primary-icon-name">edit-find-symbolic</property>
-                        <property name="primary-icon-activatable">False</property>
-                        <property name="primary-icon-sensitive">False</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">2</property>
-                      </packing>
-                    </child>
+                  </object>
+                  <packing>
+                    <property name="resize">False</property>
+                    <property name="shrink">True</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkSearchEntry" id="entryQuery">
+                    <property name="height-request">32</property>
+                    <property name="visible">True</property>
+                    <property name="can-focus">True</property>
+                    <property name="valign">start</property>
+                    <property name="primary-icon-name">edit-find-symbolic</property>
+                    <property name="primary-icon-activatable">False</property>
+                    <property name="primary-icon-sensitive">False</property>
                   </object>
                   <packing>
                     <property name="resize">True</property>
@@ -326,12 +516,15 @@
                             <property name="visible">True</property>
                             <property name="can-focus">True</property>
                             <child internal-child="selection">
-                              <object class="GtkTreeSelection" id="treeviewselectionCard"/>
+                              <object class="GtkTreeSelection" id="tvsCard"/>
                             </child>
                             <child>
-                              <object class="GtkTreeViewColumn" id="tvcQName">
+                              <object class="GtkTreeViewColumn" id="tvcName">
                                 <property name="resizable">True</property>
                                 <property name="title" translatable="yes">Name</property>
+                                <property name="reorderable">True</property>
+                                <property name="sort-indicator">True</property>
+                                <property name="sort-column-id">0</property>
                                 <child>
                                   <object class="GtkCellRendererText" id="crQuantityName"/>
                                   <attributes>
@@ -341,9 +534,12 @@
                               </object>
                             </child>
                             <child>
-                              <object class="GtkTreeViewColumn" id="crNominal">
+                              <object class="GtkTreeViewColumn" id="tvcNominal">
                                 <property name="resizable">True</property>
                                 <property name="title" translatable="yes">Nominal</property>
+                                <property name="reorderable">True</property>
+                                <property name="sort-indicator">True</property>
+                                <property name="sort-column-id">1</property>
                                 <child>
                                   <object class="GtkCellRendererText" id="crNominal1"/>
                                   <attributes>
@@ -353,9 +549,12 @@
                               </object>
                             </child>
                             <child>
-                              <object class="GtkTreeViewColumn" id="tvcQProperties">
+                              <object class="GtkTreeViewColumn" id="tvcProperties">
                                 <property name="resizable">True</property>
                                 <property name="title" translatable="yes">Properties</property>
+                                <property name="reorderable">True</property>
+                                <property name="sort-indicator">True</property>
+                                <property name="sort-column-id">2</property>
                                 <child>
                                   <object class="GtkCellRendererText" id="crQuantityProperties"/>
                                   <attributes>
@@ -365,9 +564,11 @@
                               </object>
                             </child>
                             <child>
-                              <object class="GtkTreeViewColumn" id="tvcQBox">
+                              <object class="GtkTreeViewColumn" id="tvcBox">
                                 <property name="resizable">True</property>
                                 <property name="title" translatable="yes">Box</property>
+                                <property name="reorderable">True</property>
+                                <property name="sort-column-id">3</property>
                                 <child>
                                   <object class="GtkCellRendererText" id="crQuantityBox"/>
                                   <attributes>
@@ -377,9 +578,12 @@
                               </object>
                             </child>
                             <child>
-                              <object class="GtkTreeViewColumn" id="tvcQQuantity">
+                              <object class="GtkTreeViewColumn" id="tvcQuantity">
                                 <property name="resizable">True</property>
                                 <property name="title" translatable="yes">Quantity</property>
+                                <property name="reorderable">True</property>
+                                <property name="sort-indicator">True</property>
+                                <property name="sort-column-id">4</property>
                                 <child>
                                   <object class="GtkCellRendererText" id="crQuantityQuantity"/>
                                   <attributes>
