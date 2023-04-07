@@ -109,7 +109,7 @@ TopWindow::TopWindow (BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder> 
     mTreeViewCard->get_column(2)->set_sort_column(2);
     mTreeViewCard->get_column(3)->set_sort_column(3);
     mTreeViewCard->get_column(4)->set_sort_column(4);
-
+    mTreeViewCard->signal_row_activated().connect(sigc::mem_fun(*this, &TopWindow::onCardActivated), mTreeViewCard);
 	mTreeViewSelectionBox->signal_changed().connect(
 			sigc::bind <Glib::RefPtr<Gtk::TreeSelection>> (sigc::mem_fun(*this, &TopWindow::onBoxSelected), mTreeViewSelectionBox));
 
@@ -174,6 +174,7 @@ bool TopWindow::on_key_press_event(GdkEventKey* event)
 {
 	switch (event->keyval) {
 		case GDK_KEY_Return:
+        case GDK_KEY_KP_Enter:
             if (mTreeViewCard->is_focus()) {
                 editCard();
             } else {
@@ -397,4 +398,12 @@ void TopWindow::editCard(
     bool isNew
 ) {
     cardWindow->show_all();
+}
+
+void TopWindow::onCardActivated(
+    const Gtk::TreeModel::Path& path,
+    Gtk::TreeViewColumn* column
+)
+{
+    editCard();
 }

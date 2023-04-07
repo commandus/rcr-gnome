@@ -2,6 +2,54 @@
 <!-- Generated with glade 3.38.2 -->
 <interface>
   <requires lib="gtk+" version="3.24"/>
+  <object class="GtkListStore" id="liststoreCard">
+    <columns>
+      <!-- column-name name -->
+      <column type="gchararray"/>
+      <!-- column-name nominal -->
+      <column type="gchararray"/>
+      <!-- column-name properties -->
+      <column type="gchararray"/>
+      <!-- column-name boxname -->
+      <column type="gchararray"/>
+      <!-- column-name qty -->
+      <column type="glong"/>
+      <!-- column-name id -->
+      <column type="gulong"/>
+      <!-- column-name box -->
+      <column type="gulong"/>
+    </columns>
+  </object>
+  <object class="GtkListStore" id="liststoreMeasure">
+    <columns>
+      <!-- column-name key -->
+      <column type="gchararray"/>
+      <!-- column-name value -->
+      <column type="gchararray"/>
+    </columns>
+  </object>
+  <object class="GtkListStore" id="liststoreProperty">
+    <columns>
+      <!-- column-name key -->
+      <column type="gchararray"/>
+      <!-- column-name value -->
+      <column type="gchararray"/>
+    </columns>
+  </object>
+  <object class="GtkListStore" id="liststoreSymbol">
+    <columns>
+      <!-- column-name description -->
+      <column type="gchararray"/>
+      <!-- column-name id -->
+      <column type="gulong"/>
+      <!-- column-name sym -->
+      <column type="gchararray"/>
+      <!-- column-name unit -->
+      <column type="gchararray"/>
+      <!-- column-name pow10 -->
+      <column type="gulong"/>
+    </columns>
+  </object>
   <object class="GtkWindow" id="cardWindow">
     <property name="width-request">640</property>
     <property name="can-focus">False</property>
@@ -90,7 +138,8 @@
                   <object class="GtkComboBox" id="cbComponent">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
-                    <property name="model">liststoreComponent</property>
+                    <property name="model">liststoreSymbol</property>
+                    <property name="id-column">1</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -232,6 +281,9 @@
                 <property name="can-focus">True</property>
                 <property name="model">liststoreProperty</property>
                 <property name="search-column">0</property>
+                <child internal-child="selection">
+                  <object class="GtkTreeSelection"/>
+                </child>
               </object>
               <packing>
                 <property name="resize">True</property>
@@ -246,62 +298,6 @@
         </child>
       </object>
     </child>
-  </object>
-  <object class="GtkListStore" id="liststoreCard">
-    <columns>
-      <!-- column-name name -->
-      <column type="gchararray"/>
-      <!-- column-name nominal -->
-      <column type="gchararray"/>
-      <!-- column-name properties -->
-      <column type="gchararray"/>
-      <!-- column-name boxname -->
-      <column type="gchararray"/>
-      <!-- column-name qty -->
-      <column type="glong"/>
-      <!-- column-name id -->
-      <column type="gulong"/>
-      <!-- column-name box -->
-      <column type="gulong"/>
-    </columns>
-  </object>
-  <object class="GtkListStore" id="liststoreComponent">
-    <columns>
-      <!-- column-name key -->
-      <column type="gchararray"/>
-      <!-- column-name value -->
-      <column type="gchararray"/>
-    </columns>
-  </object>
-  <object class="GtkListStore" id="liststoreMeasure">
-    <columns>
-      <!-- column-name key -->
-      <column type="gchararray"/>
-      <!-- column-name value -->
-      <column type="gchararray"/>
-    </columns>
-  </object>
-  <object class="GtkListStore" id="liststoreProperty">
-    <columns>
-      <!-- column-name key -->
-      <column type="gchararray"/>
-      <!-- column-name value -->
-      <column type="gchararray"/>
-    </columns>
-  </object>
-  <object class="GtkListStore" id="liststoreSymbol">
-    <columns>
-      <!-- column-name description -->
-      <column type="gchararray"/>
-      <!-- column-name id -->
-      <column type="gulong"/>
-      <!-- column-name sym -->
-      <column type="gchararray"/>
-      <!-- column-name unit -->
-      <column type="gchararray"/>
-      <!-- column-name pow10 -->
-      <column type="gulong"/>
-    </columns>
   </object>
   <object class="GtkWindow" id="topWindow">
     <property name="width-request">640</property>
@@ -401,6 +397,7 @@
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="model">liststoreSymbol</property>
+                    <property name="id-column">1</property>
                     <child>
                       <object class="GtkCellRendererText" id="crSymbolName"/>
                       <attributes>

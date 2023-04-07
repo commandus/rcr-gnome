@@ -24,11 +24,12 @@ CardWindow::~CardWindow()
 }
 
 void CardWindow::bindWidgets() {
-    mRefListStoreComponent = Glib::RefPtr<Gtk::ListStore>::cast_static(mRefBuilder->get_object("liststoreComponent"));
+    mRefListStoreComponent = Glib::RefPtr<Gtk::ListStore>::cast_static(mRefBuilder->get_object("liststoreSymbol"));
     mRefListStoreMeasure = Glib::RefPtr<Gtk::ListStore>::cast_static(mRefBuilder->get_object("liststoreMeasure"));
     mRefListStoreProperty = Glib::RefPtr<Gtk::ListStore>::cast_static(mRefBuilder->get_object("liststoreProperty"));
 
     mRefBuilder->get_widget("cbComponent", mRefCBComponent);
+    mRefCBComponent->set_model(mRefListStoreComponent);
     mRefBuilder->get_widget("cbMeasure", mRefCBMeasure);
     mRefBuilder->get_widget("entryName", mRefEntryName);
     mRefBuilder->get_widget("entryBox", mRefEntryBox);
