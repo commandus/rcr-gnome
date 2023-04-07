@@ -61,7 +61,15 @@ private:
     Glib::RefPtr<Gtk::TreeSelection> mTreeViewSelectionCard;
     Glib::RefPtr<Gtk::TreeModelFilter> mRefTreeModelFilterCard;
 
-    void selectSymbol(const std::string &symbol);
+    void selectSymbol(
+        Gtk::ComboBox *cb,
+        const std::string &symbol
+    );
+
+    void selectSymbolId(
+        Gtk::ComboBox *cb,
+        uint64_t symbold
+    );
 
     void selectBox(const uint64_t boxId);
 
@@ -78,6 +86,7 @@ private:
     void editCard();
 
     void editCard(
+        uint64_t symbolId,
         const std::string &name,
         const std::string &nominal,
         const std::string &properties,

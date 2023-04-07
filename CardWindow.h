@@ -8,34 +8,39 @@
 #include <gtkmm.h>
 
 class CardWindow: public Gtk::Window {
-protected:
+private:
     Glib::RefPtr<Gtk::Builder> mRefBuilder;
 
     Glib::RefPtr<Gtk::ListStore> mRefListStoreComponent;
     Glib::RefPtr<Gtk::ListStore> mRefListStoreMeasure;
     Glib::RefPtr<Gtk::ListStore> mRefListStoreProperty;
 
-    Gtk::ComboBox* mRefCBComponent;
-    Gtk::ComboBox* mRefCBMeasure;
+    Glib::RefPtr<Gio::SimpleActionGroup> mRefActionGroup;
 
-    Gtk::Entry* mRefEntryName;
-    Gtk::Entry* mRefEntryBox;
-    Gtk::Entry* mRefEntryQuantity;
-
+protected:
     Gtk::ToolButton* mRefButtonCardSave;
     Gtk::ToolButton* mRefButtonCardCancel;
     Gtk::ToolButton* mRefButtonCardRm;
-
-    Gtk::TreeView* mRefTreeViewProperty;
 
     Gtk::Label* mRefLabelNominal;
     Gtk::Label* mRefLabelName;
 
     Glib::RefPtr<Gtk::TreeSelection> mTreeViewSelectionProperty;
 
-    Glib::RefPtr<Gio::SimpleActionGroup> mRefActionGroup;
-
 public:
+    uint64_t id;
+    uint64_t boxId;
+
+    Gtk::ComboBox* refCBSymbol;
+    Gtk::ComboBox* refCBMeasure;
+
+    Gtk::Entry* refEntryName;
+    Gtk::Entry* refEntryBox;
+    Gtk::Entry* refEntryQuantity;
+    Gtk::Entry* refEntryNominal;
+
+    Gtk::TreeView* refTreeViewProperty;
+
     CardWindow(BaseObjectType*, const Glib::RefPtr<Gtk::Builder>&);
     virtual ~CardWindow();
 protected:
@@ -43,6 +48,8 @@ protected:
     void onCardSave();
     void onCardRm();
     void onCardCancel();
+    void onSymbolSelected();
+
 };
 
 #endif //RCR_GNOME_CARDWINDOW_H

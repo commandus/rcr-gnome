@@ -207,6 +207,7 @@ void GRcrClient::query(
             row.set_value(4, p->qty());
             row.set_value(5, p->id());
             row.set_value(6, p->box());
+            row.set_value(7, it->card().symbol_id());
         }
     }
 }

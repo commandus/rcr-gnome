@@ -48,7 +48,6 @@ void TopWindow::bindWidgets() {
     insert_action_group("rcr", mRefActionGroup);
 
     mRefBuilder->get_widget("tvBox", mTreeViewBox);
-
     mRefBuilder->get_widget("tvCard", mTreeViewCard);
 
     mRefListStoreSymbol = Glib::RefPtr<Gtk::ListStore>::cast_static(mRefBuilder->get_object("liststoreSymbol"));
@@ -86,7 +85,7 @@ TopWindow::TopWindow (BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder> 
 {
     createCardWindow();
     bindWidgets();
-    // 0 name 1 boxname 2 properties 3 id 4 qty 5 rem 6 boxid
+    // 0 name 1 boxname 2 properties 3 id 4 qty 5 rem 6 boxid 7 symbol_id
     mRefTreeModelFilterCard = Gtk::TreeModelFilter::create(mRefListStoreCard);
 	mRefTreeModelFilterCard->set_visible_func(
 	[this] (const Gtk::TreeModel::const_iterator& it) -> bool {
@@ -246,7 +245,7 @@ void TopWindow::onFileConnect() {
     client->loadSymbols(mRefListStoreSymbol);
     mComboBoxSymbol->set_model(mRefListStoreSymbol);
 
-    selectSymbol(settings->settings.service(settings->selected).last_component_symbol());
+    selectSymbol(mComboBoxSymbol, settings->settings.service(settings->selected).last_component_symbol());
     client->loadBoxes(mRefTreeStoreBox);
     mTreeViewBox->set_model(mRefTreeStoreBox);
     mTreeViewBox->expand_all();
@@ -255,6 +254,7 @@ void TopWindow::onFileConnect() {
 }
 
 void TopWindow::selectSymbol(
+    Gtk::ComboBox *cb,
     const std::string &symbol
 ) {
     auto children = mRefListStoreSymbol->children();
@@ -266,7 +266,23 @@ void TopWindow::selectSymbol(
             break;
         c++;
     }
-    mComboBoxSymbol->set_active(c);
+    cb->set_active(c);
+}
+
+void TopWindow::selectSymbolId(
+    Gtk::ComboBox *cb,
+    uint64_t symbolId
+) {
+    auto children = mRefListStoreSymbol->children();
+    auto c = 0;
+    for (auto iter = children.begin(), end = children.end(); iter != end; ++iter) {
+        uint64_t sym;
+        iter->get_value(1, sym);
+        if (sym == symbolId)
+            break;
+        c++;
+    }
+    cb->set_active(c);
 }
 
 static bool findBox(
@@ -376,7 +392,7 @@ void TopWindow::editCard() {
         return;
     Gtk::TreeModel::Row row = *iter;
     std::string name, nominal, properties, boxname;
-    uint64_t qty, id, box;
+    uint64_t qty, id, box, symbol_id;
     row.get_value(0, name);
     row.get_value(1, nominal);
     row.get_value(2, properties);
@@ -384,10 +400,16 @@ void TopWindow::editCard() {
     row.get_value(4, qty);
     row.get_value(5, id);
     row.get_value(6, box);
-    editCard(name, nominal, properties, boxname, qty, id, box, false);
+    row.get_value(7, symbol_id);
+
+    std::cerr << "symbol_id " << symbol_id << " qty "<< qty << " = " << id << " = " << box << std::endl;
+    editCard(
+        symbol_id, name, nominal, properties, boxname, qty, id, box, false
+    );
 }
 
 void TopWindow::editCard(
+    uint64_t symbolId,
     const std::string &name,
     const std::string &nominal,
     const std::string &properties,
@@ -398,6 +420,14 @@ void TopWindow::editCard(
     bool isNew
 ) {
     cardWindow->show_all();
+    selectSymbolId(cardWindow->refCBSymbol, symbolId);
+    cardWindow->refEntryName->set_text(name);
+    cardWindow->refEntryNominal->set_text(nominal);
+    // properties
+    cardWindow->refEntryQuantity->set_text(std::to_string(qty));
+    cardWindow->refEntryBox->set_text(boxName);
+    cardWindow->id = id;
+    cardWindow->boxId = boxId;
 }
 
 void TopWindow::onCardActivated(
