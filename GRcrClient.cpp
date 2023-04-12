@@ -9,6 +9,8 @@
 
 #include "StockOperation.h"
 #include "string-helper.h"
+#include "utilstring.h"
+#include "utilfile.h"
 
 #define DEF_NAME_ALL "All"
 
@@ -255,4 +257,69 @@ void GRcrClient::reorderCards(rcr::CardQueryResponse &value) {
         [] (const rcr::CardNPropetiesPackages& a, const rcr::CardNPropetiesPackages& b){
           return a.card().name() < b.card().name();
         });
+}
+
+bool GRcrClient::importFile(
+    const std::string &symbol,
+    const std::string &fileName,
+    uint64_t boxId
+) {
+    std::string content = file2string(fileName.c_str());
+    if (content.empty())
+        return false;
+
+    grpc::ClientContext context;
+    rcr::ImportExcelRequest request;
+    request.set_symbol(symbol);
+    request.set_prefix_box(boxId);
+    auto f = request.add_file();
+    f->set_name(fileName);
+    f->set_content(content);
+
+#if CMAKE_BUILD_TYPE == Debug
+    std::cerr << pb2JsonString(request) << std::endl;
+#endif
+
+    rcr::OperationResponse response;
+
+    grpc::Status status = stub->importExcel(&context, request, &response);
+    if (!status.ok()) {
+        std::cerr << "Error: " << status.error_code() << " " << status.error_message() << std::endl;
+        return false;
+    }
+    return true;
+}
+
+bool GRcrClient::importDirectory(
+    const std::string &symbol,
+    const std::string &path,
+    uint64_t boxId
+) {
+    grpc::ClientContext context;
+    rcr::ImportExcelRequest request;
+    request.set_symbol(symbol);
+    request.set_prefix_box(boxId);
+
+    std::vector<std::string> files;
+    util::filesInPath(path, ".xlsx", 0, &files);
+    for (auto it = files.begin(); it != files.end(); it++) {
+        std::string content = file2string(it->c_str());
+        if (content.empty())
+            continue;
+        auto f = request.add_file();
+        f->set_name(*it);
+        f->set_content(content);
+    }
+#if CMAKE_BUILD_TYPE == Debug
+    std::cerr << pb2JsonString(request) << std::endl;
+#endif
+
+    rcr::OperationResponse response;
+
+    grpc::Status status = stub->importExcel(&context, request, &response);
+    if (!status.ok()) {
+        std::cerr << "Error: " << status.error_code() << " " << status.error_message() << std::endl;
+        return false;
+    }
+    return true;
 }

@@ -1,5 +1,6 @@
 #include <gdk/gdkkeysyms.h>
 #include <gtkmm.h>
+#include <thread>
 
 #include "top-window.h"
 #include "RCQuery.h"
@@ -45,6 +46,11 @@ void TopWindow::bindWidgets() {
                                 sigc::mem_fun(*this, &TopWindow::onFileQuit));
     mRefActionGroup->add_action("about",
                                 sigc::mem_fun(*this, &TopWindow::onHelpAbout));
+    mRefActionGroup->add_action("importFile",
+                                sigc::mem_fun(*this, &TopWindow::onStartImportFile));
+    mRefActionGroup->add_action("importDirectory",
+                                sigc::mem_fun(*this, &TopWindow::onStartImportDirectory));
+
     insert_action_group("rcr", mRefActionGroup);
 
     mRefBuilder->get_widget("tvBox", mTreeViewBox);
@@ -84,6 +90,7 @@ TopWindow::TopWindow (BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder> 
     Gtk::Window(cobject), mRefBuilder (refBuilder)
 {
     createCardWindow();
+    createBoxConfirmDialog();
     bindWidgets();
     // 0 name 1 boxname 2 properties 3 id 4 qty 5 rem 6 boxid 7 symbol_id
     mRefTreeModelFilterCard = Gtk::TreeModelFilter::create(mRefListStoreCard);
@@ -115,7 +122,7 @@ TopWindow::TopWindow (BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder> 
 	add_events(Gdk::KEY_PRESS_MASK);
 
     mFileFilterXLSX = Gtk::FileFilter::create();
-	mFileFilterXLSX->set_name("Excel xlsx");
+	mFileFilterXLSX->set_name("Excel spreadsheet files");
 	mFileFilterXLSX->add_mime_type("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 
     loadSettings();
@@ -241,15 +248,18 @@ void TopWindow::onFileConnect() {
     client = new GRcrClient(settings->settings.service(settings->selected).addr());
 
     mComboBoxSymbol->unset_model();
-    mTreeViewBox->unset_model();
     client->loadSymbols(mRefListStoreSymbol);
     mComboBoxSymbol->set_model(mRefListStoreSymbol);
 
     selectSymbol(mComboBoxSymbol, settings->settings.service(settings->selected).last_component_symbol());
+    reloadBoxTree();
+}
+
+void TopWindow::reloadBoxTree() {
+    mTreeViewBox->unset_model();
     client->loadBoxes(mRefTreeStoreBox);
     mTreeViewBox->set_model(mRefTreeStoreBox);
     mTreeViewBox->expand_all();
-
     selectBox(settings->settings.service(settings->selected).last_box());
 }
 
@@ -378,10 +388,21 @@ void TopWindow::createCardWindow() {
     // cardWindow->set_modal();
 }
 
+void TopWindow::createBoxConfirmDialog() {
+    mRefBuilder->get_widget_derived("boxConfirmDialog", boxConfirmDialog);
+    // boxConfirmDialog->signal_hide().connect(sigc::bind<Gtk::Window *>(sigc::mem_fun(*this, &TopWindow::onHideboxConfirmWindow), boxConfirmDialog));
+}
+
 void TopWindow::onHideCardWindow(Gtk::Window *window) {
     Gtk::TreeModel::iterator iter = mTreeViewSelectionCard->get_selected();
     if (!iter)
         return;
+    // update
+    // show main window
+}
+
+
+void TopWindow::onHideboxConfirmWindow(Gtk::Window *window) {
     // update
     // show main window
 }
@@ -430,10 +451,121 @@ void TopWindow::editCard(
     cardWindow->boxId = boxId;
 }
 
+bool TopWindow::confirmBox(
+    uint64_t &box_id
+)
+{
+    boxConfirmDialog->refEntryBox->set_text(StockOperation::boxes2string(box_id));
+    int r = boxConfirmDialog->run();
+    std::string s = boxConfirmDialog->refEntryBox->get_text();
+
+
+    StockOperation::parseBoxes(box_id, s, 0, s.size());
+    if (r != Gtk::RESPONSE_OK)
+        return false;
+    return  (StockOperation::parseBoxes(box_id, s, 0, s.size()) > 0 && box_id);
+}
+
 void TopWindow::onCardActivated(
     const Gtk::TreeModel::Path& path,
     Gtk::TreeViewColumn* column
 )
 {
     editCard();
+}
+
+void TopWindow::onStartImportFile()
+{
+
+    uint64_t b = settings->settings.mutable_service(settings->selected)->last_box();
+    if (!confirmBox(b))
+        return;
+
+    std::string symbol = settings->settings.service(settings->selected).last_component_symbol();
+    COMPONENT c = getComponentBySymbol(symbol);
+    std::string cn = MeasureUnit::description(ML_RU, c);
+
+    std::stringstream ss;
+    ss << "Import " << cn << " to box " << StockOperation::boxes2string(b);
+    std::string t = ss.str();
+
+    Gtk::FileChooserDialog dialog(t, Gtk::FILE_CHOOSER_ACTION_OPEN);
+    dialog.set_transient_for(*this);
+    // Add response buttons the the dialog:
+    dialog.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
+    dialog.add_button("Import", Gtk::RESPONSE_OK);
+    dialog.add_filter(mFileFilterXLSX);
+    int result = dialog.run();
+    // Handle the response:
+    if (result == Gtk::RESPONSE_OK) {
+        std::string fn = dialog.get_filename();
+        runImportExcel(symbol, fn, b, false);
+    }
+}
+
+void TopWindow::onStartImportDirectory()
+{
+    uint64_t b = settings->settings.mutable_service(settings->selected)->last_box();
+    if (!confirmBox(b))
+        return;
+
+    std::string symbol = settings->settings.service(settings->selected).last_component_symbol();
+    COMPONENT c = getComponentBySymbol(symbol);
+    std::string cn = MeasureUnit::description(ML_RU, c);
+
+    std::stringstream ss;
+    ss << "Import " << cn << " to box " << StockOperation::boxes2string(b);
+    std::string t = ss.str();
+
+    Gtk::FileChooserDialog dialog(t, Gtk::FILE_CHOOSER_ACTION_SELECT_FOLDER);
+    dialog.set_transient_for(*this);
+    // Add response buttons the the dialog:
+    dialog.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
+    dialog.add_button("Import", Gtk::RESPONSE_OK);
+    int result = dialog.run();
+    // Handle the response:
+    if (result == Gtk::RESPONSE_OK) {
+        std::string fn = dialog.get_filename();
+        runImportExcel(symbol, fn, b, true);
+    }
+}
+
+void TopWindow::runImportExcel(
+    const std::string &symbol,
+    const std::string &path,
+    uint64_t box,
+    bool isDirectory
+) {
+    if (box == 0) {
+        Gtk::MessageDialog dialog(*this, "Wrong box specified");
+        dialog.set_secondary_text(path);
+        dialog.run();
+        return;
+    }
+    std::thread t([=]() {
+        if (isDirectory) {
+            if (!client->importDirectory(symbol, path, box)) {
+                Gtk::MessageDialog dialog(*this, "Error import Excel files");
+                dialog.set_secondary_text(path);
+                dialog.run();
+            } else {
+                reloadBoxTree();
+                Gtk::MessageDialog dialog(*this, "Excel files imported successfully");
+                dialog.set_secondary_text(path);
+                dialog.run();
+            }
+        } else {
+            if (!client->importFile(symbol, path, box)) {
+                Gtk::MessageDialog dialog(*this, "Error import Excel file");
+                dialog.set_secondary_text(path);
+                dialog.run();
+            } else {
+                reloadBoxTree();
+                Gtk::MessageDialog dialog(*this, "Excel file imported successfully");
+                dialog.set_secondary_text(path);
+                dialog.run();
+            }
+        }
+    });
+    t.detach();
 }

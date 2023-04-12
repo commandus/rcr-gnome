@@ -8,6 +8,7 @@
 #include "RcrSettings.h"
 
 #include "CardWindow.h"
+#include "BoxConfirmDialog.h"
 
 class TopWindow: public Gtk::Window {
 public:
@@ -15,6 +16,7 @@ public:
 
     // window to edit component card
     CardWindow *cardWindow;
+    BoxConfirmDialog *boxConfirmDialog;
 
     virtual ~TopWindow();
 
@@ -26,18 +28,14 @@ protected:
     bool on_key_press_event(GdkEventKey *event) override;
 
     void onHelpAbout();
-
     void onFileQuit();
-
     void onFileConnect();
-
     void onBoxSelected(Glib::RefPtr<Gtk::TreeSelection> selection);
-
     void onSymbolSelected();
-
     void onCardSelected(Glib::RefPtr<Gtk::TreeSelection> selection);
-
     void onAboutDialogResponse(int responseId);
+    void onStartImportFile();
+    void onStartImportDirectory();
 
 private:
     RcrSettings *settings;
@@ -79,12 +77,15 @@ private:
 
     void doQuery();
 
+    // dialogs
     void createCardWindow();
-
+    void createBoxConfirmDialog();
+    // dialog close event handlers
     void onHideCardWindow(Gtk::Window *window);
+    void onHideboxConfirmWindow(Gtk::Window *window);
 
+    // call dialog
     void editCard();
-
     void editCard(
         uint64_t symbolId,
         const std::string &name,
@@ -96,11 +97,21 @@ private:
         uint64_t boxId,
         bool isNew
     );
+    bool confirmBox(uint64_t &box_id);
 
     void onCardActivated(
         const Gtk::TreeModel::Path& path,
         Gtk::TreeViewColumn* column
     );
+
+    void runImportExcel(
+        const std::string &symbol,
+        const std::string &path,
+        uint64_t box,
+        bool isDirectory = false
+    );
+
+    void reloadBoxTree();
 };
 
 #endif

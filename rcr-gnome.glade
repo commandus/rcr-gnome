@@ -2,6 +2,106 @@
 <!-- Generated with glade 3.38.2 -->
 <interface>
   <requires lib="gtk+" version="3.24"/>
+  <object class="GtkDialog" id="boxConfirmDialog">
+    <property name="can-focus">False</property>
+    <property name="type-hint">dialog</property>
+    <child internal-child="vbox">
+      <object class="GtkBox">
+        <property name="can-focus">False</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">2</property>
+        <child internal-child="action_area">
+          <object class="GtkButtonBox">
+            <property name="can-focus">False</property>
+            <property name="layout-style">end</property>
+            <child>
+              <object class="GtkButton" id="bConfirmBoxContinue">
+                <property name="label" translatable="yes">Confirm</property>
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="receives-default">True</property>
+                <property name="action-name">rcr.confirmBoxContinue</property>
+              </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="bConfirmBoxCancel">
+                <property name="label" translatable="yes">Cancel</property>
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="receives-default">True</property>
+                <property name="action-name">rcr.confirmBoxCancel</property>
+              </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="orientation">vertical</property>
+            <child>
+              <placeholder/>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="halign">start</property>
+                <property name="margin-start">22</property>
+                <property name="label" translatable="yes">Box</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkEntry" id="entryConfirmBox">
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="valign">center</property>
+                <property name="margin-start">22</property>
+                <property name="margin-end">22</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">2</property>
+              </packing>
+            </child>
+            <child>
+              <placeholder/>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+    <action-widgets>
+      <action-widget response="-5">bConfirmBoxContinue</action-widget>
+      <action-widget response="-6">bConfirmBoxCancel</action-widget>
+    </action-widgets>
+  </object>
   <object class="GtkListStore" id="liststoreCard">
     <columns>
       <!-- column-name name -->
@@ -347,14 +447,37 @@
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="action-name">rcr.quit</property>
-                        <property name="label">gtk-quit</property>
+                        <property name="label">Quit</property>
                         <property name="use-underline">True</property>
+                        <accelerator key="x" signal="activate" modifiers="GDK_MOD1_MASK"/>
                       </object>
                     </child>
                     <child>
                       <object class="GtkSeparatorMenuItem">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkMenuItem" id="importFile">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="tooltip-text" translatable="yes">Import .xlsx Excel file</property>
+                        <property name="action-name">rcr.importFile</property>
+                        <property name="label" translatable="yes">Import Excel file</property>
+                        <property name="use-underline">True</property>
+                        <accelerator key="i" signal="activate" modifiers="GDK_MOD1_MASK"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkMenuItem" id="importDirectory">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="tooltip-text" translatable="yes">Import Excel files from directory</property>
+                        <property name="action-name">rcr.importDirectory</property>
+                        <property name="label" translatable="yes">Import Excel directory</property>
+                        <property name="use-underline">True</property>
+                        <accelerator key="d" signal="activate" modifiers="GDK_MOD1_MASK"/>
                       </object>
                     </child>
                   </object>

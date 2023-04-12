@@ -4,8 +4,6 @@
 
 #include "CardWindow.h"
 
-#include <gdk/gdkkeysyms.h>
-#include <gtkmm.h>
 #include <iostream>
 
 #include "MeasureUnit.h"
@@ -51,6 +49,8 @@ void CardWindow::bindWidgets() {
     mRefActionGroup->add_action("cardsave", sigc::mem_fun(*this, &CardWindow::onCardSave));
     mRefActionGroup->add_action("cardrm", sigc::mem_fun(*this, &CardWindow::onCardRm));
     mRefActionGroup->add_action("cardcancel", sigc::mem_fun(*this, &CardWindow::onCardCancel));
+
+    insert_action_group("rcr", mRefActionGroup);
 }
 
 void CardWindow::onCardSave() {

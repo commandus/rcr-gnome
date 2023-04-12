@@ -1,6 +1,3 @@
-set(Protobuf_DIR "~/src-old/third_party/protobuf")
-set(gRPC_DIR "~/src/rcr/third-party/grpc-1.24.3")
-set(VCPKG_INC "/git/vcpkg/installed/x64-windows/include")
 #
 # -------------------- Do not edit below this line --------------------
 #
@@ -54,7 +51,7 @@ set(RCR_GNOME_SRC rcr-gnome.cpp rcr-app.cpp top-window.cpp
 	third-party/rcr/RCQuery.cpp
 	${GEN_GRPC_SRC}
 	${GEN_SRC}
-	GRcrClient.cpp GRcrClient.h RcrSettings.cpp CardWindow.cpp CardWindow.h)
+	GRcrClient.cpp GRcrClient.h RcrSettings.cpp CardWindow.cpp CardWindow.h BoxConfirmDialog.cpp BoxConfirmDialog.h)
 add_executable(rcr-gnome ${RCR_GNOME_SRC})
 target_link_libraries(rcr-gnome PRIVATE ${ICU_LIBS} gRPC::grpc++ ${Protobuf_LIBRARIES} ${ICU_LIBS} ${XLSX_LIBS})
 target_include_directories(rcr-gnome PRIVATE "third-party" ${RCR_INCLUDE_DIR} ${GTK_INCLUDE_DIRS})

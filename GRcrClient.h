@@ -29,7 +29,9 @@ public:
         const std::string &host
     );
     virtual ~GRcrClient();
-    void loadSymbols(Glib::RefPtr<Gtk::ListStore> target);
+    void loadSymbols(
+        Glib::RefPtr<Gtk::ListStore> target
+    );
     bool loadBoxes(
         Glib::RefPtr<Gtk::TreeStore> treeStore
     );
@@ -48,11 +50,29 @@ public:
         const google::protobuf::RepeatedPtrField<::rcr::PropertyWithName> &properties
     );
 
-    void reorderBoxesByBoxId(rcr::BoxResponse &response);
+    void reorderBoxesByBoxId(
+        rcr::BoxResponse &response
+    );
 
-    void reorderDisctionaries(rcr::DictionariesResponse &value);
+    void reorderDisctionaries(
+        rcr::DictionariesResponse &value
+    );
 
-    void reorderCards(rcr::CardQueryResponse &value);
+    void reorderCards(
+        rcr::CardQueryResponse &value
+    );
+
+    bool importFile(
+        const std::string &symbol,
+        const std::string &fileName,
+        uint64_t boxId
+    );
+
+    bool importDirectory(
+        const std::string &symbol,
+        const std::string &fileName,
+        uint64_t boxId
+    );
 };
 
 #endif //RCR_GNOME_GRCRCLIENT_H
