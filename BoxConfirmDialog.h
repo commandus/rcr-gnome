@@ -11,23 +11,27 @@ class BoxConfirmDialog: public Gtk::Dialog {
 private:
     Glib::RefPtr<Gtk::Builder> mRefBuilder;
     Glib::RefPtr<Gio::SimpleActionGroup> mRefActionGroup;
-public:
-    uint64_t boxId;
-
     Gtk::Entry* refEntryBox;
     Gtk::Button* refButtonContinue;
     Gtk::Button* refButtonCancel;
 
+    bool on_key_press_event(GdkEventKey *event) override;
+    void bindWidgets();
+    void onBoxConfirm();
+    void onBoxCancel();
+public:
     BoxConfirmDialog(
         BaseObjectType* cobject,
         const Glib::RefPtr<Gtk::Builder>&
     );
     virtual ~BoxConfirmDialog();
-protected:
-    bool on_key_press_event(GdkEventKey *event) override;
-    void bindWidgets();
-    void onBoxConfirm();
-    void onBoxCancel();
+
+    uint64_t box();
+
+    void setBox(
+        const uint64_t &boxId
+    );
+
 };
 
 #endif //RCR_GNOME_BOXCONFIRMDIALOG_H

@@ -40,16 +40,13 @@ void TopWindow::bindWidgets() {
 
     mComboBoxSymbol->signal_changed().connect(sigc::mem_fun(*this, &TopWindow::onSymbolSelected));
     mRefActionGroup = Gio::SimpleActionGroup::create();
-    mRefActionGroup->add_action("connect",
-                                sigc::mem_fun(*this, &TopWindow::onFileConnect));
-    mRefActionGroup->add_action("quit",
-                                sigc::mem_fun(*this, &TopWindow::onFileQuit));
-    mRefActionGroup->add_action("about",
-                                sigc::mem_fun(*this, &TopWindow::onHelpAbout));
-    mRefActionGroup->add_action("importFile",
-                                sigc::mem_fun(*this, &TopWindow::onStartImportFile));
-    mRefActionGroup->add_action("importDirectory",
-                                sigc::mem_fun(*this, &TopWindow::onStartImportDirectory));
+    mRefActionGroup->add_action("connect", sigc::mem_fun(*this, &TopWindow::onFileConnect));
+    mRefActionGroup->add_action("quit", sigc::mem_fun(*this, &TopWindow::onFileQuit));
+    mRefActionGroup->add_action("about", sigc::mem_fun(*this, &TopWindow::onHelpAbout));
+    mRefActionGroup->add_action("importFile", sigc::mem_fun(*this, &TopWindow::onStartImportFile));
+    mRefActionGroup->add_action("importDirectory", sigc::mem_fun(*this, &TopWindow::onStartImportDirectory));
+    mRefActionGroup->add_action("login", sigc::mem_fun(*this, &TopWindow::onLogin));
+    mRefActionGroup->add_action("register", sigc::mem_fun(*this, &TopWindow::onRegister));
 
     insert_action_group("rcr", mRefActionGroup);
 
@@ -90,6 +87,8 @@ TopWindow::TopWindow (BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder> 
     Gtk::Window(cobject), mRefBuilder (refBuilder)
 {
     createCardWindow();
+    createLoginDialog();
+    createRegistertDialog();
     createBoxConfirmDialog();
     bindWidgets();
     // 0 name 1 boxname 2 properties 3 id 4 qty 5 rem 6 boxid 7 symbol_id
@@ -390,7 +389,16 @@ void TopWindow::createCardWindow() {
 
 void TopWindow::createBoxConfirmDialog() {
     mRefBuilder->get_widget_derived("boxConfirmDialog", boxConfirmDialog);
-    // boxConfirmDialog->signal_hide().connect(sigc::bind<Gtk::Window *>(sigc::mem_fun(*this, &TopWindow::onHideboxConfirmWindow), boxConfirmDialog));
+}
+
+void TopWindow::createLoginDialog()
+{
+    mRefBuilder->get_widget_derived("loginUserDialog", loginDialog);
+}
+
+void TopWindow::createRegistertDialog()
+{
+    mRefBuilder->get_widget_derived("registerUserDialog", registerDialog);
 }
 
 void TopWindow::onHideCardWindow(Gtk::Window *window) {
@@ -455,15 +463,14 @@ bool TopWindow::confirmBox(
     uint64_t &box_id
 )
 {
-    boxConfirmDialog->refEntryBox->set_text(StockOperation::boxes2string(box_id));
+    boxConfirmDialog->setBox(box_id);
     int r = boxConfirmDialog->run();
-    std::string s = boxConfirmDialog->refEntryBox->get_text();
-
-
-    StockOperation::parseBoxes(box_id, s, 0, s.size());
     if (r != Gtk::RESPONSE_OK)
         return false;
-    return  (StockOperation::parseBoxes(box_id, s, 0, s.size()) > 0 && box_id);
+    box_id = boxConfirmDialog->box();
+    // uncomment if create box in the root denied
+    // return (StockOperation::parseBoxes(box_id, sb, 0, sb.size()) > 0 && box_id);
+    return true;
 }
 
 void TopWindow::onCardActivated(
@@ -476,7 +483,6 @@ void TopWindow::onCardActivated(
 
 void TopWindow::onStartImportFile()
 {
-
     uint64_t b = settings->settings.mutable_service(settings->selected)->last_box();
     if (!confirmBox(b))
         return;
@@ -501,6 +507,31 @@ void TopWindow::onStartImportFile()
         std::string fn = dialog.get_filename();
         runImportExcel(symbol, fn, b, false);
     }
+}
+void TopWindow::onLogin()
+{
+    loginDialog->setUser(settings->settings.user());
+    int r = loginDialog->run();
+    if (r == Gtk::RESPONSE_REJECT) {
+        onRegister();
+        return;
+    }
+    if (r != Gtk::RESPONSE_OK)
+        return;
+    loginDialog->user(settings->settings.mutable_user());
+}
+
+void TopWindow::onRegister()
+{
+    registerDialog->setUser(settings->settings.user());
+    int r = registerDialog->run();
+    if (r == Gtk::RESPONSE_REJECT) {
+        onLogin();
+        return;
+    }
+    if (r != Gtk::RESPONSE_OK)
+        return;
+    registerDialog->user(settings->settings.mutable_user());
 }
 
 void TopWindow::onStartImportDirectory()

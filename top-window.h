@@ -9,6 +9,8 @@
 
 #include "CardWindow.h"
 #include "BoxConfirmDialog.h"
+#include "LoginDialog.h"
+#include "RegisterDialog.h"
 
 class TopWindow: public Gtk::Window {
 public:
@@ -16,7 +18,12 @@ public:
 
     // window to edit component card
     CardWindow *cardWindow;
+    // confirmation dialog
     BoxConfirmDialog *boxConfirmDialog;
+    // Login dialog
+    LoginDialog *loginDialog;
+    // Register a new user dialog
+    RegisterDialog *registerDialog;
 
     virtual ~TopWindow();
 
@@ -24,20 +31,8 @@ public:
 
     void saveSettings();
 
-protected:
-    bool on_key_press_event(GdkEventKey *event) override;
-
-    void onHelpAbout();
-    void onFileQuit();
-    void onFileConnect();
-    void onBoxSelected(Glib::RefPtr<Gtk::TreeSelection> selection);
-    void onSymbolSelected();
-    void onCardSelected(Glib::RefPtr<Gtk::TreeSelection> selection);
-    void onAboutDialogResponse(int responseId);
-    void onStartImportFile();
-    void onStartImportDirectory();
-
 private:
+
     RcrSettings *settings;
     GRcrClient *client;
 
@@ -58,6 +53,20 @@ private:
     Glib::RefPtr<Gtk::TreeSelection> mTreeViewSelectionBox;
     Glib::RefPtr<Gtk::TreeSelection> mTreeViewSelectionCard;
     Glib::RefPtr<Gtk::TreeModelFilter> mRefTreeModelFilterCard;
+
+    bool on_key_press_event(GdkEventKey *event) override;
+
+    void onHelpAbout();
+    void onFileQuit();
+    void onFileConnect();
+    void onBoxSelected(Glib::RefPtr<Gtk::TreeSelection> selection);
+    void onSymbolSelected();
+    void onCardSelected(Glib::RefPtr<Gtk::TreeSelection> selection);
+    void onAboutDialogResponse(int responseId);
+    void onStartImportFile();
+    void onStartImportDirectory();
+    void onLogin();
+    void onRegister();
 
     void selectSymbol(
         Gtk::ComboBox *cb,
@@ -80,6 +89,8 @@ private:
     // dialogs
     void createCardWindow();
     void createBoxConfirmDialog();
+    void createLoginDialog();
+    void createRegistertDialog();
     // dialog close event handlers
     void onHideCardWindow(Gtk::Window *window);
     void onHideboxConfirmWindow(Gtk::Window *window);

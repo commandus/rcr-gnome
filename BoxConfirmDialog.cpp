@@ -2,8 +2,8 @@
 // Created by andrei on 12.04.23.
 //
 
-#include <iostream>
 #include "BoxConfirmDialog.h"
+#include "StockOperation.h"
 
 BoxConfirmDialog::BoxConfirmDialog(
     BaseObjectType* cobject,
@@ -32,12 +32,10 @@ void BoxConfirmDialog::bindWidgets() {
 }
 
 void BoxConfirmDialog::onBoxConfirm() {
-    std::cerr << "==Confirm==" << std::endl;
     hide();
 }
 
 void BoxConfirmDialog::onBoxCancel() {
-    std::cerr << "==Cancel==" << std::endl;
     hide();
 }
 
@@ -53,4 +51,20 @@ bool BoxConfirmDialog::on_key_press_event(GdkEventKey* event)
             return Gtk::Window::on_key_press_event(event);
     }
     return FALSE;
+}
+
+void BoxConfirmDialog::setBox(
+    const uint64_t &boxId
+) {
+    std::string sb = StockOperation::boxes2string(boxId);
+    if (sb == "0")
+        sb = "";
+    refEntryBox->set_text(sb);
+}
+
+uint64_t BoxConfirmDialog::box() {
+    std::string sb = refEntryBox->get_text();
+    uint64_t r;
+    StockOperation::parseBoxes(r, sb, 0, sb.size());
+    return r;
 }
