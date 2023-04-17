@@ -11,9 +11,10 @@ class BoxConfirmDialog: public Gtk::Dialog {
 private:
     Glib::RefPtr<Gtk::Builder> mRefBuilder;
     Glib::RefPtr<Gio::SimpleActionGroup> mRefActionGroup;
-    Gtk::Entry* refEntryBox;
-    Gtk::Button* refButtonContinue;
-    Gtk::Button* refButtonCancel;
+    Gtk::Entry *refEntryBox;
+    Gtk::CheckButton *refСheckNumberInFileName;
+    Gtk::Button *refButtonContinue;
+    Gtk::Button *refButtonCancel;
 
     bool on_key_press_event(GdkEventKey *event) override;
     void bindWidgets();
@@ -32,6 +33,12 @@ public:
         const uint64_t &boxId
     );
 
+    bool numberInFileName();
+
+    void setNumberInFileName(bool value);
+
+
+    void onBoxNumberInFileName();
 };
 
 #endif //RCR_GNOME_BOXCONFIRMDIALOG_H

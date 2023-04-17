@@ -11,6 +11,8 @@
 #include "BoxConfirmDialog.h"
 #include "LoginDialog.h"
 #include "RegisterDialog.h"
+#include "UserListDialog.h"
+#include "UserDialog.h"
 
 class TopWindow: public Gtk::Window {
 public:
@@ -24,7 +26,10 @@ public:
     LoginDialog *loginDialog;
     // Register a new user dialog
     RegisterDialog *registerDialog;
-
+    // User list
+    UserListDialog *userListDialog;
+    // User
+    UserDialog *userDialog;
     virtual ~TopWindow();
 
     void loadSettings();
@@ -67,6 +72,9 @@ private:
     void onStartImportDirectory();
     void onLogin();
     void onRegister();
+    void onUserList();
+    void onUserAdd();
+    void onUserBox();
 
     void selectSymbol(
         Gtk::ComboBox *cb,
@@ -90,7 +98,9 @@ private:
     void createCardWindow();
     void createBoxConfirmDialog();
     void createLoginDialog();
-    void createRegistertDialog();
+    void createRegisterDialog();
+    void createUserListDialog();
+    void createUserDialog();
     // dialog close event handlers
     void onHideCardWindow(Gtk::Window *window);
     void onHideboxConfirmWindow(Gtk::Window *window);
@@ -108,7 +118,10 @@ private:
         uint64_t boxId,
         bool isNew
     );
-    bool confirmBox(uint64_t &box_id);
+    bool confirmBox(
+        uint64_t &box_id,
+        bool numberInFileName
+    );
 
     void onCardActivated(
         const Gtk::TreeModel::Path& path,
@@ -119,10 +132,13 @@ private:
         const std::string &symbol,
         const std::string &path,
         uint64_t box,
-        bool isDirectory = false
+        bool isDirectory = false,
+        bool numberInFileName = true
     );
 
     void reloadBoxTree();
+
+    void editUser(rcr::User *user);
 };
 
 #endif

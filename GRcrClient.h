@@ -65,13 +65,20 @@ public:
     bool importFile(
         const std::string &symbol,
         const std::string &fileName,
-        uint64_t boxId
+        uint64_t boxId,
+        bool numberInFileName
     );
 
     bool importDirectory(
         const std::string &symbol,
         const std::string &fileName,
-        uint64_t boxId
+        uint64_t boxId,
+        bool numberInFileName
+    );
+
+    void loadUsers(
+        Glib::RefPtr<Gtk::ListStore> retVal,
+        const rcr::User &user
     );
 };
 

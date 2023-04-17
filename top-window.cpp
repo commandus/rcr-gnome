@@ -48,6 +48,10 @@ void TopWindow::bindWidgets() {
     mRefActionGroup->add_action("login", sigc::mem_fun(*this, &TopWindow::onLogin));
     mRefActionGroup->add_action("register", sigc::mem_fun(*this, &TopWindow::onRegister));
 
+    mRefActionGroup->add_action("userList", sigc::mem_fun(*this, &TopWindow::onUserList));
+    mRefActionGroup->add_action("userAdd", sigc::mem_fun(*this, &TopWindow::onUserAdd));
+    mRefActionGroup->add_action("userBox", sigc::mem_fun(*this, &TopWindow::onUserBox));
+
     insert_action_group("rcr", mRefActionGroup);
 
     mRefBuilder->get_widget("tvBox", mTreeViewBox);
@@ -88,8 +92,10 @@ TopWindow::TopWindow (BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder> 
 {
     createCardWindow();
     createLoginDialog();
-    createRegistertDialog();
+    createRegisterDialog();
     createBoxConfirmDialog();
+    createUserListDialog();
+    createUserDialog();
     bindWidgets();
     // 0 name 1 boxname 2 properties 3 id 4 qty 5 rem 6 boxid 7 symbol_id
     mRefTreeModelFilterCard = Gtk::TreeModelFilter::create(mRefListStoreCard);
@@ -396,9 +402,20 @@ void TopWindow::createLoginDialog()
     mRefBuilder->get_widget_derived("loginUserDialog", loginDialog);
 }
 
-void TopWindow::createRegistertDialog()
+void TopWindow::createRegisterDialog()
 {
     mRefBuilder->get_widget_derived("registerUserDialog", registerDialog);
+}
+
+void TopWindow::createUserListDialog()
+{
+    mRefBuilder->get_widget_derived("userListDialog", userListDialog);
+}
+
+
+void TopWindow::createUserDialog()
+{
+    mRefBuilder->get_widget_derived("userDialog", userDialog);
 }
 
 void TopWindow::onHideCardWindow(Gtk::Window *window) {
@@ -431,7 +448,6 @@ void TopWindow::editCard() {
     row.get_value(6, box);
     row.get_value(7, symbol_id);
 
-    std::cerr << "symbol_id " << symbol_id << " qty "<< qty << " = " << id << " = " << box << std::endl;
     editCard(
         symbol_id, name, nominal, properties, boxname, qty, id, box, false
     );
@@ -460,10 +476,12 @@ void TopWindow::editCard(
 }
 
 bool TopWindow::confirmBox(
-    uint64_t &box_id
+    uint64_t &box_id,
+    bool numberInFileName
 )
 {
     boxConfirmDialog->setBox(box_id);
+    boxConfirmDialog->setNumberInFileName(numberInFileName);
     int r = boxConfirmDialog->run();
     if (r != Gtk::RESPONSE_OK)
         return false;
@@ -484,8 +502,11 @@ void TopWindow::onCardActivated(
 void TopWindow::onStartImportFile()
 {
     uint64_t b = settings->settings.mutable_service(settings->selected)->last_box();
-    if (!confirmBox(b))
+    bool numberInFileName = settings->settings.mutable_service(settings->selected)->number_in_filename();
+    if (!confirmBox(b, numberInFileName))
         return;
+    settings->settings.mutable_service(settings->selected)->set_number_in_filename(numberInFileName);
+    settings->save();
 
     std::string symbol = settings->settings.service(settings->selected).last_component_symbol();
     COMPONENT c = getComponentBySymbol(symbol);
@@ -505,7 +526,7 @@ void TopWindow::onStartImportFile()
     // Handle the response:
     if (result == Gtk::RESPONSE_OK) {
         std::string fn = dialog.get_filename();
-        runImportExcel(symbol, fn, b, false);
+        runImportExcel(symbol, fn, b, false, numberInFileName);
     }
 }
 void TopWindow::onLogin()
@@ -534,12 +555,54 @@ void TopWindow::onRegister()
     registerDialog->user(settings->settings.mutable_user());
 }
 
+void TopWindow::onUserList()
+{
+    if (!userListDialog)
+        return;
+    userListDialog->load(client, settings);
+    int r = userListDialog->run();
+    switch (r) {
+        case Gtk::RESPONSE_YES:
+            // add
+            onUserAdd();
+            break;
+        case Gtk::RESPONSE_NO:
+            // remove selected
+            break;
+        case Gtk::RESPONSE_APPLY:
+            // boxes owned by selected user
+            break;
+        case Gtk::RESPONSE_CANCEL:
+            // nothing
+            break;
+        case Gtk::RESPONSE_ACCEPT:
+            // show user
+            editUser(&userListDialog->selectedUser);
+            break;
+        default:
+            break;
+    }
+}
+
+void TopWindow::onUserAdd()
+{
+    editUser(nullptr);
+}
+
+void TopWindow::onUserBox()
+{
+    // edit current user
+    editUser(settings->settings.mutable_user());
+}
+
 void TopWindow::onStartImportDirectory()
 {
     uint64_t b = settings->settings.mutable_service(settings->selected)->last_box();
-    if (!confirmBox(b))
+    bool numberInFileName = settings->settings.mutable_service(settings->selected)->number_in_filename();
+    if (!confirmBox(b, numberInFileName))
         return;
-
+    settings->settings.mutable_service(settings->selected)->set_number_in_filename(numberInFileName);
+    settings->save();
     std::string symbol = settings->settings.service(settings->selected).last_component_symbol();
     COMPONENT c = getComponentBySymbol(symbol);
     std::string cn = MeasureUnit::description(ML_RU, c);
@@ -557,7 +620,7 @@ void TopWindow::onStartImportDirectory()
     // Handle the response:
     if (result == Gtk::RESPONSE_OK) {
         std::string fn = dialog.get_filename();
-        runImportExcel(symbol, fn, b, true);
+        runImportExcel(symbol, fn, b, true, numberInFileName);
     }
 }
 
@@ -565,7 +628,8 @@ void TopWindow::runImportExcel(
     const std::string &symbol,
     const std::string &path,
     uint64_t box,
-    bool isDirectory
+    bool isDirectory,
+    bool numberInFileName
 ) {
     if (box == 0) {
         Gtk::MessageDialog dialog(*this, "Wrong box specified");
@@ -575,7 +639,7 @@ void TopWindow::runImportExcel(
     }
     std::thread t([=]() {
         if (isDirectory) {
-            if (!client->importDirectory(symbol, path, box)) {
+            if (!client->importDirectory(symbol, path, box, numberInFileName)) {
                 Gtk::MessageDialog dialog(*this, "Error import Excel files");
                 dialog.set_secondary_text(path);
                 dialog.run();
@@ -586,7 +650,7 @@ void TopWindow::runImportExcel(
                 dialog.run();
             }
         } else {
-            if (!client->importFile(symbol, path, box)) {
+            if (!client->importFile(symbol, path, box, numberInFileName)) {
                 Gtk::MessageDialog dialog(*this, "Error import Excel file");
                 dialog.set_secondary_text(path);
                 dialog.run();
@@ -599,4 +663,12 @@ void TopWindow::runImportExcel(
         }
     });
     t.detach();
+}
+
+void TopWindow::editUser(rcr::User *user) {
+    if (user)
+        userDialog->set(settings->settings.user().rights() == 1, *user);
+    int r = userDialog->run();
+    if (r != Gtk::RESPONSE_OK)
+        return;
 }

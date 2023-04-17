@@ -23,10 +23,13 @@ void BoxConfirmDialog::bindWidgets() {
     mRefBuilder->get_widget("entryConfirmBox", refEntryBox);
     mRefBuilder->get_widget("bConfirmBoxContinue", refButtonContinue);
     mRefBuilder->get_widget("bConfirmBoxCancel", refButtonCancel);
+    mRefBuilder->get_widget("checkNumberInFileName", refСheckNumberInFileName);
+    refСheckNumberInFileName->set_active(true);
 
     mRefActionGroup = Gio::SimpleActionGroup::create();
     mRefActionGroup->add_action("confirmBoxContinue", sigc::mem_fun(*this, &BoxConfirmDialog::onBoxConfirm));
     mRefActionGroup->add_action("confirmBoxCancel", sigc::mem_fun(*this, &BoxConfirmDialog::onBoxCancel));
+    mRefActionGroup->add_action("numberInFileName", sigc::mem_fun(*this, &BoxConfirmDialog::onBoxNumberInFileName));
 
     insert_action_group("rcr", mRefActionGroup);
 }
@@ -67,4 +70,19 @@ uint64_t BoxConfirmDialog::box() {
     uint64_t r;
     StockOperation::parseBoxes(r, sb, 0, sb.size());
     return r;
+}
+
+void BoxConfirmDialog::onBoxNumberInFileName()
+{
+
+}
+
+bool BoxConfirmDialog::numberInFileName()
+{
+    return refСheckNumberInFileName->get_active();
+}
+
+void BoxConfirmDialog::setNumberInFileName(bool value)
+{
+    refСheckNumberInFileName->set_active(value);
 }

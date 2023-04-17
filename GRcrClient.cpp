@@ -133,7 +133,7 @@ void GRcrClient::loadSymbols(
     row.set_value <Glib::ustring>(3, "");
     row.set_value <ulong>(4, 0);
 
-    // just make sure is symbols ordered
+    // just make sure does symbols ordered
     reorderDisctionaries(dictionaries);
 
     for (auto it = dictionaries.symbol().begin(); it != dictionaries.symbol().end(); ++it) {
@@ -262,7 +262,8 @@ void GRcrClient::reorderCards(rcr::CardQueryResponse &value) {
 bool GRcrClient::importFile(
     const std::string &symbol,
     const std::string &fileName,
-    uint64_t boxId
+    uint64_t boxId,
+    bool numberInFileName
 ) {
     std::string content = file2string(fileName.c_str());
     if (content.empty())
@@ -272,6 +273,7 @@ bool GRcrClient::importFile(
     rcr::ImportExcelRequest request;
     request.set_symbol(symbol);
     request.set_prefix_box(boxId);
+    request.set_number_in_filename(numberInFileName);
     auto f = request.add_file();
     f->set_name(fileName);
     f->set_content(content);
@@ -293,12 +295,14 @@ bool GRcrClient::importFile(
 bool GRcrClient::importDirectory(
     const std::string &symbol,
     const std::string &path,
-    uint64_t boxId
+    uint64_t boxId,
+    bool numberInFileName
 ) {
     grpc::ClientContext context;
     rcr::ImportExcelRequest request;
     request.set_symbol(symbol);
     request.set_prefix_box(boxId);
+    request.set_number_in_filename(numberInFileName);
 
     std::vector<std::string> files;
     util::filesInPath(path, ".xlsx", 0, &files);
@@ -322,4 +326,27 @@ bool GRcrClient::importDirectory(
         return false;
     }
     return true;
+}
+
+void GRcrClient::loadUsers(
+    Glib::RefPtr<Gtk::ListStore> listStore,
+    const rcr::User &user
+) {
+    if (!listStore)
+        return;
+    // before do it, unbind GUI elements first
+    listStore->clear();
+    rcr::UserRequest request;
+    *request.mutable_user() = user;
+    grpc::ClientContext context;
+    std::unique_ptr< ::grpc::ClientReader< ::rcr::User>> reader = stub->lsUser(&context, request);
+    rcr::User u;
+    while (reader->Read(&u)) {
+        Gtk::TreeModel::Row row = *listStore->append();
+        row.set_value(0, u.name());
+        row.set_value(1, u.rights());
+        row.set_value(2, u.password());
+        row.set_value(3, u.token());
+        row.set_value(4, u.id());
+    }
 }

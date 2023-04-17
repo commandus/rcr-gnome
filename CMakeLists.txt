@@ -51,7 +51,7 @@ set(RCR_GNOME_SRC rcr-gnome.cpp rcr-app.cpp top-window.cpp
 	third-party/rcr/RCQuery.cpp
 	${GEN_GRPC_SRC}
 	${GEN_SRC}
-	GRcrClient.cpp GRcrClient.h RcrSettings.cpp CardWindow.cpp CardWindow.h BoxConfirmDialog.cpp BoxConfirmDialog.h LoginDialog.cpp LoginDialog.h RegisterDialog.cpp RegisterDialog.h)
+	GRcrClient.cpp GRcrClient.h RcrSettings.cpp CardWindow.cpp CardWindow.h BoxConfirmDialog.cpp BoxConfirmDialog.h LoginDialog.cpp LoginDialog.h RegisterDialog.cpp RegisterDialog.h UserListDialog.cpp UserListDialog.h UserDialog.cpp UserDialog.h)
 add_executable(rcr-gnome ${RCR_GNOME_SRC})
 target_link_libraries(rcr-gnome PRIVATE ${ICU_LIBS} gRPC::grpc++ ${Protobuf_LIBRARIES} ${ICU_LIBS} ${XLSX_LIBS})
 target_include_directories(rcr-gnome PRIVATE "third-party" ${RCR_INCLUDE_DIR} ${GTK_INCLUDE_DIRS})
