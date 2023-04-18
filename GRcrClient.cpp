@@ -350,3 +350,19 @@ void GRcrClient::loadUsers(
         row.set_value(4, u.id());
     }
 }
+
+void GRcrClient::getStatistics(
+    uint64_t &componentCount,
+    uint64_t &total
+) {
+    grpc::ClientContext context;
+    rcr::CardQueryRequest request;
+    request.set_query("* sum");
+    rcr::CardQueryResponse response;
+    grpc::Status status = stub->cardQuery(&context, request, &response);
+    if (!status.ok()) {
+        std::cerr << "Error: " << status.error_code() << " " << status.error_message() << std::endl;
+    }
+    componentCount = response.rslt().count();
+    total = response.rslt().sum();
+}

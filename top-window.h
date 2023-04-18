@@ -13,6 +13,7 @@
 #include "RegisterDialog.h"
 #include "UserListDialog.h"
 #include "UserDialog.h"
+#include "StatisticsDialog.h"
 
 class TopWindow: public Gtk::Window {
 public:
@@ -30,6 +31,9 @@ public:
     UserListDialog *userListDialog;
     // User
     UserDialog *userDialog;
+    // Statistics
+    StatisticsDialog *statisticsDialog;
+
     virtual ~TopWindow();
 
     void loadSettings();
@@ -52,6 +56,8 @@ private:
     Gtk::TreeView *mTreeViewBox;
     Gtk::TreeView *mTreeViewCard;
     Gtk::ComboBox *mComboBoxSymbol;
+    Gtk::Label *mLabelMessage;
+    Gtk::ProgressBar * mProgressBar;
 
     Glib::RefPtr<Gtk::FileFilter> mFileFilterXLSX;
     Glib::RefPtr<Gio::SimpleActionGroup> mRefActionGroup;
@@ -62,6 +68,7 @@ private:
     bool on_key_press_event(GdkEventKey *event) override;
 
     void onHelpAbout();
+    void onHelpStatistics();
     void onFileQuit();
     void onFileConnect();
     void onBoxSelected(Glib::RefPtr<Gtk::TreeSelection> selection);
@@ -95,12 +102,7 @@ private:
     void doQuery();
 
     // dialogs
-    void createCardWindow();
-    void createBoxConfirmDialog();
-    void createLoginDialog();
-    void createRegisterDialog();
-    void createUserListDialog();
-    void createUserDialog();
+    void createDialogs();
     // dialog close event handlers
     void onHideCardWindow(Gtk::Window *window);
     void onHideboxConfirmWindow(Gtk::Window *window);

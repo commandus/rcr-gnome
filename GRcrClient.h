@@ -80,6 +80,11 @@ public:
         Glib::RefPtr<Gtk::ListStore> retVal,
         const rcr::User &user
     );
+
+    void getStatistics(
+        uint64_t &componentCount,
+        uint64_t &total
+    );
 };
 
 #endif //RCR_GNOME_GRCRCLIENT_H

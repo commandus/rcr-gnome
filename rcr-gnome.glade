@@ -530,7 +530,7 @@
               <object class="GtkMenuItem" id="menuUser">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
-                <property name="label" translatable="yes">User</property>
+                <property name="label" translatable="yes">_User</property>
                 <property name="use-underline">True</property>
                 <child type="submenu">
                   <object class="GtkMenu">
@@ -570,12 +570,42 @@
               </object>
             </child>
             <child>
-              <object class="GtkMenuItem" id="menu_file_connect">
+              <object class="GtkMenuItem" id="menuOptions">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
-                <property name="action-name">rcr.connect</property>
-                <property name="label">Connect</property>
+                <property name="label" translatable="yes">_Options</property>
                 <property name="use-underline">True</property>
+                <child type="submenu">
+                  <object class="GtkMenu">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <child>
+                      <object class="GtkMenuItem" id="menuConnect">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="action-name">rcr.connect</property>
+                        <property name="label" translatable="yes">_Connect</property>
+                        <property name="use-underline">True</property>
+                        <accelerator key="c" signal="activate" modifiers="GDK_MOD1_MASK"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkSeparatorMenuItem">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkMenuItem" id="menuPreferences">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="action-name">rcr.preferences</property>
+                        <property name="label" translatable="yes">_Preferences</property>
+                        <property name="use-underline">True</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
@@ -589,11 +619,20 @@
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <child>
+                      <object class="GtkMenuItem" id="menuHelpStatistics">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="action-name">rcr.statistics</property>
+                        <property name="label" translatable="yes">_Statistics</property>
+                        <property name="use-underline">True</property>
+                      </object>
+                    </child>
+                    <child>
                       <object class="GtkMenuItem" id="about">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="action-name">rcr.about</property>
-                        <property name="label">gtk-about</property>
+                        <property name="label">_About</property>
                         <property name="use-underline">True</property>
                       </object>
                     </child>
@@ -699,18 +738,15 @@
                     <property name="orientation">vertical</property>
                     <child>
                       <object class="GtkPaned">
+                        <property name="width-request">-1</property>
+                        <property name="height-request">32</property>
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
                         <property name="orientation">vertical</property>
                         <child>
-                          <object class="GtkMenuButton">
+                          <object class="GtkProgressBar" id="progressBar">
                             <property name="visible">True</property>
-                            <property name="can-focus">True</property>
-                            <property name="focus-on-click">False</property>
-                            <property name="receives-default">True</property>
-                            <child>
-                              <placeholder/>
-                            </child>
+                            <property name="can-focus">False</property>
                           </object>
                           <packing>
                             <property name="resize">False</property>
@@ -718,7 +754,15 @@
                           </packing>
                         </child>
                         <child>
-                          <placeholder/>
+                          <object class="GtkLabel" id="labelMessage">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="ellipsize">end</property>
+                          </object>
+                          <packing>
+                            <property name="resize">False</property>
+                            <property name="shrink">True</property>
+                          </packing>
                         </child>
                       </object>
                       <packing>
@@ -818,7 +862,7 @@
                       </object>
                       <packing>
                         <property name="resize">True</property>
-                        <property name="shrink">True</property>
+                        <property name="shrink">False</property>
                       </packing>
                     </child>
                   </object>
@@ -1317,6 +1361,129 @@
     <action-widgets>
       <action-widget response="-5">bRegisterUser</action-widget>
       <action-widget response="-6">bRegisterUserCancel</action-widget>
+    </action-widgets>
+  </object>
+  <object class="GtkDialog" id="statisticsDialog">
+    <property name="width-request">340</property>
+    <property name="height-request">300</property>
+    <property name="can-focus">False</property>
+    <property name="title" translatable="yes">Statistics</property>
+    <property name="type-hint">dialog</property>
+    <child internal-child="vbox">
+      <object class="GtkBox">
+        <property name="can-focus">False</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">2</property>
+        <child internal-child="action_area">
+          <object class="GtkButtonBox">
+            <property name="can-focus">False</property>
+            <property name="layout-style">end</property>
+            <child>
+              <object class="GtkButton" id="buttonStatisticsClose">
+                <property name="label" translatable="yes">Close</property>
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="receives-default">True</property>
+                <property name="action-name">rcr.closeStatistics</property>
+              </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <!-- n-columns=2 n-rows=4 -->
+          <object class="GtkGrid">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="halign">end</property>
+                <property name="valign">start</property>
+                <property name="margin-start">42</property>
+                <property name="margin-end">42</property>
+                <property name="margin-bottom">42</property>
+                <property name="label" translatable="yes">Components</property>
+              </object>
+              <packing>
+                <property name="left-attach">0</property>
+                <property name="top-attach">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="halign">end</property>
+                <property name="valign">start</property>
+                <property name="margin-end">42</property>
+                <property name="label" translatable="yes">Total</property>
+              </object>
+              <packing>
+                <property name="left-attach">0</property>
+                <property name="top-attach">2</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="labelStatisticsComponents">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="halign">start</property>
+                <property name="valign">start</property>
+                <property name="label" translatable="yes">0</property>
+              </object>
+              <packing>
+                <property name="left-attach">1</property>
+                <property name="top-attach">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="labelStatisticsTotal">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="halign">start</property>
+                <property name="valign">start</property>
+                <property name="margin-end">42</property>
+                <property name="label" translatable="yes">0</property>
+              </object>
+              <packing>
+                <property name="left-attach">1</property>
+                <property name="top-attach">2</property>
+              </packing>
+            </child>
+            <child>
+              <placeholder/>
+            </child>
+            <child>
+              <placeholder/>
+            </child>
+            <child>
+              <placeholder/>
+            </child>
+            <child>
+              <placeholder/>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">True</property>
+            <property name="fill">False</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+    <action-widgets>
+      <action-widget response="-6">buttonStatisticsClose</action-widget>
     </action-widgets>
   </object>
   <object class="GtkTreeStore" id="treestoreBox">

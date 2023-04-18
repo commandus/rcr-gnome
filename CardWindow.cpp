@@ -15,7 +15,6 @@ CardWindow::CardWindow(
     : Gtk::Window(cobject), mRefBuilder(refBuilder)
 {
     bindWidgets();
-    std::cerr << "*** CardWindow ***" << std::endl;
 }
 
 CardWindow::~CardWindow()

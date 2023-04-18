@@ -43,6 +43,8 @@ void TopWindow::bindWidgets() {
     mRefActionGroup->add_action("connect", sigc::mem_fun(*this, &TopWindow::onFileConnect));
     mRefActionGroup->add_action("quit", sigc::mem_fun(*this, &TopWindow::onFileQuit));
     mRefActionGroup->add_action("about", sigc::mem_fun(*this, &TopWindow::onHelpAbout));
+    mRefActionGroup->add_action("statistics", sigc::mem_fun(*this, &TopWindow::onHelpStatistics));
+
     mRefActionGroup->add_action("importFile", sigc::mem_fun(*this, &TopWindow::onStartImportFile));
     mRefActionGroup->add_action("importDirectory", sigc::mem_fun(*this, &TopWindow::onStartImportDirectory));
     mRefActionGroup->add_action("login", sigc::mem_fun(*this, &TopWindow::onLogin));
@@ -52,10 +54,14 @@ void TopWindow::bindWidgets() {
     mRefActionGroup->add_action("userAdd", sigc::mem_fun(*this, &TopWindow::onUserAdd));
     mRefActionGroup->add_action("userBox", sigc::mem_fun(*this, &TopWindow::onUserBox));
 
+    // labelStatisticsComponents
+
     insert_action_group("rcr", mRefActionGroup);
 
     mRefBuilder->get_widget("tvBox", mTreeViewBox);
     mRefBuilder->get_widget("tvCard", mTreeViewCard);
+    mRefBuilder->get_widget("labelMessage", mLabelMessage);
+    mRefBuilder->get_widget("progressBar", mProgressBar);
 
     mRefListStoreSymbol = Glib::RefPtr<Gtk::ListStore>::cast_static(mRefBuilder->get_object("liststoreSymbol"));
     mRefTreeStoreBox = Glib::RefPtr<Gtk::TreeStore>::cast_static(mRefBuilder->get_object("treestoreBox"));
@@ -63,6 +69,7 @@ void TopWindow::bindWidgets() {
 
     mTreeViewSelectionBox = Glib::RefPtr<Gtk::TreeSelection>::cast_static(mRefBuilder->get_object("tvsBox"));
     mTreeViewSelectionCard = Glib::RefPtr<Gtk::TreeSelection>::cast_static(mRefBuilder->get_object("tvsCard"));
+
 }
 
 void TopWindow::loadSettings() {
@@ -90,12 +97,7 @@ TopWindow::TopWindow (BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder> 
 	: client(nullptr),
     Gtk::Window(cobject), mRefBuilder (refBuilder)
 {
-    createCardWindow();
-    createLoginDialog();
-    createRegisterDialog();
-    createBoxConfirmDialog();
-    createUserListDialog();
-    createUserDialog();
+    createDialogs();
     bindWidgets();
     // 0 name 1 boxname 2 properties 3 id 4 qty 5 rem 6 boxid 7 symbol_id
     mRefTreeModelFilterCard = Gtk::TreeModelFilter::create(mRefListStoreCard);
@@ -132,6 +134,7 @@ TopWindow::TopWindow (BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder> 
 
     loadSettings();
     onFileConnect();
+
 }
 
 void TopWindow::onBoxSelected(
@@ -207,12 +210,19 @@ void TopWindow::onHelpAbout()
 	std::string v;
 #ifdef HAVE_CONFIG_H
 	v = PACKAGE_STRING;
-#else	
-	v = "Custom build";
+#else
+    #ifdef RCR_VERSION
+#define STRINGIFY2( x) #x
+#define STRINGIFY(x) STRINGIFY2(x)
+        v = STRINGIFY(RCR_VERSION);
+    #else
+        v = "Custom build";
+    #endif
+
 #endif
 	mAboutDialog->set_version(v);
 	mAboutDialog->set_copyright("2023 Yu.G. Shafer Institute of Cosmophysical Research and Aeronomy of Siberian Branch of the Russian Academy of Sciences");
-	mAboutDialog->set_comments("rcr Gnome client");
+	mAboutDialog->set_comments("In memory of Konstantin Zolotovsky");
 	mAboutDialog->set_license(MIT_LICENSE);
 
 	mAboutDialog->set_website("https://ikfia.ysn.ru/");
@@ -220,13 +230,26 @@ void TopWindow::onHelpAbout()
 
 	std::vector<Glib::ustring> list_authors;
 	list_authors.push_back("Andrei Ivanov andrey.ivanov@ikfia.ysn.ru");
-	mAboutDialog->set_authors(list_authors);
+    list_authors.push_back("Yu.G. Shafer Institute of Cosmophysical Research and Aeronomy of Siberian Branch of the Russian Academy of Sciences http://ikfia.ysn.ru/");
+    list_authors.push_back("The International Components for Unicode (ICU) libraries https://icu.unicode.org/");
+    list_authors.push_back("xlnt library for manipulating spreadsheets https://github.com/tfussell/xlnt");
+    list_authors.push_back("gRPC high performance, open source universal RPC framework https://grpc.io/");
 
+    mAboutDialog->set_authors(list_authors);
 	mAboutDialog->signal_response().connect(
 		sigc::mem_fun(*this, &TopWindow::onAboutDialogResponse));
 
+
 	mAboutDialog->show();
 	mAboutDialog->present();
+}
+
+void TopWindow::onHelpStatistics()
+{
+    uint64_t componentCount, total;
+    client->getStatistics(componentCount, total);
+    statisticsDialog->setStat(componentCount, total);
+    statisticsDialog->run();
 }
 
 void TopWindow::onFileQuit()
@@ -386,36 +409,19 @@ void TopWindow::doQuery() {
     searchCard(mEntryQuery->get_text(), settings->settings.service(settings->selected).last_component_symbol());
 }
 
-void TopWindow::createCardWindow() {
+void TopWindow::createDialogs() {
+    // card window is not a dialog
     mRefBuilder->get_widget_derived("cardWindow", cardWindow);
     cardWindow->signal_hide().connect(sigc::bind<Gtk::Window *>(
             sigc::mem_fun(*this, &TopWindow::onHideCardWindow), cardWindow));
     // cardWindow->set_modal();
-}
-
-void TopWindow::createBoxConfirmDialog() {
+    // dialogs
     mRefBuilder->get_widget_derived("boxConfirmDialog", boxConfirmDialog);
-}
-
-void TopWindow::createLoginDialog()
-{
     mRefBuilder->get_widget_derived("loginUserDialog", loginDialog);
-}
-
-void TopWindow::createRegisterDialog()
-{
     mRefBuilder->get_widget_derived("registerUserDialog", registerDialog);
-}
-
-void TopWindow::createUserListDialog()
-{
     mRefBuilder->get_widget_derived("userListDialog", userListDialog);
-}
-
-
-void TopWindow::createUserDialog()
-{
     mRefBuilder->get_widget_derived("userDialog", userDialog);
+    mRefBuilder->get_widget_derived("statisticsDialog", statisticsDialog);
 }
 
 void TopWindow::onHideCardWindow(Gtk::Window *window) {
@@ -425,7 +431,6 @@ void TopWindow::onHideCardWindow(Gtk::Window *window) {
     // update
     // show main window
 }
-
 
 void TopWindow::onHideboxConfirmWindow(Gtk::Window *window) {
     // update
