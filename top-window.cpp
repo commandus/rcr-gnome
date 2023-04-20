@@ -1,5 +1,5 @@
-#include <gdk/gdkkeysyms.h>
 #include <gtkmm.h>
+#include <gdk/gdkkeysyms.h>
 #include <thread>
 
 #include "top-window.h"
@@ -7,9 +7,9 @@
 #include "string-helper.h"
 #include "utilfile.h"
 
-#define DEF_NAME_ALL	"All"
+#define DEF_NAME_ALL	_("All")
 
-#define MIT_LICENSE "Copyright (c) 2023 andrey.ivanov@ikfia.ysn.ru Yu.G. Shafer \n\n\
+#define MIT_LICENSE _("Copyright (c) 2023 andrey.ivanov@ikfia.ysn.ru Yu.G. Shafer \n\n\
 Institute of Cosmophysical Research and Aeronomy of Siberian \n\n\
 Branch of the Russian Academy of Sciences \n\n\
 MIT license\n\n\
@@ -32,7 +32,7 @@ OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR \n\
 OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT\" \n\
 OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION \n\
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN \n\
-THE SOFTWARE."
+THE SOFTWARE.")
 
 void TopWindow::bindWidgets() {
     mRefBuilder->get_widget("entryQuery", mEntryQuery);
@@ -129,7 +129,7 @@ TopWindow::TopWindow (BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder> 
 	add_events(Gdk::KEY_PRESS_MASK);
 
     mFileFilterXLSX = Gtk::FileFilter::create();
-	mFileFilterXLSX->set_name("Excel spreadsheet files");
+	mFileFilterXLSX->set_name(_("Excel spreadsheet files"));
 	mFileFilterXLSX->add_mime_type("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 
     loadSettings();
@@ -206,7 +206,7 @@ void TopWindow::onHelpAbout()
 	mAboutDialog = new Gtk::AboutDialog();
 	mAboutDialog->set_transient_for(*this);
 	mAboutDialog->set_logo(Gdk::Pixbuf::create_from_resource("/ic_launcher.png", -1, 40, true));
-	mAboutDialog->set_program_name("rcr for Gnome");
+	mAboutDialog->set_program_name(_("rcr for Gnome"));
 	std::string v;
 #ifdef HAVE_CONFIG_H
 	v = PACKAGE_STRING;
@@ -216,24 +216,24 @@ void TopWindow::onHelpAbout()
 #define STRINGIFY(x) STRINGIFY2(x)
         v = STRINGIFY(RCR_VERSION);
     #else
-        v = "Custom build";
+        v = _("Custom build");
     #endif
 
 #endif
 	mAboutDialog->set_version(v);
-	mAboutDialog->set_copyright("2023 Yu.G. Shafer Institute of Cosmophysical Research and Aeronomy of Siberian Branch of the Russian Academy of Sciences");
-	mAboutDialog->set_comments("In memory of Konstantin Zolotovsky");
+	mAboutDialog->set_copyright(_("2023 Yu.G. Shafer Institute of Cosmophysical Research and Aeronomy of Siberian Branch of the Russian Academy of Sciences"));
+	mAboutDialog->set_comments(_("In memory of Konstantin Zolotovsky"));
 	mAboutDialog->set_license(MIT_LICENSE);
 
 	mAboutDialog->set_website("https://ikfia.ysn.ru/");
 	mAboutDialog->set_website_label("ikfia.ysn.ru");
 
 	std::vector<Glib::ustring> list_authors;
-	list_authors.push_back("Andrei Ivanov andrey.ivanov@ikfia.ysn.ru");
-    list_authors.push_back("Yu.G. Shafer Institute of Cosmophysical Research and Aeronomy of Siberian Branch of the Russian Academy of Sciences http://ikfia.ysn.ru/");
-    list_authors.push_back("The International Components for Unicode (ICU) libraries https://icu.unicode.org/");
-    list_authors.push_back("xlnt library for manipulating spreadsheets https://github.com/tfussell/xlnt");
-    list_authors.push_back("gRPC high performance, open source universal RPC framework https://grpc.io/");
+	list_authors.push_back(_("Andrei Ivanov andrey.ivanov@ikfia.ysn.ru"));
+    list_authors.push_back(_("Yu.G. Shafer Institute of Cosmophysical Research and Aeronomy of Siberian Branch of the Russian Academy of Sciences http://ikfia.ysn.ru/"));
+    list_authors.push_back(_("The International Components for Unicode (ICU) libraries https://icu.unicode.org/"));
+    list_authors.push_back(_("xlnt library for manipulating spreadsheets https://github.com/tfussell/xlnt"));
+    list_authors.push_back(_("gRPC high performance, open source universal RPC framework https://grpc.io/"));
 
     mAboutDialog->set_authors(list_authors);
 	mAboutDialog->signal_response().connect(
@@ -368,7 +368,7 @@ void TopWindow::selectBox(
             Gtk::TreeViewColumn fc;
         })) {
 #if CMAKE_BUILD_TYPE == Debug
-            std::cerr << "Selected box " << StockOperation::boxes2string(boxId) << std::endl;
+            std::cerr << _("Selected box ") << StockOperation::boxes2string(boxId) << std::endl;
 #endif
         }
     }
@@ -518,14 +518,14 @@ void TopWindow::onStartImportFile()
     std::string cn = MeasureUnit::description(ML_RU, c);
 
     std::stringstream ss;
-    ss << "Import " << cn << " to box " << StockOperation::boxes2string(b);
+    ss << _("Import ") << cn << _(" to box ") << StockOperation::boxes2string(b);
     std::string t = ss.str();
 
     Gtk::FileChooserDialog dialog(t, Gtk::FILE_CHOOSER_ACTION_OPEN);
     dialog.set_transient_for(*this);
     // Add response buttons the the dialog:
     dialog.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
-    dialog.add_button("Import", Gtk::RESPONSE_OK);
+    dialog.add_button(_("Import"), Gtk::RESPONSE_OK);
     dialog.add_filter(mFileFilterXLSX);
     int result = dialog.run();
     // Handle the response:
@@ -613,14 +613,14 @@ void TopWindow::onStartImportDirectory()
     std::string cn = MeasureUnit::description(ML_RU, c);
 
     std::stringstream ss;
-    ss << "Import " << cn << " to box " << StockOperation::boxes2string(b);
+    ss << _("Import ") << cn << _(" to box ") << StockOperation::boxes2string(b);
     std::string t = ss.str();
 
     Gtk::FileChooserDialog dialog(t, Gtk::FILE_CHOOSER_ACTION_SELECT_FOLDER);
     dialog.set_transient_for(*this);
     // Add response buttons the the dialog:
     dialog.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
-    dialog.add_button("Import", Gtk::RESPONSE_OK);
+    dialog.add_button(_("Import"), Gtk::RESPONSE_OK);
     int result = dialog.run();
     // Handle the response:
     if (result == Gtk::RESPONSE_OK) {
@@ -637,7 +637,7 @@ void TopWindow::runImportExcel(
     bool numberInFileName
 ) {
     if (box == 0) {
-        Gtk::MessageDialog dialog(*this, "Wrong box specified");
+        Gtk::MessageDialog dialog(*this, _("Wrong box specified"));
         dialog.set_secondary_text(path);
         dialog.run();
         return;
@@ -645,23 +645,23 @@ void TopWindow::runImportExcel(
     std::thread t([=]() {
         if (isDirectory) {
             if (!client->importDirectory(symbol, path, box, numberInFileName)) {
-                Gtk::MessageDialog dialog(*this, "Error import Excel files");
+                Gtk::MessageDialog dialog(*this, _("Error import Excel files"));
                 dialog.set_secondary_text(path);
                 dialog.run();
             } else {
                 reloadBoxTree();
-                Gtk::MessageDialog dialog(*this, "Excel files imported successfully");
+                Gtk::MessageDialog dialog(*this, _("Excel files imported successfully"));
                 dialog.set_secondary_text(path);
                 dialog.run();
             }
         } else {
             if (!client->importFile(symbol, path, box, numberInFileName)) {
-                Gtk::MessageDialog dialog(*this, "Error import Excel file");
+                Gtk::MessageDialog dialog(*this, _("Error import Excel file"));
                 dialog.set_secondary_text(path);
                 dialog.run();
             } else {
                 reloadBoxTree();
-                Gtk::MessageDialog dialog(*this, "Excel file imported successfully");
+                Gtk::MessageDialog dialog(*this, _("Excel file imported successfully"));
                 dialog.set_secondary_text(path);
                 dialog.run();
             }

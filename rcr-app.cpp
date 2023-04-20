@@ -23,7 +23,7 @@ void RcrApplication::on_startup()
 		// glib-compile-resources rcr-gnome.resource.xml --target=resources.c --generate-source
 		mRefBuilder->add_from_resource(RES_GLADE);
 	} catch (const Glib::Error& ex) {
-		std::cerr << "Building menus failed: " << ex.what();
+		std::cerr << _("Building menus failed: ") << ex.what();
 	}
 }
 

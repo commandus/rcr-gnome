@@ -27,14 +27,17 @@
  * @file wpn-app.h
  * 
  */
-#include <vector>
-#include <iostream>
-// #include <gtkmm.h>
-#include <gtk/gtk.h>
 #include "rcr-app.h"
+#include "rcr-gnome.h"
 
 int main(int argc, char *argv[])
 {
+    // I18N
+    setlocale(LC_ALL, "");
+    // bindtextdomain(progname, "/usr/share/locale");
+    bind_textdomain_codeset(progname, "UTF-8");
+    textdomain(progname);
+
     Glib::RefPtr<RcrApplication> app = RcrApplication::create();
 	return app->run(argc, argv);
 }

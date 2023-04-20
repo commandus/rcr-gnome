@@ -1,0 +1,339 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-04-20 16:53+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: rcr-app.cpp:26
+msgid "Building menus failed: "
+msgstr ""
+
+#: top-window.cpp:10
+msgid "All"
+msgstr ""
+
+#: top-window.cpp:12
+msgid ""
+"Copyright (c) 2023 andrey.ivanov@ikfia.ysn.ru Yu.G. Shafer \n"
+"\n"
+"Institute of Cosmophysical Research and Aeronomy of Siberian \n"
+"\n"
+"Branch of the Russian Academy of Sciences \n"
+"\n"
+"MIT license\n"
+"\n"
+"Permission is hereby granted, free of charge, to any \n"
+"person obtaining a copy of this software and associated \n"
+"documentation files (the \"Software\"), to deal in the \n"
+"Software without restriction, including without limitation \n"
+"the rights to use, copy, modify, merge, publish, distribute, \n"
+"sublicense, and/or sell copies of the Software, and to permit \n"
+"persons to whom the Software is furnished to do so, subject \n"
+"to the following conditions:\n"
+"\n"
+"The above copyright notice and this permission notice shall \n"
+"be included in all copies or substantial portions of the \n"
+"Software.\n"
+"\n"
+"THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY \n"
+"KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE \n"
+"WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR\" \n"
+"PURPOSE AND NONINFRINGEMENT IN NO EVENT SHALL THE AUTHORS \n"
+"OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR \n"
+"OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT\" \n"
+"OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION \n"
+"WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN \n"
+"THE SOFTWARE."
+msgstr ""
+
+#: top-window.cpp:132
+msgid "Excel spreadsheet files"
+msgstr ""
+
+#: top-window.cpp:209
+msgid "rcr for Gnome"
+msgstr ""
+
+#: top-window.cpp:219
+msgid "Custom build"
+msgstr ""
+
+#: top-window.cpp:224
+msgid ""
+"2023 Yu.G. Shafer Institute of Cosmophysical Research and Aeronomy of "
+"Siberian Branch of the Russian Academy of Sciences"
+msgstr ""
+
+#: top-window.cpp:225
+msgid "In memory of Konstantin Zolotovsky"
+msgstr ""
+
+#: top-window.cpp:232
+msgid "Andrei Ivanov andrey.ivanov@ikfia.ysn.ru"
+msgstr ""
+
+#: top-window.cpp:233
+msgid ""
+"Yu.G. Shafer Institute of Cosmophysical Research and Aeronomy of Siberian "
+"Branch of the Russian Academy of Sciences http://ikfia.ysn.ru/"
+msgstr ""
+
+#: top-window.cpp:234
+msgid ""
+"The International Components for Unicode (ICU) libraries https://icu.unicode."
+"org/"
+msgstr ""
+
+#: top-window.cpp:235
+msgid ""
+"xlnt library for manipulating spreadsheets https://github.com/tfussell/xlnt"
+msgstr ""
+
+#: top-window.cpp:236
+msgid ""
+"gRPC high performance, open source universal RPC framework https://grpc.io/"
+msgstr ""
+
+#: top-window.cpp:371
+msgid "Selected box "
+msgstr ""
+
+#: top-window.cpp:521 top-window.cpp:616
+msgid "Import "
+msgstr ""
+
+#: top-window.cpp:521 top-window.cpp:616
+msgid " to box "
+msgstr ""
+
+#: top-window.cpp:528 top-window.cpp:623
+msgid "Import"
+msgstr ""
+
+#: top-window.cpp:640
+msgid "Wrong box specified"
+msgstr ""
+
+#: top-window.cpp:648
+msgid "Error import Excel files"
+msgstr ""
+
+#: top-window.cpp:653
+msgid "Excel files imported successfully"
+msgstr ""
+
+#: top-window.cpp:659
+msgid "Error import Excel file"
+msgstr ""
+
+#: top-window.cpp:664
+msgid "Excel file imported successfully"
+msgstr ""
+
+#: rcr-gnome.glade:8
+msgid "Box identifier"
+msgstr ""
+
+#: rcr-gnome.glade:23
+msgid "Confirm"
+msgstr ""
+
+#: rcr-gnome.glade:37 rcr-gnome.glade:197 rcr-gnome.glade:1069
+#: rcr-gnome.glade:1218 rcr-gnome.glade:1530
+msgid "Cancel"
+msgstr ""
+
+#: rcr-gnome.glade:68 rcr-gnome.glade:342 rcr-gnome.glade:717
+#: rcr-gnome.glade:834
+msgid "Box"
+msgstr ""
+
+#: rcr-gnome.glade:90
+msgid "Number in file name"
+msgstr ""
+
+#: rcr-gnome.glade:158
+msgid "Card"
+msgstr ""
+
+#: rcr-gnome.glade:173 rcr-gnome.glade:1516
+msgid "Save"
+msgstr ""
+
+#: rcr-gnome.glade:185 rcr-gnome.glade:932
+msgid "Remove"
+msgstr ""
+
+#: rcr-gnome.glade:232
+msgid "Component"
+msgstr ""
+
+#: rcr-gnome.glade:265 rcr-gnome.glade:804
+msgid "Nominal"
+msgstr ""
+
+#: rcr-gnome.glade:317 rcr-gnome.glade:789 rcr-gnome.glade:990
+msgid "Name"
+msgstr ""
+
+#: rcr-gnome.glade:367 rcr-gnome.glade:848
+msgid "Quantity"
+msgstr ""
+
+#: rcr-gnome.glade:436
+msgid "Boxes & cards"
+msgstr ""
+
+#: rcr-gnome.glade:453
+msgid "_File"
+msgstr ""
+
+#: rcr-gnome.glade:463
+msgid "Log in"
+msgstr ""
+
+#: rcr-gnome.glade:465
+msgid "_Login"
+msgstr ""
+
+#: rcr-gnome.glade:474
+msgid "Register new user"
+msgstr ""
+
+#: rcr-gnome.glade:476
+msgid "_Register"
+msgstr ""
+
+#: rcr-gnome.glade:491
+msgid "Import .xlsx Excel file"
+msgstr ""
+
+#: rcr-gnome.glade:493
+msgid "Import Excel _file"
+msgstr ""
+
+#: rcr-gnome.glade:502
+msgid "Import Excel files from directory"
+msgstr ""
+
+#: rcr-gnome.glade:504
+msgid "Import Excel _directory"
+msgstr ""
+
+#: rcr-gnome.glade:533
+msgid "_User"
+msgstr ""
+
+#: rcr-gnome.glade:544
+msgid "List"
+msgstr ""
+
+#: rcr-gnome.glade:554 rcr-gnome.glade:918
+msgid "Add"
+msgstr ""
+
+#: rcr-gnome.glade:563 rcr-gnome.glade:946
+msgid "Boxes"
+msgstr ""
+
+#: rcr-gnome.glade:576
+msgid "_Options"
+msgstr ""
+
+#: rcr-gnome.glade:587
+msgid "_Connect"
+msgstr ""
+
+#: rcr-gnome.glade:603
+msgid "_Preferences"
+msgstr ""
+
+#: rcr-gnome.glade:615
+msgid "_Help"
+msgstr ""
+
+#: rcr-gnome.glade:626
+msgid "_Statistics"
+msgstr ""
+
+#: rcr-gnome.glade:819
+msgid "Properties"
+msgstr ""
+
+#: rcr-gnome.glade:905
+msgid "User list"
+msgstr ""
+
+#: rcr-gnome.glade:960 rcr-gnome.glade:1383
+msgid "Close"
+msgstr ""
+
+#: rcr-gnome.glade:1002
+msgid "Rights"
+msgstr ""
+
+#: rcr-gnome.glade:1013 rcr-gnome.glade:1126 rcr-gnome.glade:1277
+#: rcr-gnome.glade:1589
+msgid "Password"
+msgstr ""
+
+#: rcr-gnome.glade:1041 rcr-gnome.glade:1055 rcr-gnome.glade:1338
+msgid "Login"
+msgstr ""
+
+#: rcr-gnome.glade:1101 rcr-gnome.glade:1252 rcr-gnome.glade:1564
+msgid "User name"
+msgstr ""
+
+#: rcr-gnome.glade:1158 rcr-gnome.glade:1204
+msgid "Register"
+msgstr ""
+
+#: rcr-gnome.glade:1189
+msgid "Register a new user"
+msgstr ""
+
+#: rcr-gnome.glade:1305
+msgid "Re-type password"
+msgstr ""
+
+#: rcr-gnome.glade:1336
+msgid "Switch to login"
+msgstr ""
+
+#: rcr-gnome.glade:1370
+msgid "Statistics"
+msgstr ""
+
+#: rcr-gnome.glade:1416
+msgid "Components"
+msgstr ""
+
+#: rcr-gnome.glade:1430
+msgid "Total"
+msgstr ""
+
+#: rcr-gnome.glade:1443 rcr-gnome.glade:1457
+msgid "0"
+msgstr ""
+
+#: rcr-gnome.glade:1502
+msgid "User"
+msgstr ""
+
+#: rcr-gnome.glade:1620 rcr-gnome.glade:1622
+msgid "Admin"
+msgstr ""

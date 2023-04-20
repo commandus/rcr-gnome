@@ -4,6 +4,8 @@
 #include <functional>
 #include <gtkmm.h>
 
+#include "rcr-gnome.h"
+
 #include "GRcrClient.h"
 #include "RcrSettings.h"
 
