@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-21 10:26+0900\n"
+"POT-Creation-Date: 2023-04-21 11:10+0900\n"
 "PO-Revision-Date: 2023-04-21 10:00+0900\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -18,13 +18,70 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
+#: GRcrClient.cpp:13 top-window.cpp:10
+msgid "All"
+msgstr "Все"
+
+#: GRcrClient.cpp:77
+msgid "Loading boxes"
+msgstr "Загружаются коробки"
+
+#: GRcrClient.cpp:99
+msgid "Loading boxes error"
+msgstr "Ошибка загрузки коробок"
+
+#: GRcrClient.cpp:134
+msgid "Loading boxes completed successfully"
+msgstr "Коробки загружены"
+
+#: GRcrClient.cpp:144
+msgid "Loading symbols"
+msgstr "Загружаются компоненты"
+
+#: GRcrClient.cpp:166
+msgid "Loading symbols completed successfully"
+msgstr "Компоненты загружены"
+
+#: GRcrClient.cpp:197
+msgid "Executing query"
+msgstr "Выполняется запрос"
+
+#: GRcrClient.cpp:236
+
+msgid "Executing query completed successfully"
+msgstr "Запрос выполнен"
+
+#: GRcrClient.cpp:293 GRcrClient.cpp:325
+msgid "Import boxes"
+msgstr "Импорт коробок"
+
+#: GRcrClient.cpp:312 GRcrClient.cpp:351
+msgid "Import boxes failed"
+msgstr "Ошибка импорта коробок"
+
+#: GRcrClient.cpp:315 GRcrClient.cpp:354
+msgid "Import boxes completed successfully"
+msgstr "Коробки импортированы"
+
+#: GRcrClient.cpp:364
+msgid "Loading users"
+msgstr "Загружаются пользователи"
+
+#: GRcrClient.cpp:380
+msgid "Loading users completed successfully"
+msgstr "Пользователи загружены"
+
+#: GRcrClient.cpp:387
+msgid "Getting statistics"
+msgstr "Чтение статистики"
+
+#: GRcrClient.cpp:398
+msgid "Getting statistics completed successfully"
+msgstr "Статистика собрана"
+
 #: rcr-app.cpp:26
 msgid "Building menus failed: "
 msgstr "Создание меню завершилось с ошибкой: "
-
-#: top-window.cpp:10
-msgid "All"
-msgstr "Все"
 
 #: top-window.cpp:12
 msgid ""
@@ -122,8 +179,8 @@ msgid ""
 "Yu.G. Shafer Institute of Cosmophysical Research and Aeronomy http://ikfia."
 "ysn.ru/"
 msgstr ""
-"2023 Институт космофизических исследований и аэрономии им. Ю.Г. Шафера "
-" http://ikfia.ysn.ru/"
+"2023 Институт космофизических исследований и аэрономии им. Ю.Г. Шафера  "
+"http://ikfia.ysn.ru/"
 
 #: top-window.cpp:235
 msgid "ICU https://icu.unicode.org/"

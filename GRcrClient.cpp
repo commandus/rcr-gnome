@@ -1,9 +1,6 @@
 //
 // Created by andrei on 29.03.23.
 //
-
-#define DEBUG
-
 #include <sstream>
 #include "GRcrClient.h"
 
@@ -11,18 +8,35 @@
 #include "string-helper.h"
 #include "utilstring.h"
 #include "utilfile.h"
+#include "rcr-gnome.h"
 
-#define DEF_NAME_ALL "All"
+#define DEF_NAME_ALL _("All")
 
 /*
  * grpcClient.cpp
  */
+
+void GRcrClient::start(const std::string &message)
+{
+    if (state)
+        state->onCallStarted(message);
+}
+
+void GRcrClient::finish(
+    int code,
+    const std::string &message
+)
+{
+    if (state)
+        state->onCallFinished(code, message);
+}
 
 GRcrClient::GRcrClient(
     std::shared_ptr<grpc::Channel> aChannel,
     const std::string &username,
     const std::string &password
 )
+    : state(nullptr)
 {
     channel = aChannel;
     stub = rcr::Rcr::NewStub(aChannel);
@@ -31,6 +45,7 @@ GRcrClient::GRcrClient(
 GRcrClient::GRcrClient(
     const std::string &host
 )
+    : state(nullptr)
 {
     std::stringstream ss;
     ss << host << ":" << 50051;
@@ -59,6 +74,7 @@ bool GRcrClient::loadBoxes(
     const Gtk::TreeModel::iterator *r = nullptr;
     if (!treeStore)
         return false;
+    start(_("Loading boxes"));
     treeStore->clear();
 
     Gtk::TreeModel::Row topRows[5];
@@ -80,6 +96,7 @@ bool GRcrClient::loadBoxes(
     grpc::Status status = stub->getBox(&context, request, &response);
     if (!status.ok()) {
         std::cerr << "Error: " << status.error_code() << " " << status.error_message() << std::endl;
+        finish(status.error_code(), _("Loading boxes error"));
         return false;
     }
 
@@ -114,6 +131,7 @@ bool GRcrClient::loadBoxes(
             }
         }
     }
+    finish(0, _("Loading boxes completed successfully"));
     return true;
 }
 
@@ -123,6 +141,7 @@ void GRcrClient::loadSymbols(
 {
     if (!listStore)
         return;
+    start(_("Loading symbols"));
     // before do it, unbind GUI elements first
     listStore->clear();
     // root element
@@ -144,6 +163,7 @@ void GRcrClient::loadSymbols(
         row.set_value(3, it->unit());
         row.set_value(4, it->pow10());
     }
+    finish(0, _("Loading symbols completed successfully"));
 }
 
 int GRcrClient::findSymbol(
@@ -174,6 +194,7 @@ void GRcrClient::query(
     const std::string &symbol,
     Glib::RefPtr<Gtk::ListStore> listStore
 ) {
+    start(_("Executing query"));
     grpc::ClientContext context;
     rcr::CardQueryRequest request;
     request.set_query(q);
@@ -212,6 +233,7 @@ void GRcrClient::query(
             row.set_value(7, it->card().symbol_id());
         }
     }
+    finish(0, _("Executing query completed successfully"));
 }
 
 std::string GRcrClient::properties2string(
@@ -268,7 +290,7 @@ bool GRcrClient::importFile(
     std::string content = file2string(fileName.c_str());
     if (content.empty())
         return false;
-
+    finish(0, _("Import boxes"));
     grpc::ClientContext context;
     rcr::ImportExcelRequest request;
     request.set_symbol(symbol);
@@ -287,8 +309,10 @@ bool GRcrClient::importFile(
     grpc::Status status = stub->importExcel(&context, request, &response);
     if (!status.ok()) {
         std::cerr << "Error: " << status.error_code() << " " << status.error_message() << std::endl;
+        finish(status.error_code(), _("Import boxes failed"));
         return false;
     }
+    finish(0, _("Import boxes completed successfully"));
     return true;
 }
 
@@ -298,6 +322,7 @@ bool GRcrClient::importDirectory(
     uint64_t boxId,
     bool numberInFileName
 ) {
+    start(_("Import boxes"));
     grpc::ClientContext context;
     rcr::ImportExcelRequest request;
     request.set_symbol(symbol);
@@ -323,8 +348,10 @@ bool GRcrClient::importDirectory(
     grpc::Status status = stub->importExcel(&context, request, &response);
     if (!status.ok()) {
         std::cerr << "Error: " << status.error_code() << " " << status.error_message() << std::endl;
+        finish(status.error_code(), _("Import boxes failed"));
         return false;
     }
+    finish(0, _("Import boxes completed successfully"));
     return true;
 }
 
@@ -334,6 +361,7 @@ void GRcrClient::loadUsers(
 ) {
     if (!listStore)
         return;
+    finish(0, _("Loading users"));
     // before do it, unbind GUI elements first
     listStore->clear();
     rcr::UserRequest request;
@@ -349,12 +377,14 @@ void GRcrClient::loadUsers(
         row.set_value(3, u.token());
         row.set_value(4, u.id());
     }
+    finish(0, _("Loading users completed successfully"));
 }
 
 void GRcrClient::getStatistics(
     uint64_t &componentCount,
     uint64_t &total
 ) {
+    finish(0, _("Getting statistics"));
     grpc::ClientContext context;
     rcr::CardQueryRequest request;
     request.set_query("* sum");
@@ -365,4 +395,9 @@ void GRcrClient::getStatistics(
     }
     componentCount = response.rslt().count();
     total = response.rslt().sum();
+    finish(0, _("Getting statistics completed successfully"));
+}
+
+void GRcrClient::setServiceState(ServiceStateIntf *value) {
+    state = value;
 }

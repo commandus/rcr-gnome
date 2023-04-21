@@ -10,11 +10,16 @@
 
 #include "gen/rcr.grpc.pb.h"
 #include "MeasureUnit.h"
+#include "ServiceStateIntf.h"
 
 #include <gtkmm.h>
 #include <gtkmm/treeview.h>
 
 class GRcrClient {
+private:
+    ServiceStateIntf *state;
+    void start(const std::string &message = "");
+    void finish(int code, const std::string &message = "");
 public:
     std::unique_ptr<rcr::Rcr::Stub> stub;
     std::shared_ptr<grpc::Channel> channel;
@@ -85,6 +90,8 @@ public:
         uint64_t &componentCount,
         uint64_t &total
     );
+
+    void setServiceState(ServiceStateIntf *value);
 };
 
 #endif //RCR_GNOME_GRCRCLIENT_H

@@ -17,7 +17,7 @@
 #include "UserDialog.h"
 #include "StatisticsDialog.h"
 
-class TopWindow: public Gtk::Window {
+class TopWindow: public Gtk::Window, public ServiceStateIntf {
 public:
     TopWindow(BaseObjectType *, const Glib::RefPtr<Gtk::Builder> &);
 
@@ -43,7 +43,6 @@ public:
     void saveSettings();
 
 private:
-
     RcrSettings *settings;
     GRcrClient *client;
 
@@ -102,6 +101,11 @@ private:
     void bindWidgets();
 
     void doQuery();
+
+    void onCallStarted(const std::string &message = "") override;
+    void onCallFinished(int code, const std::string &message = "") override;
+    // Not used yet
+    void onProgress(int pos, int total) override;
 
     // dialogs
     void createDialogs();

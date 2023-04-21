@@ -274,6 +274,7 @@ void TopWindow::onFileConnect() {
     if (client)
         delete client;
     client = new GRcrClient(settings->settings.service(settings->selected).addr());
+    client->setServiceState(this);
 
     mComboBoxSymbol->unset_model();
     client->loadSymbols(mRefListStoreSymbol);
@@ -403,6 +404,29 @@ void TopWindow::searchCard(
     mTreeViewCard->set_model(Glib::RefPtr<Gtk::TreeModelSort>(Gtk::TreeModelSort::create(mRefTreeModelFilterCard)));
 
     settings->settings.mutable_service(settings->selected)->set_last_query(q);
+}
+
+void TopWindow::onCallStarted(
+    const std::string &message
+)
+{
+    mProgressBar->pulse();
+}
+
+void TopWindow::onCallFinished(
+    int code,
+    const std::string &message
+)
+{
+    mProgressBar->set_fraction(0.0f);
+}
+// Not used yet
+void TopWindow::onProgress(
+    int pos,
+    int total
+)
+{
+    mProgressBar->pulse();
 }
 
 void TopWindow::doQuery() {

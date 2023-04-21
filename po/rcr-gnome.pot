@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-21 10:27+0900\n"
+"POT-Creation-Date: 2023-04-21 11:18+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,12 +17,68 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: rcr-app.cpp:26
-msgid "Building menus failed: "
+#: GRcrClient.cpp:13 top-window.cpp:10
+msgid "All"
 msgstr ""
 
-#: top-window.cpp:10
-msgid "All"
+#: GRcrClient.cpp:77
+msgid "Loading boxes"
+msgstr ""
+
+#: GRcrClient.cpp:99
+msgid "Loading boxes error"
+msgstr ""
+
+#: GRcrClient.cpp:134
+msgid "Loading boxes completed successfully"
+msgstr ""
+
+#: GRcrClient.cpp:144
+msgid "Loading symbols"
+msgstr ""
+
+#: GRcrClient.cpp:166
+msgid "Loading symbols completed successfully"
+msgstr ""
+
+#: GRcrClient.cpp:197
+msgid "Executing query"
+msgstr ""
+
+#: GRcrClient.cpp:236
+msgid "Executing query completed successfully"
+msgstr ""
+
+#: GRcrClient.cpp:293 GRcrClient.cpp:325
+msgid "Import boxes"
+msgstr ""
+
+#: GRcrClient.cpp:312 GRcrClient.cpp:351
+msgid "Import boxes failed"
+msgstr ""
+
+#: GRcrClient.cpp:315 GRcrClient.cpp:354
+msgid "Import boxes completed successfully"
+msgstr ""
+
+#: GRcrClient.cpp:364
+msgid "Loading users"
+msgstr ""
+
+#: GRcrClient.cpp:380
+msgid "Loading users completed successfully"
+msgstr ""
+
+#: GRcrClient.cpp:387
+msgid "Getting statistics"
+msgstr ""
+
+#: GRcrClient.cpp:398
+msgid "Getting statistics completed successfully"
+msgstr ""
+
+#: rcr-app.cpp:26
+msgid "Building menus failed: "
 msgstr ""
 
 #: top-window.cpp:12
