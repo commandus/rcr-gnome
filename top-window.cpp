@@ -204,6 +204,7 @@ bool TopWindow::on_key_press_event(GdkEventKey* event)
 void TopWindow::onHelpAbout()
 {
 	mAboutDialog = new Gtk::AboutDialog();
+    mAboutDialog->set_size_request(640, 480);
 	mAboutDialog->set_transient_for(*this);
 	mAboutDialog->set_logo(Gdk::Pixbuf::create_from_resource("/ic_launcher.png", -1, 40, true));
 	mAboutDialog->set_program_name(_("rcr for Gnome"));
@@ -230,15 +231,14 @@ void TopWindow::onHelpAbout()
 
 	std::vector<Glib::ustring> list_authors;
 	list_authors.push_back(_("Andrei Ivanov andrey.ivanov@ikfia.ysn.ru"));
-    list_authors.push_back(_("Yu.G. Shafer Institute of Cosmophysical Research and Aeronomy of Siberian Branch of the Russian Academy of Sciences http://ikfia.ysn.ru/"));
-    list_authors.push_back(_("The International Components for Unicode (ICU) libraries https://icu.unicode.org/"));
-    list_authors.push_back(_("xlnt library for manipulating spreadsheets https://github.com/tfussell/xlnt"));
-    list_authors.push_back(_("gRPC high performance, open source universal RPC framework https://grpc.io/"));
+    list_authors.push_back(_("Yu.G. Shafer Institute of Cosmophysical Research and Aeronomy http://ikfia.ysn.ru/"));
+    list_authors.push_back(_("ICU https://icu.unicode.org/"));
+    list_authors.push_back(_("xlnt https://github.com/tfussell/xlnt"));
+    list_authors.push_back(_("gRPC https://grpc.io/"));
 
     mAboutDialog->set_authors(list_authors);
 	mAboutDialog->signal_response().connect(
 		sigc::mem_fun(*this, &TopWindow::onAboutDialogResponse));
-
 
 	mAboutDialog->show();
 	mAboutDialog->present();

@@ -1,6 +1,26 @@
+# Russian translations for PACKAGE package.
+# Copyright (C) 2023 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Automatically generated, 2023.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-04-21 10:26+0900\n"
+"PO-Revision-Date: 2023-04-21 10:00+0900\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
 #: rcr-app.cpp:26
 msgid "Building menus failed: "
-msgstr ""
+msgstr "Создание меню завершилось с ошибкой: "
 
 #: top-window.cpp:10
 msgid "All"
@@ -39,9 +59,11 @@ msgid ""
 "WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN \n"
 "THE SOFTWARE."
 msgstr ""
-"Copyright (c) 2023 Институт космофизических исследований и аэрономии им. Ю.Г. Шафера\n"
-"Сибирского отделения Российской академии наук\n\n"
-"Лицензия MIT\n\n"
+"Copyright (c) 2023 Институт космофизических исследований и аэрономии\n"
+"им. Ю.Г. Шафера Сибирского отделения Российской академии наук\n"
+"\n"
+"Лицензия MIT\n"
+"\n"
 "Данная лицензия разрешает лицам, получившим копию данного\n"
 "программного обеспечения и сопутствующей документации\n"
 "(далее — Программное обеспечение), безвозмездно использовать\n"
@@ -50,10 +72,12 @@ msgstr ""
 "публикацию, распространение, сублицензирование и/или продажу\n"
 "копий Программного обеспечения, а также лицам, которым\n"
 "предоставляется данное Программное обеспечение, при соблюдении\n"
-"следующих условий:\n\n"
+"следующих условий:\n"
+"\n"
 "Указанное выше уведомление об авторском праве и данные условия\n"
 "должны быть включены во все копии или значимые части данного\n"
-"Программного обеспечения.\n\n"
+"Программного обеспечения.\n"
+"\n"
 "ДАННОЕ ПРОГРАММНОЕ ОБЕСПЕЧЕНИЕ ПРЕДОСТАВЛЯЕТСЯ «КАК ЕСТЬ»,\n"
 "БЕЗ КАКИХ-ЛИБО ГАРАНТИЙ, ЯВНО ВЫРАЖЕННЫХ ИЛИ ПОДРАЗУМЕВАЕМЫХ,\n"
 "ВКЛЮЧАЯ ГАРАНТИИ ТОВАРНОЙ ПРИГОДНОСТИ, СООТВЕТСТВИЯ ПО ЕГО\n"
@@ -69,15 +93,15 @@ msgstr ""
 msgid "Excel spreadsheet files"
 msgstr "Файлы Excel"
 
-#: top-window.cpp:209
+#: top-window.cpp:210
 msgid "rcr for Gnome"
 msgstr "rcr версия Gnome"
 
-#: top-window.cpp:219
+#: top-window.cpp:220
 msgid "Custom build"
-msgstr ""
+msgstr "Специальная сборка без версии"
 
-#: top-window.cpp:224
+#: top-window.cpp:225
 msgid ""
 "2023 Yu.G. Shafer Institute of Cosmophysical Research and Aeronomy of "
 "Siberian Branch of the Russian Academy of Sciences"
@@ -85,123 +109,119 @@ msgstr ""
 "2023 Институт космофизических исследований и аэрономии им. Ю.Г. Шафера "
 "Сибирского отделения Российской академии наук"
 
-#: top-window.cpp:225
+#: top-window.cpp:226
 msgid "In memory of Konstantin Zolotovsky"
 msgstr "В память о Константине Золотовском"
 
-#: top-window.cpp:232
+#: top-window.cpp:233
 msgid "Andrei Ivanov andrey.ivanov@ikfia.ysn.ru"
 msgstr "А. Иванов andrey.ivanov@ikfia.ysn.ru"
 
-#: top-window.cpp:233
-msgid ""
-"Yu.G. Shafer Institute of Cosmophysical Research and Aeronomy of Siberian "
-"Branch of the Russian Academy of Sciences http://ikfia.ysn.ru/"
-msgstr ""
-"2023 Институт космофизических исследований и аэрономии им. Ю.Г. Шафера "
-"Сибирского отделения Российской академии наук http://ikfia.ysn.ru/"
-
 #: top-window.cpp:234
 msgid ""
-"The International Components for Unicode (ICU) libraries https://icu.unicode."
-"org/"
+"Yu.G. Shafer Institute of Cosmophysical Research and Aeronomy http://ikfia."
+"ysn.ru/"
 msgstr ""
+"2023 Институт космофизических исследований и аэрономии им. Ю.Г. Шафера "
+" http://ikfia.ysn.ru/"
 
 #: top-window.cpp:235
-msgid ""
-"xlnt library for manipulating spreadsheets https://github.com/tfussell/xlnt"
+msgid "ICU https://icu.unicode.org/"
 msgstr ""
 
 #: top-window.cpp:236
-msgid ""
-"gRPC high performance, open source universal RPC framework https://grpc.io/"
+msgid "xlnt https://github.com/tfussell/xlnt"
+msgstr ""
+
+#: top-window.cpp:237
+msgid "gRPC https://grpc.io/"
 msgstr ""
 
 #: top-window.cpp:371
 msgid "Selected box "
-msgstr ""
+msgstr "Выбрана коробка "
 
 #: top-window.cpp:521 top-window.cpp:616
 msgid "Import "
-msgstr ""
+msgstr "Импорт"
 
 #: top-window.cpp:521 top-window.cpp:616
 msgid " to box "
-msgstr ""
+msgstr " в коробку"
 
 #: top-window.cpp:528 top-window.cpp:623
 msgid "Import"
-msgstr ""
+msgstr "Импорт"
 
 #: top-window.cpp:640
 msgid "Wrong box specified"
-msgstr ""
+msgstr "Указана неверная коробка"
 
 #: top-window.cpp:648
 msgid "Error import Excel files"
-msgstr ""
+msgstr "Ошибка импорта Excel файла"
 
 #: top-window.cpp:653
 msgid "Excel files imported successfully"
-msgstr ""
+msgstr "Excel файлы успешно импортированы"
 
 #: top-window.cpp:659
 msgid "Error import Excel file"
-msgstr ""
+msgstr "Ошибка импорта Excel файла"
 
 #: top-window.cpp:664
 msgid "Excel file imported successfully"
-msgstr ""
+msgstr "Excel файл успешно импортирован"
 
 #: rcr-gnome.glade:8
 msgid "Box identifier"
-msgstr ""
+msgstr "Номер коробки"
 
 #: rcr-gnome.glade:23
 msgid "Confirm"
-msgstr ""
+msgstr "Готово"
 
 #: rcr-gnome.glade:37 rcr-gnome.glade:197 rcr-gnome.glade:1069
 #: rcr-gnome.glade:1218 rcr-gnome.glade:1530
 msgid "Cancel"
-msgstr ""
+msgstr "Отмена"
 
 #: rcr-gnome.glade:68 rcr-gnome.glade:342 rcr-gnome.glade:717
 #: rcr-gnome.glade:834
 msgid "Box"
-msgstr ""
+msgstr "Коробка"
 
 #: rcr-gnome.glade:90
 msgid "Number in file name"
-msgstr ""
+msgstr "Номер в имени файла"
 
 #: rcr-gnome.glade:158
 msgid "Card"
-msgstr ""
+msgstr "Карточка"
 
 #: rcr-gnome.glade:173 rcr-gnome.glade:1516
 msgid "Save"
-msgstr ""
+msgstr "Сохранить"
 
 #: rcr-gnome.glade:185 rcr-gnome.glade:932
 msgid "Remove"
-msgstr ""
+msgstr "Удалить"
 
 #: rcr-gnome.glade:232
 msgid "Component"
-msgstr ""
+msgstr "Компонент"
 
 #: rcr-gnome.glade:265 rcr-gnome.glade:804
 msgid "Nominal"
-msgstr ""
+msgstr "Номинал"
 
 #: rcr-gnome.glade:317 rcr-gnome.glade:789 rcr-gnome.glade:990
 msgid "Name"
-msgstr ""
+msgstr "Имя"
 
 #: rcr-gnome.glade:367 rcr-gnome.glade:848
 msgid "Quantity"
-msgstr ""
+msgstr "Количество"
 
 #: rcr-gnome.glade:436
 msgid "Boxes & cards"
@@ -243,6 +263,10 @@ msgstr "Импорт папки с файлами Excel"
 msgid "Import Excel _directory"
 msgstr "Импорт _папки с файлами Excel"
 
+#: rcr-gnome.glade:520
+msgid "_Quit"
+msgstr "_Выход"
+
 #: rcr-gnome.glade:533
 msgid "_User"
 msgstr "_Пользователь"
@@ -265,76 +289,80 @@ msgstr "_Опции"
 
 #: rcr-gnome.glade:587
 msgid "_Connect"
-msgstr ""
+msgstr "_Коннект"
 
 #: rcr-gnome.glade:603
 msgid "_Preferences"
-msgstr ""
+msgstr "_Настройки"
 
 #: rcr-gnome.glade:615
 msgid "_Help"
-msgstr ""
+msgstr "_Справка"
 
 #: rcr-gnome.glade:626
 msgid "_Statistics"
-msgstr ""
+msgstr "_Статистика"
+
+#: rcr-gnome.glade:635
+msgid "_About"
+msgstr "_О программе"
 
 #: rcr-gnome.glade:819
 msgid "Properties"
-msgstr ""
+msgstr "Свойства"
 
 #: rcr-gnome.glade:905
 msgid "User list"
-msgstr ""
+msgstr "Список пользователей"
 
 #: rcr-gnome.glade:960 rcr-gnome.glade:1383
 msgid "Close"
-msgstr ""
+msgstr "Закрыть"
 
 #: rcr-gnome.glade:1002
 msgid "Rights"
-msgstr ""
+msgstr "Права"
 
 #: rcr-gnome.glade:1013 rcr-gnome.glade:1126 rcr-gnome.glade:1277
 #: rcr-gnome.glade:1589
 msgid "Password"
-msgstr ""
+msgstr "Пароль"
 
 #: rcr-gnome.glade:1041 rcr-gnome.glade:1055 rcr-gnome.glade:1338
 msgid "Login"
-msgstr ""
+msgstr "Логин"
 
 #: rcr-gnome.glade:1101 rcr-gnome.glade:1252 rcr-gnome.glade:1564
 msgid "User name"
-msgstr ""
+msgstr "Имя пользователя"
 
 #: rcr-gnome.glade:1158 rcr-gnome.glade:1204
 msgid "Register"
-msgstr ""
+msgstr "Регистрация"
 
 #: rcr-gnome.glade:1189
 msgid "Register a new user"
-msgstr ""
+msgstr "Зарегистрировать нового пользователя"
 
 #: rcr-gnome.glade:1305
 msgid "Re-type password"
-msgstr ""
+msgstr "Введите пароль еще раз"
 
 #: rcr-gnome.glade:1336
 msgid "Switch to login"
-msgstr ""
+msgstr "Перейти к логину"
 
 #: rcr-gnome.glade:1370
 msgid "Statistics"
-msgstr ""
+msgstr "Статистика"
 
 #: rcr-gnome.glade:1416
 msgid "Components"
-msgstr ""
+msgstr "Компоненты"
 
 #: rcr-gnome.glade:1430
 msgid "Total"
-msgstr ""
+msgstr "Всего"
 
 #: rcr-gnome.glade:1443 rcr-gnome.glade:1457
 msgid "0"
@@ -342,8 +370,8 @@ msgstr ""
 
 #: rcr-gnome.glade:1502
 msgid "User"
-msgstr ""
+msgstr "Пользователь"
 
 #: rcr-gnome.glade:1620 rcr-gnome.glade:1622
 msgid "Admin"
-msgstr ""
+msgstr "Администратор"

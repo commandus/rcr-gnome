@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-20 16:53+0900\n"
+"POT-Creation-Date: 2023-04-21 10:27+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -63,48 +63,44 @@ msgstr ""
 msgid "Excel spreadsheet files"
 msgstr ""
 
-#: top-window.cpp:209
+#: top-window.cpp:210
 msgid "rcr for Gnome"
 msgstr ""
 
-#: top-window.cpp:219
+#: top-window.cpp:220
 msgid "Custom build"
 msgstr ""
 
-#: top-window.cpp:224
+#: top-window.cpp:225
 msgid ""
 "2023 Yu.G. Shafer Institute of Cosmophysical Research and Aeronomy of "
 "Siberian Branch of the Russian Academy of Sciences"
 msgstr ""
 
-#: top-window.cpp:225
+#: top-window.cpp:226
 msgid "In memory of Konstantin Zolotovsky"
 msgstr ""
 
-#: top-window.cpp:232
-msgid "Andrei Ivanov andrey.ivanov@ikfia.ysn.ru"
-msgstr ""
-
 #: top-window.cpp:233
-msgid ""
-"Yu.G. Shafer Institute of Cosmophysical Research and Aeronomy of Siberian "
-"Branch of the Russian Academy of Sciences http://ikfia.ysn.ru/"
+msgid "Andrei Ivanov andrey.ivanov@ikfia.ysn.ru"
 msgstr ""
 
 #: top-window.cpp:234
 msgid ""
-"The International Components for Unicode (ICU) libraries https://icu.unicode."
-"org/"
+"Yu.G. Shafer Institute of Cosmophysical Research and Aeronomy http://ikfia."
+"ysn.ru/"
 msgstr ""
 
 #: top-window.cpp:235
-msgid ""
-"xlnt library for manipulating spreadsheets https://github.com/tfussell/xlnt"
+msgid "ICU https://icu.unicode.org/"
 msgstr ""
 
 #: top-window.cpp:236
-msgid ""
-"gRPC high performance, open source universal RPC framework https://grpc.io/"
+msgid "xlnt https://github.com/tfussell/xlnt"
+msgstr ""
+
+#: top-window.cpp:237
+msgid "gRPC https://grpc.io/"
 msgstr ""
 
 #: top-window.cpp:371
@@ -233,6 +229,10 @@ msgstr ""
 msgid "Import Excel _directory"
 msgstr ""
 
+#: rcr-gnome.glade:520
+msgid "_Quit"
+msgstr ""
+
 #: rcr-gnome.glade:533
 msgid "_User"
 msgstr ""
@@ -267,6 +267,10 @@ msgstr ""
 
 #: rcr-gnome.glade:626
 msgid "_Statistics"
+msgstr ""
+
+#: rcr-gnome.glade:635
+msgid "_About"
 msgstr ""
 
 #: rcr-gnome.glade:819

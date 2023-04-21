@@ -7,6 +7,8 @@ for f in $(ls po/rcr-gnome.*.po) ; do
   if [[ $f =~ $regex ]]; then
     code="${BASH_REMATCH[1]}"
     echo -n Merge ${code} ..
+# Add UTF-8 to .po
+#   msginit --no-translator -i $TEMPLATE -o $f --locale=ru_RU.UTF-8
     msgmerge -U $f $TEMPLATE
     echo Copying ${code} ..
     mkdir -p locale/${code}/LC_MESSAGES
