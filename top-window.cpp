@@ -53,6 +53,7 @@ void TopWindow::bindWidgets() {
     mRefActionGroup->add_action("userList", sigc::mem_fun(*this, &TopWindow::onUserList));
     mRefActionGroup->add_action("userAdd", sigc::mem_fun(*this, &TopWindow::onUserAdd));
     mRefActionGroup->add_action("userBox", sigc::mem_fun(*this, &TopWindow::onUserBox));
+    mRefActionGroup->add_action("properties", sigc::mem_fun(*this, &TopWindow::onProperties));
 
     // labelStatisticsComponents
 
@@ -69,7 +70,6 @@ void TopWindow::bindWidgets() {
 
     mTreeViewSelectionBox = Glib::RefPtr<Gtk::TreeSelection>::cast_static(mRefBuilder->get_object("tvsBox"));
     mTreeViewSelectionCard = Glib::RefPtr<Gtk::TreeSelection>::cast_static(mRefBuilder->get_object("tvsCard"));
-
 }
 
 void TopWindow::loadSettings() {
@@ -282,6 +282,8 @@ void TopWindow::onFileConnect() {
 
     selectSymbol(mComboBoxSymbol, settings->settings.service(settings->selected).last_component_symbol());
     reloadBoxTree();
+    // bind client with dictionaries to dialog
+    propertyTypeDialog->setClient(client, propertyTypeEditDialog);
 }
 
 void TopWindow::reloadBoxTree() {
@@ -446,6 +448,8 @@ void TopWindow::createDialogs() {
     mRefBuilder->get_widget_derived("userListDialog", userListDialog);
     mRefBuilder->get_widget_derived("userDialog", userDialog);
     mRefBuilder->get_widget_derived("statisticsDialog", statisticsDialog);
+    mRefBuilder->get_widget_derived("propertyTypeDialog", propertyTypeDialog);
+    mRefBuilder->get_widget_derived("propertyTypeEditDialog", propertyTypeEditDialog);
 }
 
 void TopWindow::onHideCardWindow(Gtk::Window *window) {
@@ -616,6 +620,11 @@ void TopWindow::onUserList()
 void TopWindow::onUserAdd()
 {
     editUser(nullptr);
+}
+
+void TopWindow::onProperties()
+{
+    propertyTypeDialog->run();
 }
 
 void TopWindow::onUserBox()

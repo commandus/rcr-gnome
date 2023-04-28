@@ -16,6 +16,8 @@
 #include "UserListDialog.h"
 #include "UserDialog.h"
 #include "StatisticsDialog.h"
+#include "PropertyTypeDialog.h"
+#include "PropertyTypeEditDialog.h"
 
 class TopWindow: public Gtk::Window, public ServiceStateIntf {
 public:
@@ -35,6 +37,9 @@ public:
     UserDialog *userDialog;
     // Statistics
     StatisticsDialog *statisticsDialog;
+    // Property type
+    PropertyTypeDialog *propertyTypeDialog;
+    PropertyTypeEditDialog *propertyTypeEditDialog;
 
     virtual ~TopWindow();
 
@@ -83,6 +88,7 @@ private:
     void onUserList();
     void onUserAdd();
     void onUserBox();
+    void onProperties();
 
     void selectSymbol(
         Gtk::ComboBox *cb,
