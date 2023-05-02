@@ -25,13 +25,26 @@ void UserDialog::bindWidgets() {
     mRefBuilder->get_widget("bUserSave", refButtonSave);
     mRefBuilder->get_widget("bUserCancel", refButtonCancel);
 
-
     mRefActionGroup = Gio::SimpleActionGroup::create();
     mRefActionGroup->add_action("userCancel", sigc::mem_fun(*this, &UserDialog::onCancel));
     mRefActionGroup->add_action("userSave", sigc::mem_fun(*this, &UserDialog::onSave));
     mRefActionGroup->add_action("userRightsAdmin", sigc::mem_fun(*this, &UserDialog::onRightsAdmin));
 
     insert_action_group("rcr", mRefActionGroup);
+}
+
+bool UserDialog::on_key_press_event(GdkEventKey* event)
+{
+    switch (event->keyval) {
+        case GDK_KEY_Return:
+        case GDK_KEY_KP_Enter:
+            response(Gtk::RESPONSE_OK);
+            onSave();
+            break;
+        default:
+            return Gtk::Window::on_key_press_event(event);
+    }
+    return FALSE;
 }
 
 void UserDialog::onRightsAdmin()

@@ -16,11 +16,16 @@ private:
     Glib::RefPtr<Gio::SimpleActionGroup> mRefActionGroup;
     Gtk::Entry *entryPropertyTypeEditKey;
     Gtk::Entry *entryPropertyTypeEditDescription;
+    Gtk::Button *refButtonPropertyTypeEditDelete;
     Gtk::Button *refButtonPropertyTypeEditSave;
     Gtk::Button *refButtonPropertyTypeEditCancel;
     void bindWidgets();
+    void onDelete();
     void onSave();
     void onCancel();
+    bool on_key_press_event(GdkEventKey *event) override;
+protected:
+    uint64_t id;
 public:
     PropertyTypeEditDialog(
         BaseObjectType* cobject,
@@ -28,6 +33,11 @@ public:
     );
     virtual ~PropertyTypeEditDialog();
     void setClient(GRcrClient *client);
+    void set(
+        uint64_t id,
+        const std::string &key,
+        const std::string &description
+    );
 };
 
 #endif //RCR_GNOME_PROPERTYTYPEEDITDIALOG_H

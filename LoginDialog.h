@@ -15,11 +15,11 @@ private:
     Gtk::ToolButton* refButtonRegisterSwitchToLogin;
     Gtk::Button* refButtonOK;
     Gtk::Button* refButtonCancel;
-    bool on_key_press_event(GdkEventKey *event) override;
     void bindWidgets();
     void onLogin();
     void onCancel();
     void onSwitchToLogin();
+    bool on_key_press_event(GdkEventKey *event) override;
 public:
     Gtk::Entry* refEntryLogin;
     Gtk::Entry* refEntryPassword;

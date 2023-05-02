@@ -33,13 +33,15 @@ void GRcrClient::finish(
 
 GRcrClient::GRcrClient(
     std::shared_ptr<grpc::Channel> aChannel,
-    const std::string &username,
-    const std::string &password
+    const std::string &aUserName,
+    const std::string &aPassword
 )
     : state(nullptr)
 {
     channel = aChannel;
     stub = rcr::Rcr::NewStub(aChannel);
+    username = aUserName;
+    password = aPassword;
 }
 
 GRcrClient::GRcrClient(
@@ -52,15 +54,6 @@ GRcrClient::GRcrClient(
     std::string target(ss.str());
     channel = grpc::CreateChannel(target, grpc::InsecureChannelCredentials());
     stub = rcr::Rcr::NewStub(channel);
-
-    grpc::ClientContext context;
-    rcr::DictionariesRequest request;
-    request.set_flags(0);
-
-    grpc::Status status = stub->getDictionaries(&context, request, &dictionaries);
-    if (!status.ok()) {
-        std::cerr << "Error: " << status.error_code() << " " << status.error_message() << std::endl;
-    }
 }
 
 GRcrClient::~GRcrClient()
@@ -135,17 +128,35 @@ bool GRcrClient::loadBoxes(
     return true;
 }
 
-void GRcrClient::loadSymbols(
-    Glib::RefPtr<Gtk::ListStore> listStore
+void GRcrClient::loadDictionaries()
+{
+    start(_("Loading dictionaries"));
+    grpc::ClientContext context;
+    rcr::DictionariesRequest request;
+    request.set_flags(0);
+
+    grpc::Status status = stub->getDictionaries(&context, request, &dictionaries);
+    if (!status.ok()) {
+        std::cerr << "Error: " << status.error_code() << " " << status.error_message() << std::endl;
+    }
+
+    // before do it, unbind GUI elements first
+    // just make sure does symbols ordered
+    reorderDisctionaries(dictionaries);
+    finish(0, _("Loading dictionaries completed successfully"));
+}
+
+void GRcrClient::bindSymbols(
+    Glib::RefPtr<Gtk::ListStore> target
 )
 {
-    if (!listStore)
+    if (!target)
         return;
     start(_("Loading symbols"));
     // before do it, unbind GUI elements first
-    listStore->clear();
+    target->clear();
     // root element
-    Gtk::TreeModel::Row row = *listStore->append();
+    Gtk::TreeModel::Row row = *target->append();
     row.set_value <Glib::ustring>(0, DEF_NAME_ALL);
     row.set_value(1, 0);
     row.set_value <Glib::ustring>(2, "");
@@ -156,7 +167,7 @@ void GRcrClient::loadSymbols(
     reorderDisctionaries(dictionaries);
 
     for (auto it = dictionaries.symbol().begin(); it != dictionaries.symbol().end(); ++it) {
-        Gtk::TreeModel::Row row = *listStore->append();
+        Gtk::TreeModel::Row row = *target->append();
         row.set_value(0, it->description());
         row.set_value(1, it->id());
         row.set_value(2, it->sym());
@@ -400,4 +411,48 @@ void GRcrClient::getStatistics(
 
 void GRcrClient::setServiceState(ServiceStateIntf *value) {
     state = value;
+}
+
+void GRcrClient::savePropertyType(
+    uint64_t id,
+    const std::string &key,
+    const std::string &description
+) {
+    grpc::ClientContext context;
+    rcr::ChPropertyTypeRequest chPropertyTypeRequest;
+    rcr::OperationResponse response;
+    chPropertyTypeRequest.mutable_user()->set_name(username);
+    chPropertyTypeRequest.mutable_user()->set_password(password);
+    if (id == 0) {
+        chPropertyTypeRequest.set_operationsymbol("+");
+    } else {
+        chPropertyTypeRequest.set_operationsymbol("=");
+    }
+    chPropertyTypeRequest.mutable_value()->set_key(key);
+    chPropertyTypeRequest.mutable_value()->set_description(description);
+
+    grpc::Status status = stub->chPropertyType(&context, chPropertyTypeRequest, &response);
+    if (!status.ok()) {
+        std::cerr << "Error: " << status.error_code() << " " << status.error_message() << std::endl;
+    }
+    // reload dictionaries
+    loadDictionaries();
+}
+
+void GRcrClient::rmPropertyType(
+    uint64_t id
+)
+{
+    grpc::ClientContext context;
+    rcr::ChPropertyTypeRequest chPropertyTypeRequest;
+    rcr::OperationResponse response;
+    chPropertyTypeRequest.mutable_user()->set_name(username);
+    chPropertyTypeRequest.mutable_user()->set_password(password);
+    chPropertyTypeRequest.set_operationsymbol("-");
+    grpc::Status status = stub->chPropertyType(&context, chPropertyTypeRequest, &response);
+    if (!status.ok()) {
+        std::cerr << "Error: " << status.error_code() << " " << status.error_message() << std::endl;
+    }
+    // reload dictionaries
+    loadDictionaries();
 }

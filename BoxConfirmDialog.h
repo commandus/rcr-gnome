@@ -16,10 +16,10 @@ private:
     Gtk::Button *refButtonContinue;
     Gtk::Button *refButtonCancel;
 
-    bool on_key_press_event(GdkEventKey *event) override;
     void bindWidgets();
     void onBoxConfirm();
     void onBoxCancel();
+    bool on_key_press_event(GdkEventKey *event) override;
 public:
     BoxConfirmDialog(
         BaseObjectType* cobject,

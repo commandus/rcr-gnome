@@ -25,6 +25,7 @@ private:
     void onRightsAdmin();
     void onSave();
     void onCancel();
+    bool on_key_press_event(GdkEventKey *event) override;
 public:
     UserDialog(
         BaseObjectType* cobject,

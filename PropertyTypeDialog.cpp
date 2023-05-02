@@ -33,6 +33,20 @@ void PropertyTypeDialog::bindWidgets() {
     mRefActionGroup->add_action("propertyTypeClose", sigc::mem_fun(*this, &PropertyTypeDialog::onClose));
 
     insert_action_group("rcr", mRefActionGroup);
+
+    mTreeViewSelectionPropertyType = Glib::RefPtr<Gtk::TreeSelection>::cast_static(mRefBuilder->get_object("tvsPropertyType"));
+}
+
+bool PropertyTypeDialog::on_key_press_event(GdkEventKey* event)
+{
+    switch (event->keyval) {
+        case GDK_KEY_plus:
+            response(Gtk::RESPONSE_YES);
+            onAdd();
+            break;
+        default:
+            return Gtk::Window::on_key_press_event(event);
+    }
 }
 
 void PropertyTypeDialog::onPropertyTypeActivated(
@@ -42,16 +56,30 @@ void PropertyTypeDialog::onPropertyTypeActivated(
 {
     if (!propertyTypeEditDialog)
         return;
-    propertyTypeEditDialog->run();
+
+    Gtk::TreeModel::iterator iter = mTreeViewSelectionPropertyType->get_selected();
+    if (!iter)
+        return;
     hide();
+    Gtk::TreeModel::Row row = *iter;
+    uint64_t id;
+    std::string key, description;
+    row.get_value(0, id);
+    row.get_value(1, key);
+    row.get_value(2, description);
+    propertyTypeEditDialog->setClient(client);
+    propertyTypeEditDialog->set(id, key, description);
+    propertyTypeEditDialog->run();
 }
 
 void PropertyTypeDialog::onAdd()
 {
     if (!propertyTypeEditDialog)
         return;
-    propertyTypeEditDialog->run();
     hide();
+    propertyTypeEditDialog->setClient(client);
+    propertyTypeEditDialog->set(0, "", "");
+    propertyTypeEditDialog->run();
 }
 
 void PropertyTypeDialog::onClose()

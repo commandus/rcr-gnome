@@ -31,6 +31,7 @@ private:
     void onRemove();
     void onBoxes();
     void onCancel();
+    bool on_key_press_event(GdkEventKey *event) override;
 public:
     rcr::User selectedUser;
     UserListDialog(

@@ -18,8 +18,16 @@
 class GRcrClient {
 private:
     ServiceStateIntf *state;
-    void start(const std::string &message = "");
-    void finish(int code, const std::string &message = "");
+    std::string username;
+    std::string password;
+
+    void start(
+        const std::string &message = ""
+    );
+    void finish(
+        int code,
+        const std::string &message = ""
+    );
 public:
     std::unique_ptr<rcr::Rcr::Stub> stub;
     std::shared_ptr<grpc::Channel> channel;
@@ -34,15 +42,20 @@ public:
         const std::string &host
     );
     virtual ~GRcrClient();
-    void loadSymbols(
+    void loadDictionaries();
+    void bindSymbols(
         Glib::RefPtr<Gtk::ListStore> target
     );
     bool loadBoxes(
         Glib::RefPtr<Gtk::TreeStore> treeStore
     );
 
-    int findSymbol(const std::string &symbol);
-    COMPONENT findSymbol(uint64_t symbolId);
+    int findSymbol(
+        const std::string &symbol
+    );
+    COMPONENT findSymbol(
+        uint64_t symbolId
+    );
 
     void query(
         const std::string &q,
@@ -91,7 +104,18 @@ public:
         uint64_t &total
     );
 
-    void setServiceState(ServiceStateIntf *value);
+    void setServiceState(
+        ServiceStateIntf *value
+    );
+
+    void savePropertyType(
+        uint64_t id,
+        const std::string &key,
+        const std::string &desctiption
+    );
+    void rmPropertyType(
+        uint64_t id
+    );
 };
 
 #endif //RCR_GNOME_GRCRCLIENT_H

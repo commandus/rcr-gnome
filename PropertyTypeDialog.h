@@ -21,6 +21,7 @@ private:
     Gtk::Button *refButtonPropertyTypeAdd;
     Gtk::Button *refButtonPropertyTypeClose;
     PropertyTypeEditDialog *propertyTypeEditDialog;
+    Glib::RefPtr<Gtk::TreeSelection> mTreeViewSelectionPropertyType;
 
     void loadPropertyTypes();
 
@@ -32,6 +33,7 @@ private:
     void bindWidgets();
     void onAdd();
     void onClose();
+    bool on_key_press_event(GdkEventKey *event) override;
 public:
     PropertyTypeDialog(
         BaseObjectType* cobject,

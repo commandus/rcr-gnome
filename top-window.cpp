@@ -275,9 +275,9 @@ void TopWindow::onFileConnect() {
         delete client;
     client = new GRcrClient(settings->settings.service(settings->selected).addr());
     client->setServiceState(this);
-
+    client->loadDictionaries();
     mComboBoxSymbol->unset_model();
-    client->loadSymbols(mRefListStoreSymbol);
+    client->bindSymbols(mRefListStoreSymbol);
     mComboBoxSymbol->set_model(mRefListStoreSymbol);
 
     selectSymbol(mComboBoxSymbol, settings->settings.service(settings->selected).last_component_symbol());

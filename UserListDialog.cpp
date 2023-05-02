@@ -37,6 +37,23 @@ void UserListDialog::bindWidgets() {
     insert_action_group("rcr", mRefActionGroup);
 
     refTreeViewUser->signal_row_activated().connect(sigc::mem_fun(*this, &UserListDialog::onUserActivated), refTreeViewUser);
+}
+
+bool UserListDialog::on_key_press_event(GdkEventKey* event)
+{
+    switch (event->keyval) {
+        case GDK_KEY_plus:
+            response(Gtk::RESPONSE_YES);
+            onAdd();
+            break;
+        case GDK_KEY_minus:
+            response(Gtk::RESPONSE_NO);
+            onRemove();
+            break;
+        default:
+            return Gtk::Window::on_key_press_event(event);
+    }
+    return FALSE;
 
 }
 
