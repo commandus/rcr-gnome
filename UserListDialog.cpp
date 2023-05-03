@@ -43,10 +43,12 @@ bool UserListDialog::on_key_press_event(GdkEventKey* event)
 {
     switch (event->keyval) {
         case GDK_KEY_plus:
+        case GDK_KEY_KP_Add:
             response(Gtk::RESPONSE_YES);
             onAdd();
             break;
         case GDK_KEY_minus:
+        case GDK_KEY_KP_Subtract:
             response(Gtk::RESPONSE_NO);
             onRemove();
             break;

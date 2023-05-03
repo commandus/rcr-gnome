@@ -449,10 +449,51 @@ void GRcrClient::rmPropertyType(
     chPropertyTypeRequest.mutable_user()->set_name(username);
     chPropertyTypeRequest.mutable_user()->set_password(password);
     chPropertyTypeRequest.set_operationsymbol("-");
+    chPropertyTypeRequest.mutable_value()->set_id(id);
     grpc::Status status = stub->chPropertyType(&context, chPropertyTypeRequest, &response);
     if (!status.ok()) {
         std::cerr << "Error: " << status.error_code() << " " << status.error_message() << std::endl;
     }
     // reload dictionaries
     loadDictionaries();
+}
+
+bool GRcrClient::rmBox(
+        uint64_t boxId
+) {
+    grpc::ClientContext context;
+    rcr::ChBoxRequest chBoxRequest;
+    rcr::OperationResponse response;
+    chBoxRequest.mutable_user()->set_name(username);
+    chBoxRequest.mutable_user()->set_password(password);
+    chBoxRequest.set_operationsymbol("-");
+    chBoxRequest.mutable_value()->set_box_id(boxId);
+    grpc::Status status = stub->chBox(&context, chBoxRequest, &response);
+    if (!status.ok()) {
+        std::cerr << "Error: " << status.error_code() << " " << status.error_message() << std::endl;
+    }
+    return status.ok();
+}
+
+bool GRcrClient::saveBox(
+    uint64_t id,
+    uint64_t boxId,
+    const std::string &name
+) {
+    grpc::ClientContext context;
+    rcr::ChBoxRequest chBoxRequest;
+    rcr::OperationResponse response;
+    chBoxRequest.mutable_user()->set_name(username);
+    chBoxRequest.mutable_user()->set_password(password);
+    if (id) {
+        chBoxRequest.set_operationsymbol("=");
+        chBoxRequest.mutable_value()->set_id(id);
+    } else
+        chBoxRequest.set_operationsymbol("+");
+    chBoxRequest.mutable_value()->set_name(name);
+    grpc::Status status = stub->chBox(&context, chBoxRequest, &response);
+    if (!status.ok()) {
+        std::cerr << "Error: " << status.error_code() << " " << status.error_message() << std::endl;
+    }
+    return status.ok();
 }

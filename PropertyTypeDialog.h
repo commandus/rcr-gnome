@@ -13,6 +13,8 @@
 
 class PropertyTypeDialog : public Gtk::Dialog {
 private:
+    GtkWindow *parent;
+
     GRcrClient *client;
     Glib::RefPtr<Gtk::Builder> mRefBuilder;
     Glib::RefPtr<Gtk::ListStore> mRefListstorePropertyType;
@@ -22,8 +24,6 @@ private:
     Gtk::Button *refButtonPropertyTypeClose;
     PropertyTypeEditDialog *propertyTypeEditDialog;
     Glib::RefPtr<Gtk::TreeSelection> mTreeViewSelectionPropertyType;
-
-    void loadPropertyTypes();
 
     void onPropertyTypeActivated(
         const Gtk::TreeModel::Path& path,
@@ -41,8 +41,15 @@ public:
     );
     virtual ~PropertyTypeDialog();
     void setClient(
+        GtkWindow *parent,
         GRcrClient *client,
         PropertyTypeEditDialog *propertyTypeEditDialog
+    );
+
+    void loadPropertyTypes();
+
+    bool confirmDelete(
+        Gtk::TreeModel::Row &row
     );
 };
 

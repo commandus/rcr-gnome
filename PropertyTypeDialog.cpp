@@ -40,13 +40,31 @@ void PropertyTypeDialog::bindWidgets() {
 bool PropertyTypeDialog::on_key_press_event(GdkEventKey* event)
 {
     switch (event->keyval) {
+        case GDK_KEY_Delete:
+            if (tvPropertyType->has_focus()) {
+                Gtk::TreeModel::iterator iter = mTreeViewSelectionPropertyType->get_selected();
+                if (iter) {
+                    Gtk::TreeModel::Row row = *iter;
+                    if (client) {
+                        if (confirmDelete(row)) {
+                            uint64_t id;
+                            row.get_value(0, id);
+                            client->rmPropertyType(id);
+                            loadPropertyTypes();
+                        }
+                    }
+                }
+            }
+            break;
         case GDK_KEY_plus:
+        case GDK_KEY_KP_Add:
             response(Gtk::RESPONSE_YES);
             onAdd();
             break;
         default:
             return Gtk::Window::on_key_press_event(event);
     }
+    return FALSE;
 }
 
 void PropertyTypeDialog::onPropertyTypeActivated(
@@ -60,15 +78,18 @@ void PropertyTypeDialog::onPropertyTypeActivated(
     Gtk::TreeModel::iterator iter = mTreeViewSelectionPropertyType->get_selected();
     if (!iter)
         return;
-    hide();
     Gtk::TreeModel::Row row = *iter;
     uint64_t id;
     std::string key, description;
     row.get_value(0, id);
+    std::cerr << "==" << id << std::endl;
+
     row.get_value(1, key);
     row.get_value(2, description);
-    propertyTypeEditDialog->setClient(client);
+    propertyTypeEditDialog->setClient(client, this);
     propertyTypeEditDialog->set(id, key, description);
+
+    hide();
     propertyTypeEditDialog->run();
 }
 
@@ -77,7 +98,7 @@ void PropertyTypeDialog::onAdd()
     if (!propertyTypeEditDialog)
         return;
     hide();
-    propertyTypeEditDialog->setClient(client);
+    propertyTypeEditDialog->setClient(client, this);
     propertyTypeEditDialog->set(0, "", "");
     propertyTypeEditDialog->run();
 }
@@ -88,10 +109,12 @@ void PropertyTypeDialog::onClose()
 }
 
 void PropertyTypeDialog::setClient(
+    GtkWindow *aParent,
     GRcrClient *aClient,
     PropertyTypeEditDialog *aPropertyTypeEditDialog
 )
 {
+    parent = aParent;
     client = aClient;
     propertyTypeEditDialog = aPropertyTypeEditDialog;
     loadPropertyTypes();
@@ -109,4 +132,18 @@ void PropertyTypeDialog::loadPropertyTypes()
         row.set_value(1, it->key());
         row.set_value(2, it->description());
     }
+}
+
+bool PropertyTypeDialog::confirmDelete(
+    Gtk::TreeModel::Row &row
+) {
+    std::string key, description;
+    row.get_value(1, key);
+    row.get_value(2, description);
+    std::stringstream ss;
+    ss << _("Delete ") << key << ":" << description << "?";
+    Gtk::MessageDialog dlg(ss.str());
+    dlg.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
+    dlg.set_secondary_text(_("Press Ok to delete. This operation Can not be undone"));
+    return dlg.run() == GTK_RESPONSE_OK;
 }

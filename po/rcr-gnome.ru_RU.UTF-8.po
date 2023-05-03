@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-02 13:41+0900\n"
+"POT-Creation-Date: 2023-05-03 16:12+0900\n"
 "PO-Revision-Date: 2023-04-21 10:00+0900\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -17,6 +17,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#: BoxDialog.cpp:107
+msgid "Delete box?"
+msgstr "Удалить коробку?"
+
+#: BoxDialog.cpp:109 PropertyTypeDialog.cpp:147 PropertyTypeEditDialog.cpp:107
+#: top-window.cpp:803
+msgid "Press Ok to delete. This operation Can not be undone"
+msgstr "Нажмите Ok для удаления. Это удаление необратимо."
 
 #: GRcrClient.cpp:13 top-window.cpp:10
 msgid "All"
@@ -86,6 +95,14 @@ msgstr "Чтение статистики"
 msgid "Getting statistics completed successfully"
 msgstr "Статистика собрана"
 
+#: PropertyTypeDialog.cpp:144
+msgid "Delete "
+msgstr "Удалить"
+
+#: PropertyTypeEditDialog.cpp:105
+msgid "Delete property?"
+msgstr "Удалить свойство?"
+
 #: rcr-app.cpp:26
 msgid "Building menus failed: "
 msgstr "Создание меню завершилось с ошибкой: "
@@ -153,19 +170,19 @@ msgstr ""
 "ПРОГРАММНОГО ОБЕСПЕЧЕНИЯ ИЛИ ИНЫХ ДЕЙСТВИЙ С ПРОГРАММНЫМ\n"
 "ОБЕСПЕЧЕНИЕМ."
 
-#: top-window.cpp:132
+#: top-window.cpp:136
 msgid "Excel spreadsheet files"
 msgstr "Файлы Excel"
 
-#: top-window.cpp:210
+#: top-window.cpp:232
 msgid "rcr for Gnome"
 msgstr "rcr версия Gnome"
 
-#: top-window.cpp:220
+#: top-window.cpp:242
 msgid "Custom build"
 msgstr "Специальная сборка без версии"
 
-#: top-window.cpp:225
+#: top-window.cpp:247
 msgid ""
 "2023 Yu.G. Shafer Institute of Cosmophysical Research and Aeronomy of "
 "Siberian Branch of the Russian Academy of Sciences"
@@ -173,15 +190,15 @@ msgstr ""
 "2023 Институт космофизических исследований и аэрономии им. Ю.Г. Шафера "
 "Сибирского отделения Российской академии наук"
 
-#: top-window.cpp:226
+#: top-window.cpp:248
 msgid "In memory of Konstantin Zolotovsky"
 msgstr "В память о Константине Золотовском"
 
-#: top-window.cpp:233
+#: top-window.cpp:255
 msgid "Andrei Ivanov andrey.ivanov@ikfia.ysn.ru"
 msgstr "А. Иванов andrey.ivanov@ikfia.ysn.ru"
 
-#: top-window.cpp:234
+#: top-window.cpp:256
 msgid ""
 "Yu.G. Shafer Institute of Cosmophysical Research and Aeronomy http://ikfia."
 "ysn.ru/"
@@ -189,69 +206,74 @@ msgstr ""
 "2023 Институт космофизических исследований и аэрономии им. Ю.Г. Шафера  "
 "http://ikfia.ysn.ru/"
 
-#: top-window.cpp:235
+#: top-window.cpp:257
 msgid "ICU https://icu.unicode.org/"
 msgstr ""
 
-#: top-window.cpp:236
+#: top-window.cpp:258
 msgid "xlnt https://github.com/tfussell/xlnt"
 msgstr ""
 
-#: top-window.cpp:237
+#: top-window.cpp:259
 msgid "gRPC https://grpc.io/"
 msgstr ""
 
-#: top-window.cpp:374
+#: top-window.cpp:396
 msgid "Selected box "
 msgstr "Выбрана коробка "
 
-#: top-window.cpp:549 top-window.cpp:649
+#: top-window.cpp:572 top-window.cpp:729
 msgid "Import "
-msgstr "Импорт"
+msgstr "Импорт "
 
-#: top-window.cpp:549 top-window.cpp:649
+#: top-window.cpp:572 top-window.cpp:729
 msgid " to box "
-msgstr " в коробку"
+msgstr " в коробку "
 
-#: top-window.cpp:556 top-window.cpp:656
+#: top-window.cpp:579 top-window.cpp:736
 msgid "Import"
 msgstr "Импорт"
 
-#: top-window.cpp:673
+#: top-window.cpp:753
 msgid "Wrong box specified"
 msgstr "Указана неверная коробка"
 
-#: top-window.cpp:681
+#: top-window.cpp:761
 msgid "Error import Excel files"
 msgstr "Ошибка импорта Excel файла"
 
-#: top-window.cpp:686
+#: top-window.cpp:766
 msgid "Excel files imported successfully"
 msgstr "Excel файлы успешно импортированы"
 
-#: top-window.cpp:692
+#: top-window.cpp:772
 msgid "Error import Excel file"
 msgstr "Ошибка импорта Excel файла"
 
-#: top-window.cpp:697
+#: top-window.cpp:777
 msgid "Excel file imported successfully"
 msgstr "Excel файл успешно импортирован"
+
+#: top-window.cpp:800
+msgid "Delete box "
+msgstr "Удалить коробку "
 
 #: rcr-gnome.glade:8
 msgid "Box identifier"
 msgstr "Номер коробки"
 
-#: rcr-gnome.glade:23
+#: rcr-gnome.glade:23 rcr-gnome.glade:147
 msgid "Confirm"
 msgstr "Готово"
 
-#: rcr-gnome.glade:37 rcr-gnome.glade:189 rcr-gnome.glade:1179
-#: rcr-gnome.glade:1341 rcr-gnome.glade:1464 rcr-gnome.glade:1776
+#: rcr-gnome.glade:37 rcr-gnome.glade:161 rcr-gnome.glade:325
+#: rcr-gnome.glade:1359 rcr-gnome.glade:1521 rcr-gnome.glade:1644
+#: rcr-gnome.glade:1956
 msgid "Cancel"
 msgstr "Отмена"
 
-#: rcr-gnome.glade:68 rcr-gnome.glade:334 rcr-gnome.glade:827
-#: rcr-gnome.glade:944
+#: rcr-gnome.glade:68 rcr-gnome.glade:119 rcr-gnome.glade:470
+#: rcr-gnome.glade:1006 rcr-gnome.glade:1123
 msgid "Box"
 msgstr "Коробка"
 
@@ -259,207 +281,231 @@ msgstr "Коробка"
 msgid "Number in file name"
 msgstr "Номер в имени файла"
 
-#: rcr-gnome.glade:150
-msgid "Card"
-msgstr "Карточка"
-
-#: rcr-gnome.glade:165 rcr-gnome.glade:1327 rcr-gnome.glade:1762
-msgid "Save"
-msgstr "Сохранить"
-
-#: rcr-gnome.glade:177 rcr-gnome.glade:1042
-msgid "Remove"
-msgstr "Удалить"
-
-#: rcr-gnome.glade:224
-msgid "Component"
-msgstr "Компонент"
-
-#: rcr-gnome.glade:257 rcr-gnome.glade:914
-msgid "Nominal"
-msgstr "Номинал"
-
-#: rcr-gnome.glade:309 rcr-gnome.glade:899 rcr-gnome.glade:1100
-msgid "Name"
-msgstr "Имя"
-
-#: rcr-gnome.glade:359 rcr-gnome.glade:958
-msgid "Quantity"
-msgstr "Количество"
-
-#: rcr-gnome.glade:421
-msgid "Property list"
-msgstr "Свойства"
-
-#: rcr-gnome.glade:434 rcr-gnome.glade:649 rcr-gnome.glade:1028
-msgid "Add"
-msgstr "Добавить"
-
-#: rcr-gnome.glade:448 rcr-gnome.glade:1070 rcr-gnome.glade:1629
-msgid "Close"
-msgstr "Закрыть"
-
-#: rcr-gnome.glade:480 rcr-gnome.glade:1373
-msgid "Key"
-msgstr "Сокращение"
-
-#: rcr-gnome.glade:491 rcr-gnome.glade:1398
-msgid "Description"
-msgstr "Название"
-
-#: rcr-gnome.glade:531
-msgid "Boxes & cards"
-msgstr "Коробки с компонентами"
-
-#: rcr-gnome.glade:548
-msgid "_File"
-msgstr "_Файл"
-
-#: rcr-gnome.glade:558
-msgid "Log in"
-msgstr "Логин"
-
-#: rcr-gnome.glade:560
-msgid "_Login"
-msgstr "_Логин"
-
-#: rcr-gnome.glade:569
-msgid "Register new user"
-msgstr "Зарегистровать нового пользователя"
-
-#: rcr-gnome.glade:571
-msgid "_Register"
-msgstr "_Регистрация"
-
-#: rcr-gnome.glade:586
-msgid "Import .xlsx Excel file"
-msgstr "Импорт файла Excel"
-
-#: rcr-gnome.glade:588
-msgid "Import Excel _file"
-msgstr "Импорт _файла Excel"
-
-#: rcr-gnome.glade:597
-msgid "Import Excel files from directory"
-msgstr "Импорт папки с файлами Excel"
-
-#: rcr-gnome.glade:599
-msgid "Import Excel _directory"
-msgstr "Импорт _папки с файлами Excel"
-
-#: rcr-gnome.glade:615
-msgid "_Quit"
-msgstr "_Выход"
-
-#: rcr-gnome.glade:628
-msgid "_User"
-msgstr "_Пользователь"
-
-#: rcr-gnome.glade:639
-msgid "List"
-msgstr "Список"
-
-#: rcr-gnome.glade:658 rcr-gnome.glade:1056
-msgid "Boxes"
-msgstr "Коробки"
-
-#: rcr-gnome.glade:671
-msgid "_Options"
-msgstr "_Опции"
-
-#: rcr-gnome.glade:682
-msgid "_Properties"
-msgstr "Свойства"
-
-#: rcr-gnome.glade:697
-msgid "_Connect"
-msgstr "_Коннект"
-
-#: rcr-gnome.glade:713
-msgid "_Preferences"
-msgstr "_Настройки"
-
-#: rcr-gnome.glade:725
-msgid "_Help"
-msgstr "_Справка"
-
-#: rcr-gnome.glade:736
-msgid "_Statistics"
-msgstr "_Статистика"
-
-#: rcr-gnome.glade:745
-msgid "_About"
-msgstr "_О программе"
-
-#: rcr-gnome.glade:929
-msgid "Properties"
-msgstr "Свойства"
-
-#: rcr-gnome.glade:1015
-msgid "User list"
-msgstr "Список пользователей"
-
-#: rcr-gnome.glade:1112
-msgid "Rights"
-msgstr "Права"
-
-#: rcr-gnome.glade:1123 rcr-gnome.glade:1236 rcr-gnome.glade:1523
-#: rcr-gnome.glade:1835
-msgid "Password"
-msgstr "Пароль"
-
-#: rcr-gnome.glade:1151 rcr-gnome.glade:1165 rcr-gnome.glade:1584
-msgid "Login"
-msgstr "Логин"
-
-#: rcr-gnome.glade:1211 rcr-gnome.glade:1498 rcr-gnome.glade:1810
-msgid "User name"
-msgstr "Имя пользователя"
-
-#: rcr-gnome.glade:1268 rcr-gnome.glade:1450
-msgid "Register"
-msgstr "Регистрация"
-
-#: rcr-gnome.glade:1299
-msgid "Property"
-msgstr "Свойства"
-
-#: rcr-gnome.glade:1313
+#: rcr-gnome.glade:133 rcr-gnome.glade:1493
 msgid "Delete"
 msgstr "Удалить"
 
-#: rcr-gnome.glade:1435
+#: rcr-gnome.glade:192
+msgid "Box numbers"
+msgstr "Идентификатор коробки"
+
+#: rcr-gnome.glade:217
+msgid "Box name (optional)"
+msgstr "Название коробки (необязательно)"
+
+#: rcr-gnome.glade:286
+msgid "Card"
+msgstr "Карточка"
+
+#: rcr-gnome.glade:301 rcr-gnome.glade:1507 rcr-gnome.glade:1942
+msgid "Save"
+msgstr "Сохранить"
+
+#: rcr-gnome.glade:313 rcr-gnome.glade:1222
+msgid "Remove"
+msgstr "Удалить"
+
+#: rcr-gnome.glade:360
+msgid "Component"
+msgstr "Компонент"
+
+#: rcr-gnome.glade:393 rcr-gnome.glade:1093
+msgid "Nominal"
+msgstr "Номинал"
+
+#: rcr-gnome.glade:445 rcr-gnome.glade:1078 rcr-gnome.glade:1280
+msgid "Name"
+msgstr "Имя"
+
+#: rcr-gnome.glade:495 rcr-gnome.glade:1137
+msgid "Quantity"
+msgstr "Количество"
+
+#: rcr-gnome.glade:557
+msgid "Property list"
+msgstr "Свойства"
+
+#: rcr-gnome.glade:570 rcr-gnome.glade:827 rcr-gnome.glade:1208
+msgid "Add"
+msgstr "Добавить"
+
+#: rcr-gnome.glade:584 rcr-gnome.glade:1250 rcr-gnome.glade:1809
+msgid "Close"
+msgstr "Закрыть"
+
+#: rcr-gnome.glade:616 rcr-gnome.glade:1553
+msgid "Key"
+msgstr "Сокращение"
+
+#: rcr-gnome.glade:627 rcr-gnome.glade:1578
+msgid "Description"
+msgstr "Название"
+
+#: rcr-gnome.glade:668
+msgid "Boxes & cards"
+msgstr "Коробки с компонентами"
+
+#: rcr-gnome.glade:685
+msgid "_File"
+msgstr "_Файл"
+
+#: rcr-gnome.glade:695
+msgid "Log in"
+msgstr "Логин"
+
+#: rcr-gnome.glade:697
+msgid "_Login"
+msgstr "_Логин"
+
+#: rcr-gnome.glade:706
+msgid "Register new user"
+msgstr "Зарегистровать нового пользователя"
+
+#: rcr-gnome.glade:708
+msgid "_Register"
+msgstr "_Регистрация"
+
+#: rcr-gnome.glade:723
+msgid "Import .xlsx Excel file"
+msgstr "Импорт файла Excel"
+
+#: rcr-gnome.glade:725
+msgid "Import Excel _file"
+msgstr "Импорт _файла Excel"
+
+#: rcr-gnome.glade:734
+msgid "Import Excel files from directory"
+msgstr "Импорт папки с файлами Excel"
+
+#: rcr-gnome.glade:736
+msgid "Import Excel _directory"
+msgstr "Импорт _папки с файлами Excel"
+
+#: rcr-gnome.glade:752
+msgid "_Quit"
+msgstr "_Выход"
+
+#: rcr-gnome.glade:765
+msgid "_Box"
+msgstr ""
+
+#: rcr-gnome.glade:776
+msgid "_Edit selected box"
+msgstr "_Редактировать выбранную коробку"
+
+#: rcr-gnome.glade:785
+msgid "_New empty box"
+msgstr ""
+
+#: rcr-gnome.glade:794
+msgid "_Delete selected box"
+msgstr "_Удалить выбранную коробку"
+
+#: rcr-gnome.glade:806
+msgid "_User"
+msgstr "_Пользователь"
+
+#: rcr-gnome.glade:817
+msgid "List"
+msgstr "Список"
+
+#: rcr-gnome.glade:836 rcr-gnome.glade:1236
+msgid "Boxes"
+msgstr "Коробки"
+
+#: rcr-gnome.glade:849
+msgid "_Options"
+msgstr "_Опции"
+
+#: rcr-gnome.glade:860
+msgid "_Properties"
+msgstr "Свойства"
+
+#: rcr-gnome.glade:876
+msgid "_Connect"
+msgstr "_Коннект"
+
+#: rcr-gnome.glade:892
+msgid "_Preferences"
+msgstr "_Настройки"
+
+#: rcr-gnome.glade:904
+msgid "_Help"
+msgstr "_Справка"
+
+#: rcr-gnome.glade:915
+msgid "_Statistics"
+msgstr "_Статистика"
+
+#: rcr-gnome.glade:924
+msgid "_About"
+msgstr "_О программе"
+
+#: rcr-gnome.glade:1108
+msgid "Properties"
+msgstr "Свойства"
+
+#: rcr-gnome.glade:1195
+msgid "User list"
+msgstr "Список пользователей"
+
+#: rcr-gnome.glade:1292
+msgid "Rights"
+msgstr "Права"
+
+#: rcr-gnome.glade:1303 rcr-gnome.glade:1416 rcr-gnome.glade:1703
+#: rcr-gnome.glade:2015
+msgid "Password"
+msgstr "Пароль"
+
+#: rcr-gnome.glade:1331 rcr-gnome.glade:1345 rcr-gnome.glade:1764
+msgid "Login"
+msgstr "Логин"
+
+#: rcr-gnome.glade:1391 rcr-gnome.glade:1678 rcr-gnome.glade:1990
+msgid "User name"
+msgstr "Имя пользователя"
+
+#: rcr-gnome.glade:1448 rcr-gnome.glade:1630
+msgid "Register"
+msgstr "Регистрация"
+
+#: rcr-gnome.glade:1479
+msgid "Property"
+msgstr "Свойства"
+
+#: rcr-gnome.glade:1615
 msgid "Register a new user"
 msgstr "Зарегистрировать нового пользователя"
 
-#: rcr-gnome.glade:1551
+#: rcr-gnome.glade:1731
 msgid "Re-type password"
 msgstr "Введите пароль еще раз"
 
-#: rcr-gnome.glade:1582
+#: rcr-gnome.glade:1762
 msgid "Switch to login"
 msgstr "Перейти к логину"
 
-#: rcr-gnome.glade:1616
+#: rcr-gnome.glade:1796
 msgid "Statistics"
 msgstr "Статистика"
 
-#: rcr-gnome.glade:1662
+#: rcr-gnome.glade:1842
 msgid "Components"
 msgstr "Компоненты"
 
-#: rcr-gnome.glade:1676
+#: rcr-gnome.glade:1856
 msgid "Total"
 msgstr "Всего"
 
-#: rcr-gnome.glade:1689 rcr-gnome.glade:1703
+#: rcr-gnome.glade:1869 rcr-gnome.glade:1883
 msgid "0"
 msgstr ""
 
-#: rcr-gnome.glade:1748
+#: rcr-gnome.glade:1928
 msgid "User"
 msgstr "Пользователь"
 
-#: rcr-gnome.glade:1866 rcr-gnome.glade:1868
+#: rcr-gnome.glade:2046 rcr-gnome.glade:2048
 msgid "Admin"
 msgstr "Администратор"

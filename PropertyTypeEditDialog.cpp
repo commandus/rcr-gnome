@@ -3,6 +3,7 @@
 //
 
 #include "PropertyTypeEditDialog.h"
+#include "PropertyTypeDialog.h"
 #include "rcr-gnome.h"
 
 PropertyTypeEditDialog::PropertyTypeEditDialog(
@@ -55,15 +56,23 @@ bool PropertyTypeEditDialog::on_key_press_event(GdkEventKey* event)
 
 void PropertyTypeEditDialog::onDelete()
 {
-    if (client)
-        client->rmPropertyType(id);
+    if (client) {
+        if (confirmDelete()) {
+            client->rmPropertyType(id);
+            if (propertyTypeDialog)
+                propertyTypeDialog->loadPropertyTypes();
+        }
+    }
     hide();
 }
 
 void PropertyTypeEditDialog::onSave()
 {
-    if (client)
+    if (client) {
         client->savePropertyType(id, entryPropertyTypeEditKey->get_text(), entryPropertyTypeEditDescription->get_text());
+        if (propertyTypeDialog)
+            propertyTypeDialog->loadPropertyTypes();
+    }
     hide();
 }
 
@@ -73,10 +82,12 @@ void PropertyTypeEditDialog::onCancel()
 }
 
 void PropertyTypeEditDialog::setClient(
-    GRcrClient *aClient
+    GRcrClient *aClient,
+    PropertyTypeDialog *aPropertyTypeDialog
 )
 {
     client = aClient;
+    propertyTypeDialog = aPropertyTypeDialog;
 }
 
 void PropertyTypeEditDialog::set(
@@ -88,4 +99,11 @@ void PropertyTypeEditDialog::set(
     id = aId;
     entryPropertyTypeEditKey->set_text(key);
     entryPropertyTypeEditDescription->set_text(description);
+}
+
+bool PropertyTypeEditDialog::confirmDelete() {
+    Gtk::MessageDialog dlg(_("Delete property?"));
+    dlg.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
+    dlg.set_secondary_text(_("Press Ok to delete. This operation Can not be undone"));
+    return dlg.run() == GTK_RESPONSE_OK;
 }

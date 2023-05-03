@@ -55,6 +55,10 @@ void TopWindow::bindWidgets() {
     mRefActionGroup->add_action("userBox", sigc::mem_fun(*this, &TopWindow::onUserBox));
     mRefActionGroup->add_action("properties", sigc::mem_fun(*this, &TopWindow::onProperties));
 
+    mRefActionGroup->add_action("boxEdit", sigc::mem_fun(*this, &TopWindow::onBoxEdit));
+    mRefActionGroup->add_action("boxNew", sigc::mem_fun(*this, &TopWindow::onBoxNew));
+    mRefActionGroup->add_action("boxDelete", sigc::mem_fun(*this, &TopWindow::onBoxDelete));
+
     // labelStatisticsComponents
 
     insert_action_group("rcr", mRefActionGroup);
@@ -149,7 +153,7 @@ void TopWindow::onBoxSelected(
         settings->settings.mutable_service(settings->selected)->set_last_box(b);
         // saveSettings();
         doQuery();
-        // doQery or reload card tree view if not- uncomment below line
+        // doQuery or reload card tree view if not- uncomment below line
         mRefTreeModelFilterCard->refilter();
     }
 }
@@ -187,6 +191,24 @@ TopWindow::~TopWindow() {
 bool TopWindow::on_key_press_event(GdkEventKey* event)
 {
 	switch (event->keyval) {
+        case GDK_KEY_F4:
+            if (mTreeViewBox->has_focus()) {
+                onBoxEdit();
+            }
+            break;
+        case GDK_KEY_Delete:
+        case GDK_KEY_minus:
+        case GDK_KEY_KP_Subtract:
+            if (mTreeViewBox->has_focus()) {
+                onBoxDelete();
+            }
+            break;
+        case GDK_KEY_plus:
+        case GDK_KEY_KP_Add:
+            if (mTreeViewBox->has_focus()) {
+                onBoxNew();
+            }
+            break;
 		case GDK_KEY_Return:
         case GDK_KEY_KP_Enter:
             if (mTreeViewCard->is_focus()) {
@@ -283,7 +305,7 @@ void TopWindow::onFileConnect() {
     selectSymbol(mComboBoxSymbol, settings->settings.service(settings->selected).last_component_symbol());
     reloadBoxTree();
     // bind client with dictionaries to dialog
-    propertyTypeDialog->setClient(client, propertyTypeEditDialog);
+    propertyTypeDialog->setClient(reinterpret_cast<GtkWindow *>(this), client, propertyTypeEditDialog);
 }
 
 void TopWindow::reloadBoxTree() {
@@ -442,6 +464,7 @@ void TopWindow::createDialogs() {
             sigc::mem_fun(*this, &TopWindow::onHideCardWindow), cardWindow));
     // cardWindow->set_modal();
     // dialogs
+    mRefBuilder->get_widget_derived("boxDialog", boxDialog);
     mRefBuilder->get_widget_derived("boxConfirmDialog", boxConfirmDialog);
     mRefBuilder->get_widget_derived("loginUserDialog", loginDialog);
     mRefBuilder->get_widget_derived("registerUserDialog", registerDialog);
@@ -633,6 +656,63 @@ void TopWindow::onUserBox()
     editUser(settings->settings.mutable_user());
 }
 
+void TopWindow::onBoxEdit()
+{
+    // edit selected box
+    Gtk::TreeModel::iterator iter = mTreeViewSelectionBox->get_selected();
+    if (iter) {
+        Gtk::TreeModel::Row row = *iter;
+        if (client) {
+            uint64_t id, boxId;
+            std::string name;
+            row.get_value(0, name);
+            row.get_value(1, id);
+            row.get_value(2, boxId);
+            boxDialog->setClient(client);
+            boxDialog->set(id, boxId, name);
+            int r = boxDialog->run();
+            if (r == Gtk::RESPONSE_OK || r == Gtk::RESPONSE_REJECT) {
+                // reload box tree on edit or remove
+                reloadBoxTree();
+            }
+        }
+    }
+}
+
+void TopWindow::onBoxNew()
+{
+    // add a new empty box
+    if (client) {
+        boxDialog->setClient(client);
+        boxDialog->set(0, 0, "");
+        int r = boxDialog->run();
+        if (r == Gtk::RESPONSE_OK || r == Gtk::RESPONSE_REJECT) {
+            // reload box tree on edit or remove
+            reloadBoxTree();
+        }
+    }
+}
+
+void TopWindow::onBoxDelete()
+{
+    // delete selected box
+    // edit selected box
+    Gtk::TreeModel::iterator iter = mTreeViewSelectionBox->get_selected();
+    if (iter) {
+        Gtk::TreeModel::Row row = *iter;
+        if (client) {
+            if (confirmDeleteBox(row)) {
+                uint64_t boxid;
+                row.get_value(2, boxid);
+                if (client->rmBox(boxid)) {
+                    // reload box tree
+                    reloadBoxTree();
+                }
+            }
+        }
+    }
+}
+
 void TopWindow::onStartImportDirectory()
 {
     uint64_t b = settings->settings.mutable_service(settings->selected)->last_box();
@@ -709,4 +789,17 @@ void TopWindow::editUser(rcr::User *user) {
     int r = userDialog->run();
     if (r != Gtk::RESPONSE_OK)
         return;
+}
+
+bool TopWindow::confirmDeleteBox(
+    Gtk::TreeModel::Row &row
+) {
+    std::string name;
+    row.get_value(0, name);
+    std::stringstream ss;
+    ss << _("Delete box ") << name << "?";
+    Gtk::MessageDialog dlg(ss.str());
+    dlg.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
+    dlg.set_secondary_text(_("Press Ok to delete. This operation Can not be undone"));
+    return dlg.run() == GTK_RESPONSE_OK;
 }

@@ -116,6 +116,16 @@ public:
     void rmPropertyType(
         uint64_t id
     );
+
+    bool rmBox(
+        uint64_t boxId
+    );
+
+    bool saveBox(
+        uint64_t id,
+        uint64_t boxId,
+        const std::string &name
+    );
 };
 
 #endif //RCR_GNOME_GRCRCLIENT_H

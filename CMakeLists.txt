@@ -99,7 +99,7 @@ set(RCR_GNOME_SRC rcr-gnome.cpp rcr-app.cpp top-window.cpp
 	${GEN_SRC}
 	GRcrClient.cpp RcrSettings.cpp CardWindow.cpp BoxConfirmDialog.cpp LoginDialog.cpp RegisterDialog.cpp
 	UserListDialog.cpp UserDialog.cpp StatisticsDialog.cpp rcr-gnome.h ServiceStateIntf.cpp PropertyTypeDialog.cpp
-	PropertyTypeEditDialog.cpp PropertyTypeEditDialog.cpp)
+	PropertyTypeEditDialog.cpp PropertyTypeEditDialog.cpp BoxDialog.cpp BoxDialog.h)
 add_executable(rcr-gnome ${RCR_GNOME_SRC})
 target_link_libraries(rcr-gnome PRIVATE ${ICU_LIBS} gRPC::grpc++ ${Protobuf_LIBRARIES} ${ICU_LIBS} ${XLSX_LIBS}
 		${Intl_LIBRARY})

@@ -10,6 +10,7 @@
 #include "RcrSettings.h"
 
 #include "CardWindow.h"
+#include "BoxDialog.h"
 #include "BoxConfirmDialog.h"
 #include "LoginDialog.h"
 #include "RegisterDialog.h"
@@ -25,6 +26,8 @@ public:
 
     // window to edit component card
     CardWindow *cardWindow;
+    // box dialog
+    BoxDialog *boxDialog;
     // confirmation dialog
     BoxConfirmDialog *boxConfirmDialog;
     // Login dialog
@@ -63,7 +66,7 @@ private:
     Gtk::TreeView *mTreeViewCard;
     Gtk::ComboBox *mComboBoxSymbol;
     Gtk::Label *mLabelMessage;
-    Gtk::ProgressBar * mProgressBar;
+    Gtk::ProgressBar *mProgressBar;
 
     Glib::RefPtr<Gtk::FileFilter> mFileFilterXLSX;
     Glib::RefPtr<Gio::SimpleActionGroup> mRefActionGroup;
@@ -74,30 +77,51 @@ private:
     bool on_key_press_event(GdkEventKey *event) override;
 
     void onHelpAbout();
+
     void onHelpStatistics();
+
     void onFileQuit();
+
     void onFileConnect();
+
     void onBoxSelected(Glib::RefPtr<Gtk::TreeSelection> selection);
+
     void onSymbolSelected();
+
     void onCardSelected(Glib::RefPtr<Gtk::TreeSelection> selection);
+
     void onAboutDialogResponse(int responseId);
+
     void onStartImportFile();
+
     void onStartImportDirectory();
+
     void onLogin();
+
     void onRegister();
+
     void onUserList();
+
     void onUserAdd();
+
     void onUserBox();
+
+    void onBoxEdit();
+
+    void onBoxNew();
+
+    void onBoxDelete();
+
     void onProperties();
 
     void selectSymbol(
-        Gtk::ComboBox *cb,
-        const std::string &symbol
+            Gtk::ComboBox *cb,
+            const std::string &symbol
     );
 
     void selectSymbolId(
-        Gtk::ComboBox *cb,
-        uint64_t symbold
+            Gtk::ComboBox *cb,
+            uint64_t symbold
     );
 
     void selectBox(const uint64_t boxId);
@@ -109,50 +133,60 @@ private:
     void doQuery();
 
     void onCallStarted(const std::string &message = "") override;
+
     void onCallFinished(int code, const std::string &message = "") override;
+
     // Not used yet
     void onProgress(int pos, int total) override;
 
     // dialogs
     void createDialogs();
+
     // dialog close event handlers
     void onHideCardWindow(Gtk::Window *window);
+
     void onHideboxConfirmWindow(Gtk::Window *window);
 
     // call dialog
     void editCard();
+
     void editCard(
-        uint64_t symbolId,
-        const std::string &name,
-        const std::string &nominal,
-        const std::string &properties,
-        const std::string &boxName,
-        uint64_t qty,
-        uint64_t id,
-        uint64_t boxId,
-        bool isNew
+            uint64_t symbolId,
+            const std::string &name,
+            const std::string &nominal,
+            const std::string &properties,
+            const std::string &boxName,
+            uint64_t qty,
+            uint64_t id,
+            uint64_t boxId,
+            bool isNew
     );
+
     bool confirmBox(
-        uint64_t &box_id,
-        bool numberInFileName
+            uint64_t &box_id,
+            bool numberInFileName
     );
 
     void onCardActivated(
-        const Gtk::TreeModel::Path& path,
-        Gtk::TreeViewColumn* column
+            const Gtk::TreeModel::Path &path,
+            Gtk::TreeViewColumn *column
     );
 
     void runImportExcel(
-        const std::string &symbol,
-        const std::string &path,
-        uint64_t box,
-        bool isDirectory = false,
-        bool numberInFileName = true
+            const std::string &symbol,
+            const std::string &path,
+            uint64_t box,
+            bool isDirectory = false,
+            bool numberInFileName = true
     );
 
     void reloadBoxTree();
 
     void editUser(rcr::User *user);
+
+    bool confirmDeleteBox(
+        Gtk::TreeModel::Row &row
+    );
 };
 
 #endif
