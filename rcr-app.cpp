@@ -3,7 +3,7 @@
 #include <iostream>
 
 RcrApplication::RcrApplication()
-	: Gtk::Application("com.commandus.rcr")
+	: Gtk::Application("rcr.gnome")
 {
 	Glib::set_application_name("rcr");
 }
@@ -35,9 +35,26 @@ void RcrApplication::on_activate()
 void RcrApplication::createTopWindow()
 {
 	// Load the Glade file and instate its widgets:
-	TopWindow* topWindow = 0;
+	TopWindow* topWindow = nullptr;
 	mRefBuilder->get_widget_derived("topWindow", topWindow);
-    // topWindow->set_icon_name("ic_launcher.png");
+
+    GtkIconTheme *icon_theme = gtk_icon_theme_get_default();
+    gtk_icon_theme_add_resource_path(icon_theme, "/icons");
+#if CMAKE_BUILD_TYPE == Debug
+    /*
+    // Print list of available icons
+    GList *iconList = gtk_icon_theme_list_icons(icon_theme, nullptr);
+    for (GList *l = iconList; l != nullptr; l = l->next) {
+        std::cout << (char *) l->data << std::endl;
+    }
+    g_list_free(iconList);
+    if (!gtk_icon_theme_has_icon(icon_theme,"rcr.gnome")) {
+        std::cerr << "Icon nof found" << std::endl;
+    }
+     */
+#endif
+    gtk_window_set_default_icon_name("rcr.gnome");
+    topWindow->set_icon_name("rcr.gnome");
 
 	// Make sure that the application runs for as long this window is still open:
 	add_window(*topWindow);

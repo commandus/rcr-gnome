@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
     <gresource prefix="/">
-        <file>rcr-gnome.glade</file>
+        <file preprocess="xml-stripblanks">rcr-gnome.glade</file>
     </gresource>
-    <gresource prefix="">
-        <file>ic_launcher.png</file>
+    <gresource prefix="/icons">
+        <file alias="rcr.gnome.svg">icons/rcr.gnome.svg</file>
+        <file alias="rcr.gnome.png">icons/rcr.gnome.png</file>
     </gresource>
 </gresources>

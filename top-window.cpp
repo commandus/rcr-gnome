@@ -228,7 +228,7 @@ void TopWindow::onHelpAbout()
 	mAboutDialog = new Gtk::AboutDialog();
     mAboutDialog->set_size_request(640, 480);
 	mAboutDialog->set_transient_for(*this);
-	mAboutDialog->set_logo(Gdk::Pixbuf::create_from_resource("/ic_launcher.png", -1, 40, true));
+	mAboutDialog->set_logo(Gdk::Pixbuf::create_from_resource("/icons/data/icons/48x48/apps/rcr.png", -1, 40, true));
 	mAboutDialog->set_program_name(_("rcr for Gnome"));
 	std::string v;
 #ifdef HAVE_CONFIG_H

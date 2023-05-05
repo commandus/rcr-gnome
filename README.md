@@ -1,6 +1,11 @@
 # База данных микросхем Gnome client
 
-# Third party libraries
+```
+echo $XDG_DATA_DIRS
+/usr/share/ubuntu:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop
+```
+
+## Third party libraries
 
 [The International Components for Unicode (ICU) libraries](https://icu.unicode.org/)
 
@@ -8,4 +13,9 @@
 
 [gRPC high performance, open source universal RPC framework](https://grpc.io/)
 
+## Acknowledgements 
 
+$XDG_DATA_DIRS
+/usr/share/ubuntu:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop
+
+Logo [Miroku Sama](https://thenounproject.com/icon/stack-24435/) 
