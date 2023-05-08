@@ -13,6 +13,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(GEN ${CMAKE_CURRENT_SOURCE_DIR})
 set(GEN_SRC ${GEN}/resources.c)
 
+if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
+	find_program(POWERSHELL NAMES powershell)
+endif()
+
 #
 # Setting up i18l & l10n
 # see https://stackoverflow.com/questions/10521635/using-intltool-with-cmake
@@ -23,52 +27,62 @@ find_package (Intl REQUIRED)
 include_directories(${Intl_INCLUDE_DIRS})
 link_directories(${Intl_LIBRARY_DIRS})
 find_program(GETTEXT_MSGFMT_EXECUTABLE msgfmt)
-IF(NOT GETTEXT_MSGFMT_EXECUTABLE)
-	MESSAGE("NOTE: msgfmt not found. Translations will *not* be installed")
-ELSE()
+if(NOT GETTEXT_MSGFMT_EXECUTABLE)
+	message("NOTE: msgfmt not found. Translations will *not* be installed")
+else()
 	# Build the .po files
-	SET(PO_PATH ${CMAKE_CURRENT_SOURCE_DIR}/po)
+	set(PO_PATH ${CMAKE_CURRENT_SOURCE_DIR}/po)
 	# Input files
-	FILE(GLOB PO_FILES ${PO_PATH}/*.po)
+	file(GLOB PO_FILES ${PO_PATH}/*.po)
 	# Generated file list
-	SET(MO_FILES)
-	SET(PRG rcr-gnome)
-	SET(LOCALE_INSTALL_DIR /usr/share/locale)
-	FOREACH(_poFile ${PO_FILES})
-		GET_FILENAME_COMPONENT(_poFileName ${_poFile} NAME)
-		STRING(REGEX REPLACE "^${PRG}\\." "" _langCode ${_poFileName} )
-		STRING(REGEX REPLACE "\\.UTF-8\\.po$" "" _langCode ${_langCode} )
-		STRING(REGEX REPLACE "_..$" "" _langCode ${_langCode} )
-		IF( _langCode )
-			MESSAGE("** PO file ${_poFileName} LANG ${_langCode} LIBDIR ${INTL_LIBRARY_DIRS} INCDIR ${INTL_INCLUDE_DIRS}")
-			GET_FILENAME_COMPONENT(_lang ${_poFile} NAME_WE)
+	set(MO_FILES)
+	set(PRG rcr-gnome)
+	set(LOCALE_INSTALL_DIR /usr/share/locale)
+	foreach(_poFile ${PO_FILES})
+		get_filename_component(_poFileName ${_poFile} NAME)
+		string(REGEX REPLACE "^${PRG}\\." "" _langCode ${_poFileName} )
+		string(REGEX REPLACE "\\.UTF-8\\.po$" "" _langCode ${_langCode} )
+		string(REGEX REPLACE "_..$" "" _langCode ${_langCode} )
+		if( _langCode )
+			message("** PO file ${_poFileName} LANG ${_langCode} LIBDIR ${INTL_LIBRARY_DIRS} INCDIR ${INTL_INCLUDE_DIRS}")
+			get_filename_component(_lang ${_poFile} NAME_WE)
 
-			SET(_moPath ${CMAKE_CURRENT_SOURCE_DIR}/locale/${_langCode}/LC_MESSAGES)
-			SET(_moFile ${_moPath}/${PRG}.mo)
+			set(_moPath ${CMAKE_CURRENT_SOURCE_DIR}/locale/${_langCode}/LC_MESSAGES)
+			set(_moFile ${_moPath}/${PRG}.mo)
 			#	mkdir -p ${_moPath} ; ${GETTEXT_MSGFMT_EXECUTABLE} -o ${_moFile} ${_poFile}
 			if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
-				MESSAGE("** powershell ${CMAKE_CURRENT_SOURCE_DIR}/tools/mk_mo.ps1 ${GETTEXT_MSGFMT_EXECUTABLE} ${_moPath} ${_moFile} ${_poFile}")
-				ADD_CUSTOM_COMMAND(OUTPUT ${_moFile}
-					COMMAND powershell ${CMAKE_CURRENT_SOURCE_DIR}/tools/mk_mo.ps1 ${GETTEXT_MSGFMT_EXECUTABLE} ${_moPath} ${_moFile} ${_poFile}
+				message("** powershell ${CMAKE_CURRENT_SOURCE_DIR}/tools/mk_mo.ps1 ${GETTEXT_MSGFMT_EXECUTABLE} ${_moPath} ${_moFile} ${_poFile}")
+				add_custom_command(OUTPUT ${_moFile}
+					COMMAND ${POWERSHELL} ${CMAKE_CURRENT_SOURCE_DIR}/tools/mk_mo.ps1 ${GETTEXT_MSGFMT_EXECUTABLE} ${_moPath} ${_moFile} ${_poFile}
 					DEPENDS ${_poFile})
 			else()
-				MESSAGE("** ${CMAKE_CURRENT_SOURCE_DIR}/tools/mk_mo.sh ${_moPath} ${_moFile} ${_poFile}")
-				ADD_CUSTOM_COMMAND(OUTPUT ${_moFile}
+				message("** ${CMAKE_CURRENT_SOURCE_DIR}/tools/mk_mo.sh ${_moPath} ${_moFile} ${_poFile}")
+				add_custom_command(OUTPUT ${_moFile}
 					COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tools/mk_mo.sh ${_moPath} ${_moFile} ${_poFile}
 					DEPENDS ${_poFile})
 			endif()
 			#			INSTALL(FILES ${_moFile} DESTINATION ${LOCALE_INSTALL_DIR}/${_langCode}/LC_MESSAGES/ RENAME ${PRG}.mo)
 			LIST(APPEND MO_FILES ${_moFile})
-		ENDIF()
-	ENDFOREACH(_poFile ${PO_FILES})
-	ADD_CUSTOM_TARGET(translations ALL DEPENDS ${MO_FILES})
-ENDIF()
+		endif ()
+		endforeach()
+	add_custom_target(translations ALL DEPENDS ${MO_FILES})
+endif()
 
 #
 # GTK3, icu, xlsx, thread, Protobuf, gRPC
 #
-add_compile_options(-Wdeprecated-declarations)
-find_package(PkgConfig)
+
+if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
+	set(PKG_CONFIG_EXECUTABLE "/git/vcpkg/installed/x86-windows/tools/pkgconf/pkgconf.exe")
+	find_package(PkgConfig)
+	pkg_check_modules(GTKMM_VARS REQUIRED IMPORTED_TARGET gtkmm-3.0)
+	set(GTKMM_VARS PkgConfig::GTKMM_VARS)
+else()	
+	add_compile_options(-Wdeprecated-declarations)
+	find_package(PkgConfig)
+endif()
+
+
 pkg_check_modules(GTK gtk+-3.0 gtkmm-3.0)
 include_directories(${GTK_INCLUDE_DIRS})
 link_directories(${GTK_LIBRARY_DIRS})
@@ -90,13 +104,6 @@ set(RCR_INCLUDE_DIR "third-party/rcr" )
 
 set(GEN ${RCR_INCLUDE_DIR}/gen)
 set(GEN_GRPC_SRC ${GEN}/rcr.grpc.pb.cc ${GEN}/rcr.pb.cc)
-
-if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
-	set(PKG_CONFIG_EXECUTABLE "/git/vcpkg/installed/x86-windows/tools/pkgconf/pkgconf.exe")
-	find_package(PkgConfig)
-	pkg_check_modules(GTKMM_VARS REQUIRED IMPORTED_TARGET gtkmm-4.0)
-	set(GTKMM_VARS PkgConfig::GTKMM_VARS)
-endif()
 
 #
 # rcr-gnome
@@ -122,18 +129,21 @@ target_compile_definitions(rcr-gnome PUBLIC RCR_VERSION=${CMAKE_PROJECT_VERSION}
 # Generate resource file
 #
 if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
-MESSAGE("** powershell ${CMAKE_CURRENT_SOURCE_DIR}/tools/mk_mo.ps1 ${GETTEXT_MSGFMT_EXECUTABLE} ${_moPath} ${_moFile} ${_poFile}")
-	add_custom_command(
-		OUTPUT ${GEN_SRC}
-		COMMAND powershell ${CMAKE_CURRENT_SOURCE_DIR}/tools/build-resources.ps1 ${CMAKE_CURRENT_SOURCE_DIR}
-	)
+	find_program(GLIB_COMPILE_RESOURCES_EXECUTABLE msgfmt)
+	if(NOT GLIB_COMPILE_RESOURCES_EXECUTABLE)
+		message("NOTE: glib-compile-resources not found.")
+	else()
+		add_custom_command(OUTPUT ${GEN_SRC} 
+			COMMAND ${POWERSHELL} ${CMAKE_CURRENT_SOURCE_DIR}/tools/build-resources.ps1 ${GLIB_COMPILE_RESOURCES_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}
+		)
+		message("** ${POWERSHELL} ${CMAKE_CURRENT_SOURCE_DIR}/tools/build-resources.ps1 ${GLIB_COMPILE_RESOURCES_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}")
+	endif()
 else()
-	MESSAGE("** ${CMAKE_CURRENT_SOURCE_DIR}/tools/mk_mo.sh ${_moPath} ${_moFile} ${_poFile}")
-	add_custom_command(
-		OUTPUT ${GEN_SRC}
+	message("** ${CMAKE_CURRENT_SOURCE_DIR}/tools/build-resources.sh ${CMAKE_CURRENT_SOURCE_DIR}")
+	add_custom_command(OUTPUT ${GEN_SRC}
 		COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tools/build-resources.sh ${CMAKE_CURRENT_SOURCE_DIR}
 	)
 endif()
 
 
-INSTALL(FILES README.md LICENSE HISTORY COPYING TODO CODE_OF_CONDUCT.md CONTRIBUTING.md DESTINATION doc)
+install(FILES README.md LICENSE HISTORY COPYING TODO CODE_OF_CONDUCT.md CONTRIBUTING.md DESTINATION doc)
