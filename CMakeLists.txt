@@ -45,13 +45,18 @@ ELSE()
 
 			SET(_moPath ${CMAKE_CURRENT_SOURCE_DIR}/locale/${_langCode}/LC_MESSAGES)
 			SET(_moFile ${_moPath}/${PRG}.mo)
-			MESSAGE("** ** ${_moFile} install to ${LOCALE_INSTALL_DIR}/${_langCode}/LC_MESSAGES/${PRG}.mo")
 			#	mkdir -p ${_moPath} ; ${GETTEXT_MSGFMT_EXECUTABLE} -o ${_moFile} ${_poFile}
-			MESSAGE("** ${CMAKE_CURRENT_SOURCE_DIR}/tools/mk_mo.sh ${_moPath} ${_moFile} ${_poFile}")
-
-			ADD_CUSTOM_COMMAND(OUTPUT ${_moFile}
+			if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
+				MESSAGE("** powershell ${CMAKE_CURRENT_SOURCE_DIR}/tools/mk_mo.ps1 ${GETTEXT_MSGFMT_EXECUTABLE} ${_moPath} ${_moFile} ${_poFile}")
+				ADD_CUSTOM_COMMAND(OUTPUT ${_moFile}
+					COMMAND powershell ${CMAKE_CURRENT_SOURCE_DIR}/tools/mk_mo.ps1 ${GETTEXT_MSGFMT_EXECUTABLE} ${_moPath} ${_moFile} ${_poFile}
+					DEPENDS ${_poFile})
+			else()
+				MESSAGE("** ${CMAKE_CURRENT_SOURCE_DIR}/tools/mk_mo.sh ${_moPath} ${_moFile} ${_poFile}")
+				ADD_CUSTOM_COMMAND(OUTPUT ${_moFile}
 					COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tools/mk_mo.sh ${_moPath} ${_moFile} ${_poFile}
 					DEPENDS ${_poFile})
+			endif()
 			#			INSTALL(FILES ${_moFile} DESTINATION ${LOCALE_INSTALL_DIR}/${_langCode}/LC_MESSAGES/ RENAME ${PRG}.mo)
 			LIST(APPEND MO_FILES ${_moFile})
 		ENDIF()
@@ -86,6 +91,13 @@ set(RCR_INCLUDE_DIR "third-party/rcr" )
 set(GEN ${RCR_INCLUDE_DIR}/gen)
 set(GEN_GRPC_SRC ${GEN}/rcr.grpc.pb.cc ${GEN}/rcr.pb.cc)
 
+if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
+	set(PKG_CONFIG_EXECUTABLE "/git/vcpkg/installed/x86-windows/tools/pkgconf/pkgconf.exe")
+	find_package(PkgConfig)
+	pkg_check_modules(GTKMM_VARS REQUIRED IMPORTED_TARGET gtkmm-4.0)
+	set(GTKMM_VARS PkgConfig::GTKMM_VARS)
+endif()
+
 #
 # rcr-gnome
 #
@@ -102,16 +114,26 @@ set(RCR_GNOME_SRC rcr-gnome.cpp rcr-app.cpp top-window.cpp
 	PropertyTypeEditDialog.cpp PropertyTypeEditDialog.cpp BoxDialog.cpp BoxDialog.h)
 add_executable(rcr-gnome ${RCR_GNOME_SRC})
 target_link_libraries(rcr-gnome PRIVATE ${ICU_LIBS} gRPC::grpc++ ${Protobuf_LIBRARIES} ${ICU_LIBS} ${XLSX_LIBS}
-		${Intl_LIBRARY})
+		${Intl_LIBRARY} ${GTKMM_VARS})
 target_include_directories(rcr-gnome PRIVATE "third-party" ${RCR_INCLUDE_DIR} ${GTK_INCLUDE_DIRS})
 target_compile_definitions(rcr-gnome PUBLIC RCR_VERSION=${CMAKE_PROJECT_VERSION})
 
 #
 # Generate resource file
 #
-add_custom_command(
-	OUTPUT ${GEN_SRC}
-	COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tools/build-resources.sh ${CMAKE_CURRENT_SOURCE_DIR}
-)
+if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
+MESSAGE("** powershell ${CMAKE_CURRENT_SOURCE_DIR}/tools/mk_mo.ps1 ${GETTEXT_MSGFMT_EXECUTABLE} ${_moPath} ${_moFile} ${_poFile}")
+	add_custom_command(
+		OUTPUT ${GEN_SRC}
+		COMMAND powershell ${CMAKE_CURRENT_SOURCE_DIR}/tools/build-resources.ps1 ${CMAKE_CURRENT_SOURCE_DIR}
+	)
+else()
+	MESSAGE("** ${CMAKE_CURRENT_SOURCE_DIR}/tools/mk_mo.sh ${_moPath} ${_moFile} ${_poFile}")
+	add_custom_command(
+		OUTPUT ${GEN_SRC}
+		COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tools/build-resources.sh ${CMAKE_CURRENT_SOURCE_DIR}
+	)
+endif()
+
 
 INSTALL(FILES README.md LICENSE HISTORY COPYING TODO CODE_OF_CONDUCT.md CONTRIBUTING.md DESTINATION doc)
