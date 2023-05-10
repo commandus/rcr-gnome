@@ -53,17 +53,20 @@ void CardWindow::bindWidgets() {
 }
 
 void CardWindow::onCardSave() {
-
+    hide();
 }
 
 void CardWindow::onCardRm() {
-
+    hide();
 }
 
 void CardWindow::onCardCancel() {
     hide();
 }
 
+/**
+ * Change component type
+ */
 void CardWindow::onSymbolSelected() {
     std::string sym;
     refCBSymbol->get_active()->get_value(2, sym);
@@ -89,4 +92,10 @@ void CardWindow::onSymbolSelected() {
         row.set_value(2, id);
     }
     refCBMeasure->set_active(0);
+}
+
+void CardWindow::setProperties(
+    const std::string &propertiesString
+) {
+
 }

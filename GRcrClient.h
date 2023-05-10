@@ -22,9 +22,11 @@ private:
     std::string password;
 
     void start(
+        int module,
         const std::string &message = ""
     );
     void finish(
+        int module,
         int code,
         const std::string &message = ""
     );

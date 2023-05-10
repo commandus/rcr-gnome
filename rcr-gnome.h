@@ -11,4 +11,15 @@
 
 #define progname    "rcr-gnome"
 
+enum {
+    OP_LOAD_SYMBOLS,
+    OP_LOAD_DICTIONARIES,
+    OP_LOAD_BOXES,
+    OP_QUERY,
+    OP_IMPORT_FILE,
+    OP_IMPORT_DIR,
+    OP_LOAD_USERS,
+    OP_STATISTICS
+} RCR_OPERATION;
+
 #endif //RCR_GNOME_RCR_GNOME_H

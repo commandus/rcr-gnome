@@ -29,6 +29,7 @@ protected:
 
 public:
     uint64_t id;
+    bool isNew;
     uint64_t boxId;
 
     Gtk::ComboBox* refCBSymbol;
@@ -43,6 +44,9 @@ public:
 
     CardWindow(BaseObjectType*, const Glib::RefPtr<Gtk::Builder>&);
     virtual ~CardWindow();
+
+    void setProperties(const std::string &propertiesString);
+
 protected:
     void bindWidgets();
     void onCardSave();

@@ -132,9 +132,9 @@ private:
 
     void doQuery();
 
-    void onCallStarted(const std::string &message = "") override;
+    void onCallStarted(int module, const std::string &message = "") override;
 
-    void onCallFinished(int code, const std::string &message = "") override;
+    void onCallFinished(int module, int code, const std::string &message = "") override;
 
     // Not used yet
     void onProgress(int pos, int total) override;

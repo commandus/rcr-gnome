@@ -10,8 +10,8 @@
 
 class ServiceStateIntf {
 public:
-    virtual void onCallStarted(const std::string &message = "") = 0;
-    virtual void onCallFinished(int code, const std::string &message = "") = 0;
+    virtual void onCallStarted(int module, const std::string &message = "") = 0;
+    virtual void onCallFinished(int module, int code, const std::string &message = "") = 0;
     // Not used yet
     virtual void onProgress(int pos, int total) = 0;
 };

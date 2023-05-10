@@ -431,6 +431,7 @@ void TopWindow::searchCard(
 }
 
 void TopWindow::onCallStarted(
+    int module,
     const std::string &message
 )
 {
@@ -438,11 +439,36 @@ void TopWindow::onCallStarted(
 }
 
 void TopWindow::onCallFinished(
+    int module,
     int code,
     const std::string &message
 )
 {
     mProgressBar->set_fraction(0.0f);
+    switch (module) {
+        case OP_IMPORT_FILE:
+            reloadBoxTree();
+            {
+                Gtk::MessageDialog dialog(*this, code == 0 ?
+                    _("Excel file imported successfully") :
+                    _("Error import Excel file"));
+                dialog.set_secondary_text(message);
+                dialog.run();
+            }
+            break;
+        case OP_IMPORT_DIR:
+            reloadBoxTree();
+            {
+                Gtk::MessageDialog dialog(*this, code == 0 ?
+                    _("Excel files imported successfully") :
+                    _("Error import Excel files"));
+                dialog.set_secondary_text(message);
+                dialog.run();
+            }
+            break;
+        default:
+            break;
+    }
 }
 // Not used yet
 void TopWindow::onProgress(
@@ -504,9 +530,7 @@ void TopWindow::editCard() {
     row.get_value(6, box);
     row.get_value(7, symbol_id);
 
-    editCard(
-        symbol_id, name, nominal, properties, boxname, qty, id, box, false
-    );
+    editCard(symbol_id, name, nominal, properties, boxname, qty, id, box, false);
 }
 
 void TopWindow::editCard(
@@ -520,14 +544,15 @@ void TopWindow::editCard(
     uint64_t boxId,
     bool isNew
 ) {
+    cardWindow->id = id;
+    cardWindow->isNew = isNew;
     cardWindow->show_all();
     selectSymbolId(cardWindow->refCBSymbol, symbolId);
     cardWindow->refEntryName->set_text(name);
     cardWindow->refEntryNominal->set_text(nominal);
-    // properties
+    cardWindow->setProperties(properties);
     cardWindow->refEntryQuantity->set_text(std::to_string(qty));
     cardWindow->refEntryBox->set_text(boxName);
-    cardWindow->id = id;
     cardWindow->boxId = boxId;
 }
 
@@ -757,27 +782,9 @@ void TopWindow::runImportExcel(
     }
     std::thread t([=]() {
         if (isDirectory) {
-            if (!client->importDirectory(symbol, path, box, numberInFileName)) {
-                Gtk::MessageDialog dialog(*this, _("Error import Excel files"));
-                dialog.set_secondary_text(path);
-                dialog.run();
-            } else {
-                reloadBoxTree();
-                Gtk::MessageDialog dialog(*this, _("Excel files imported successfully"));
-                dialog.set_secondary_text(path);
-                dialog.run();
-            }
+            client->importDirectory(symbol, path, box, numberInFileName);
         } else {
-            if (!client->importFile(symbol, path, box, numberInFileName)) {
-                Gtk::MessageDialog dialog(*this, _("Error import Excel file"));
-                dialog.set_secondary_text(path);
-                dialog.run();
-            } else {
-                reloadBoxTree();
-                Gtk::MessageDialog dialog(*this, _("Excel file imported successfully"));
-                dialog.set_secondary_text(path);
-                dialog.run();
-            }
+            client->importFile(symbol, path, box, numberInFileName);
         }
     });
     t.detach();
