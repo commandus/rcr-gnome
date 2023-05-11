@@ -6,6 +6,7 @@
 #define RCR_GNOME_CARDWINDOW_H
 
 #include <gtkmm.h>
+#include "GRcrClient.h"
 
 class CardWindow: public Gtk::Window {
 private:
@@ -28,9 +29,13 @@ protected:
     Glib::RefPtr<Gtk::TreeSelection> mTreeViewSelectionProperty;
 
 public:
+    GRcrClient *client;
+    // save prev values
     uint64_t id;
-    bool isNew;
     uint64_t boxId;
+    uint64_t packageId;
+    std::string name;
+    bool isNew;
 
     Gtk::ComboBox* refCBSymbol;
     Gtk::ComboBox* refCBMeasure;
@@ -45,7 +50,12 @@ public:
     CardWindow(BaseObjectType*, const Glib::RefPtr<Gtk::Builder>&);
     virtual ~CardWindow();
 
-    void setProperties(const std::string &propertiesString);
+    void setBox(
+        uint64_t packageId,
+        uint64_t boxId,
+        const std::string &name,
+        const std::string &propertiesString
+    );
 
 protected:
     void bindWidgets();
@@ -53,7 +63,6 @@ protected:
     void onCardRm();
     void onCardCancel();
     void onSymbolSelected();
-
 };
 
 #endif //RCR_GNOME_CARDWINDOW_H

@@ -267,6 +267,8 @@
       <column type="gulong"/>
       <!-- column-name symbol_id -->
       <column type="gulong"/>
+      <!-- column-name package_id -->
+      <column type="gulong"/>
     </columns>
   </object>
   <object class="GtkListStore" id="liststoreMeasure">

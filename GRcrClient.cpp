@@ -245,9 +245,10 @@ void GRcrClient::query(
             row.set_value(2, properties2string(dictionaries, it->properties()));
             row.set_value(3, StockOperation::boxes2string(p->box()));
             row.set_value(4, p->qty());
-            row.set_value(5, p->id());
+            row.set_value(5, it->card().id());
             row.set_value(6, p->box());
             row.set_value(7, it->card().symbol_id());
+            row.set_value(8, p->id());
         }
     }
     finish(OP_QUERY, 0, _("Executing query completed successfully"));
@@ -402,11 +403,11 @@ void GRcrClient::getStatistics(
     uint64_t &componentCount,
     uint64_t &total
 ) {
-    start(OP_STATISTICS, _("Getting statistics"));
     grpc::ClientContext context;
     rcr::CardQueryRequest request;
     request.set_query("* sum");
     rcr::CardQueryResponse response;
+    start(OP_STATISTICS, _("Getting statistics"));
     grpc::Status status = stub->cardQuery(&context, request, &response);
     if (!status.ok()) {
         std::cerr << "Error: " << status.error_code() << " " << status.error_message() << std::endl;
@@ -420,7 +421,7 @@ void GRcrClient::setServiceState(ServiceStateIntf *value) {
     state = value;
 }
 
-void GRcrClient::savePropertyType(
+bool GRcrClient::savePropertyType(
     uint64_t id,
     const std::string &key,
     const std::string &description
@@ -438,15 +439,20 @@ void GRcrClient::savePropertyType(
     chPropertyTypeRequest.mutable_value()->set_key(key);
     chPropertyTypeRequest.mutable_value()->set_description(description);
 
+    start(OP_SAVE_PROPERTY_TYPE, _("Saving property type"));
     grpc::Status status = stub->chPropertyType(&context, chPropertyTypeRequest, &response);
     if (!status.ok()) {
         std::cerr << "Error: " << status.error_code() << " " << status.error_message() << std::endl;
+        finish(OP_SAVE_PROPERTY_TYPE, status.error_code(), _("Save property type with errors"));
+        return false;
     }
+    finish(OP_SAVE_PROPERTY_TYPE, status.error_code(), _("Save property type successfully"));
     // reload dictionaries
     loadDictionaries();
+    return true;
 }
 
-void GRcrClient::rmPropertyType(
+bool GRcrClient::rmPropertyType(
     uint64_t id
 )
 {
@@ -457,16 +463,21 @@ void GRcrClient::rmPropertyType(
     chPropertyTypeRequest.mutable_user()->set_password(password);
     chPropertyTypeRequest.set_operationsymbol("-");
     chPropertyTypeRequest.mutable_value()->set_id(id);
+    start(OP_RM_PROPERTY_TYPE, _("Removing property type"));
     grpc::Status status = stub->chPropertyType(&context, chPropertyTypeRequest, &response);
     if (!status.ok()) {
         std::cerr << "Error: " << status.error_code() << " " << status.error_message() << std::endl;
+        finish(OP_RM_PROPERTY_TYPE, status.error_code(), _("Removed property type with errors"));
+        return false;
     }
+    finish(OP_RM_PROPERTY_TYPE, 0, _("Removed property type successfully"));
     // reload dictionaries
     loadDictionaries();
+    return true;
 }
 
 bool GRcrClient::rmBox(
-        uint64_t boxId
+    uint64_t boxId
 ) {
     grpc::ClientContext context;
     rcr::ChBoxRequest chBoxRequest;
@@ -475,11 +486,15 @@ bool GRcrClient::rmBox(
     chBoxRequest.mutable_user()->set_password(password);
     chBoxRequest.set_operationsymbol("-");
     chBoxRequest.mutable_value()->set_box_id(boxId);
+    start(OP_RM_BOX, _("Removing box"));
     grpc::Status status = stub->chBox(&context, chBoxRequest, &response);
     if (!status.ok()) {
         std::cerr << "Error: " << status.error_code() << " " << status.error_message() << std::endl;
+        finish(OP_RM_BOX, status.error_code(), _("Removed box with errors"));
+        return false;
     }
-    return status.ok();
+    finish(OP_RM_BOX, 0, _("Removed box successfully"));
+    return true;
 }
 
 bool GRcrClient::saveBox(
@@ -498,9 +513,79 @@ bool GRcrClient::saveBox(
     } else
         chBoxRequest.set_operationsymbol("+");
     chBoxRequest.mutable_value()->set_name(name);
+    start(OP_SAVE_BOX, _("Saving box"));
     grpc::Status status = stub->chBox(&context, chBoxRequest, &response);
     if (!status.ok()) {
         std::cerr << "Error: " << status.error_code() << " " << status.error_message() << std::endl;
+        finish(OP_SAVE_BOX, status.error_code(), _("Save box with errors"));
+        return false;
     }
-    return status.ok();
+    finish(OP_SAVE_BOX, 0, _("Save box successfully"));
+    return true;
+}
+
+bool GRcrClient::updateCardPackage(
+    bool isNew,
+    const rcr::Card &card,
+    uint64_t packageId,
+    std::string &properties,
+    uint64_t boxId,
+    const std::string &boxName,
+    uint64_t qty
+) {
+    grpc::ClientContext context;
+
+    rcr::ChCardRequest chCardRequest;
+    rcr::OperationResponse response;
+    chCardRequest.mutable_user()->set_name(username);
+    chCardRequest.mutable_user()->set_password(password);
+    chCardRequest.set_package_id(packageId);
+    if (!isNew) {
+        chCardRequest.set_operationsymbol("=");
+        chCardRequest.mutable_value()->set_id(card.id());
+    } else
+        chCardRequest.set_operationsymbol("+");
+    chCardRequest.mutable_value()->set_name(card.name());
+    chCardRequest.mutable_value()->set_uname(toUpperCase(card.name()));
+    rcr::Package *p = chCardRequest.add_packages();
+    p->set_card_id(card.id());
+    p->set_id(packageId);
+    p->set_box(boxId);
+    p->set_box_name(boxName);
+    p->set_qty(qty);
+
+    start(OP_SAVE_CARD, _("Saving card"));
+    grpc::Status status = stub->chCard(&context, chCardRequest, &response);
+    if (!status.ok()) {
+        std::cerr << "Error: " << status.error_code() << " " << status.error_message() << std::endl;
+        finish(OP_SAVE_CARD, status.error_code(), _("Save card with errors"));
+        return false;
+    }
+    finish(OP_SAVE_CARD, 0, _("Save card successfully"));
+    return true;
+}
+
+bool GRcrClient::rmCardPackage(
+    rcr::Card &card,
+    uint64_t packageId
+) {
+    grpc::ClientContext context;
+
+    rcr::ChCardRequest chCardRequest;
+    rcr::OperationResponse response;
+    chCardRequest.mutable_user()->set_name(username);
+    chCardRequest.mutable_user()->set_password(password);
+    chCardRequest.set_package_id(packageId);
+    chCardRequest.set_operationsymbol("-");
+    chCardRequest.mutable_value()->set_id(card.id());
+    chCardRequest.set_package_id(packageId);
+    start(OP_RM_CARD, _("Removing card"));
+    grpc::Status status = stub->chCard(&context, chCardRequest, &response);
+    if (!status.ok()) {
+        std::cerr << "Error: " << status.error_code() << " " << status.error_message() << std::endl;
+        finish(OP_RM_CARD, status.error_code(), _("Remove card with errors"));
+        return false;
+    }
+    finish(OP_RM_CARD, 0, _("Remove card successfully"));
+    return true;
 }

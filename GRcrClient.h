@@ -55,6 +55,7 @@ public:
     int findSymbol(
         const std::string &symbol
     );
+
     COMPONENT findSymbol(
         uint64_t symbolId
     );
@@ -110,12 +111,12 @@ public:
         ServiceStateIntf *value
     );
 
-    void savePropertyType(
+    bool savePropertyType(
         uint64_t id,
         const std::string &key,
         const std::string &desctiption
     );
-    void rmPropertyType(
+    bool rmPropertyType(
         uint64_t id
     );
 
@@ -127,6 +128,21 @@ public:
         uint64_t id,
         uint64_t boxId,
         const std::string &name
+    );
+
+    bool updateCardPackage(
+        bool isNew,
+        const rcr::Card &card,
+        uint64_t packageId,
+        std::string &propertiies,
+        uint64_t boxId,
+        const std::string &boxName,
+        uint64_t qty
+    );
+
+    bool rmCardPackage(
+        rcr::Card &card,
+        uint64_t packageId
     );
 };
 

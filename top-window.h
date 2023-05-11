@@ -151,15 +151,17 @@ private:
     void editCard();
 
     void editCard(
-            uint64_t symbolId,
-            const std::string &name,
-            const std::string &nominal,
-            const std::string &properties,
-            const std::string &boxName,
-            uint64_t qty,
-            uint64_t id,
-            uint64_t boxId,
-            bool isNew
+        GRcrClient *client,
+        uint64_t symbolId,
+        const std::string &name,
+        const std::string &nominal,
+        const std::string &properties,
+        const std::string &boxName,
+        uint64_t qty,
+        uint64_t id,
+        uint64_t packageId,
+        uint64_t boxId,
+        bool isNew
     );
 
     bool confirmBox(

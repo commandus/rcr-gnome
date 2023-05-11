@@ -103,7 +103,7 @@ TopWindow::TopWindow (BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder> 
 {
     createDialogs();
     bindWidgets();
-    // 0 name 1 boxname 2 properties 3 id 4 qty 5 rem 6 boxid 7 symbol_id
+    // 0 name 1 boxname 2 properties 3 id 4 qty 5 rem 6 boxid 7 symbol_id 8- packageId
     mRefTreeModelFilterCard = Gtk::TreeModelFilter::create(mRefListStoreCard);
 	mRefTreeModelFilterCard->set_visible_func(
 	[this] (const Gtk::TreeModel::const_iterator& it) -> bool {
@@ -138,7 +138,6 @@ TopWindow::TopWindow (BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder> 
 
     loadSettings();
     onFileConnect();
-
 }
 
 void TopWindow::onBoxSelected(
@@ -339,9 +338,9 @@ void TopWindow::selectSymbolId(
     auto children = mRefListStoreSymbol->children();
     auto c = 0;
     for (auto iter = children.begin(), end = children.end(); iter != end; ++iter) {
-        uint64_t sym;
-        iter->get_value(1, sym);
-        if (sym == symbolId)
+        uint64_t id;
+        iter->get_value(1, id);
+        if (id == symbolId)
             break;
         c++;
     }
@@ -422,11 +421,9 @@ void TopWindow::searchCard(
     uint64_t b = settings->settings.service(settings->selected).last_box();
     if (b)
         qs += " " + StockOperation::boxes2string(b);
-
         client->query(qs, symbol, mRefListStoreCard);
 
     mTreeViewCard->set_model(Glib::RefPtr<Gtk::TreeModelSort>(Gtk::TreeModelSort::create(mRefTreeModelFilterCard)));
-
     settings->settings.mutable_service(settings->selected)->set_last_query(q);
 }
 
@@ -519,21 +516,23 @@ void TopWindow::editCard() {
     if (!iter)
         return;
     Gtk::TreeModel::Row row = *iter;
-    std::string name, nominal, properties, boxname;
-    uint64_t qty, id, box, symbol_id;
+    std::string name, nominal, properties, boxName;
+    uint64_t qty, id, box, symbol_id, packageId;
     row.get_value(0, name);
     row.get_value(1, nominal);
     row.get_value(2, properties);
-    row.get_value(3, boxname);
+    row.get_value(3, boxName);
     row.get_value(4, qty);
     row.get_value(5, id);
     row.get_value(6, box);
     row.get_value(7, symbol_id);
+    row.get_value(8, packageId);
 
-    editCard(symbol_id, name, nominal, properties, boxname, qty, id, box, false);
+    editCard(client, symbol_id, name, nominal, properties, boxName, qty, id, packageId, box, false);
 }
 
 void TopWindow::editCard(
+    GRcrClient *aClient,
     uint64_t symbolId,
     const std::string &name,
     const std::string &nominal,
@@ -541,19 +540,19 @@ void TopWindow::editCard(
     const std::string &boxName,
     uint64_t qty,
     uint64_t id,
+    uint64_t packageId,
     uint64_t boxId,
     bool isNew
 ) {
+    cardWindow->client = aClient;
     cardWindow->id = id;
     cardWindow->isNew = isNew;
     cardWindow->show_all();
     selectSymbolId(cardWindow->refCBSymbol, symbolId);
     cardWindow->refEntryName->set_text(name);
     cardWindow->refEntryNominal->set_text(nominal);
-    cardWindow->setProperties(properties);
     cardWindow->refEntryQuantity->set_text(std::to_string(qty));
-    cardWindow->refEntryBox->set_text(boxName);
-    cardWindow->boxId = boxId;
+    cardWindow->setBox(packageId, boxId, boxName, properties);
 }
 
 bool TopWindow::confirmBox(

@@ -7,6 +7,8 @@
 #include <iostream>
 
 #include "MeasureUnit.h"
+#include "StockOperation.h"
+#include "string-helper.h"
 
 CardWindow::CardWindow(
     BaseObjectType* cobject,
@@ -53,10 +55,46 @@ void CardWindow::bindWidgets() {
 }
 
 void CardWindow::onCardSave() {
+    if (!client)
+        return;
+    std::string sBid = refEntryBox->get_text();
+    StockOperation::parseBoxes(boxId, sBid, 0, sBid.size());
+    Gtk::TreeModel::iterator it = refCBSymbol->get_active();
+    if (!it)
+        return;
+    // get symbol
+    uint64_t symbolId;
+    std::string sym;
+    it->get_value(1, symbolId);
+    it->get_value(2, sym);
+
+    std::string name = refEntryName->get_text();
+    std::string sNominal = refEntryNominal->get_text();
+    uint64_t nominal = std::strtoull(sNominal.c_str(), nullptr, 10);
+
+    // properties
+    std::string properties;
+    //getProperties(properties);
+
+    std::string sQty = refEntryQuantity->get_text();
+    uint64_t qty = std::strtoull(sQty.c_str(), nullptr, 10);
+    std::string boxName = refEntryBox->get_text();
+
+    rcr::Card card;
+    card.set_id(id);
+    card.set_symbol_id(symbolId);
+    card.set_name(name);
+    card.set_uname(toUpperCase(name));
+    card.set_nominal(nominal);
+
+    client->updateCardPackage(isNew, card, packageId, properties, boxId, boxName, qty);
     hide();
 }
 
 void CardWindow::onCardRm() {
+    rcr::Card card;
+    card.set_id(id);
+    client->rmCardPackage(card, packageId);
     hide();
 }
 
@@ -94,8 +132,14 @@ void CardWindow::onSymbolSelected() {
     refCBMeasure->set_active(0);
 }
 
-void CardWindow::setProperties(
+void CardWindow::setBox(
+    uint64_t aPackageId,
+    uint64_t aBoxId,
+    const std::string &aName,
     const std::string &propertiesString
 ) {
-
+    packageId = aPackageId;
+    boxId = aBoxId;
+    name = aName;
+    refEntryBox->set_text(StockOperation::boxes2string(boxId));
 }

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-03 16:21+0900\n"
+"POT-Creation-Date: 2023-05-11 16:01+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,7 +22,7 @@ msgid "Delete box?"
 msgstr ""
 
 #: BoxDialog.cpp:109 PropertyTypeDialog.cpp:147 PropertyTypeEditDialog.cpp:107
-#: top-window.cpp:803
+#: top-window.cpp:809
 msgid "Press Ok to delete. This operation Can not be undone"
 msgstr ""
 
@@ -30,68 +30,144 @@ msgstr ""
 msgid "All"
 msgstr ""
 
-#: GRcrClient.cpp:70
+#: GRcrClient.cpp:74
 msgid "Loading boxes"
 msgstr ""
 
-#: GRcrClient.cpp:92
+#: GRcrClient.cpp:96
 msgid "Loading boxes error"
 msgstr ""
 
-#: GRcrClient.cpp:127
+#: GRcrClient.cpp:131
 msgid "Loading boxes completed successfully"
 msgstr ""
 
-#: GRcrClient.cpp:133
+#: GRcrClient.cpp:137
 msgid "Loading dictionaries"
 msgstr ""
 
-#: GRcrClient.cpp:146
+#: GRcrClient.cpp:145 GRcrClient.cpp:150
 msgid "Loading dictionaries completed successfully"
 msgstr ""
 
-#: GRcrClient.cpp:155
+#: GRcrClient.cpp:160
 msgid "Loading symbols"
 msgstr ""
 
-#: GRcrClient.cpp:177
+#: GRcrClient.cpp:182
 msgid "Loading symbols completed successfully"
 msgstr ""
 
-#: GRcrClient.cpp:208
+#: GRcrClient.cpp:213
 msgid "Executing query"
 msgstr ""
 
-#: GRcrClient.cpp:247
+#: GRcrClient.cpp:230
+msgid "Executing query completed with errors"
+msgstr ""
+
+#: GRcrClient.cpp:254
 msgid "Executing query completed successfully"
 msgstr ""
 
-#: GRcrClient.cpp:304 GRcrClient.cpp:336
+#: GRcrClient.cpp:311 GRcrClient.cpp:344
 msgid "Import boxes"
 msgstr ""
 
-#: GRcrClient.cpp:323 GRcrClient.cpp:362
+#: GRcrClient.cpp:330 GRcrClient.cpp:370
 msgid "Import boxes failed"
 msgstr ""
 
-#: GRcrClient.cpp:326 GRcrClient.cpp:365
+#: GRcrClient.cpp:333 GRcrClient.cpp:334 GRcrClient.cpp:373
 msgid "Import boxes completed successfully"
 msgstr ""
 
-#: GRcrClient.cpp:375
+#: GRcrClient.cpp:383
 msgid "Loading users"
 msgstr ""
 
-#: GRcrClient.cpp:391
+#: GRcrClient.cpp:399
 msgid "Loading users completed successfully"
 msgstr ""
 
-#: GRcrClient.cpp:398
+#: GRcrClient.cpp:410
 msgid "Getting statistics"
 msgstr ""
 
-#: GRcrClient.cpp:409
+#: GRcrClient.cpp:417
 msgid "Getting statistics completed successfully"
+msgstr ""
+
+#: GRcrClient.cpp:442
+msgid "Saving property type"
+msgstr ""
+
+#: GRcrClient.cpp:446
+msgid "Save property type with errors"
+msgstr ""
+
+#: GRcrClient.cpp:449
+msgid "Save property type successfully"
+msgstr ""
+
+#: GRcrClient.cpp:466
+msgid "Removing property type"
+msgstr ""
+
+#: GRcrClient.cpp:470
+msgid "Removed property type with errors"
+msgstr ""
+
+#: GRcrClient.cpp:473
+msgid "Removed property type successfully"
+msgstr ""
+
+#: GRcrClient.cpp:489
+msgid "Removing box"
+msgstr ""
+
+#: GRcrClient.cpp:493
+msgid "Removed box with errors"
+msgstr ""
+
+#: GRcrClient.cpp:496
+msgid "Removed box successfully"
+msgstr ""
+
+#: GRcrClient.cpp:516
+msgid "Saving box"
+msgstr ""
+
+#: GRcrClient.cpp:520
+msgid "Save box with errors"
+msgstr ""
+
+#: GRcrClient.cpp:523
+msgid "Save box successfully"
+msgstr ""
+
+#: GRcrClient.cpp:547
+msgid "Saving card"
+msgstr ""
+
+#: GRcrClient.cpp:551
+msgid "Save card with errors"
+msgstr ""
+
+#: GRcrClient.cpp:554
+msgid "Save card successfully"
+msgstr ""
+
+#: GRcrClient.cpp:572
+msgid "Removing card"
+msgstr ""
+
+#: GRcrClient.cpp:576
+msgid "Remove card with errors"
+msgstr ""
+
+#: GRcrClient.cpp:579
+msgid "Remove card successfully"
 msgstr ""
 
 #: PropertyTypeDialog.cpp:144
@@ -144,83 +220,83 @@ msgstr ""
 msgid "Excel spreadsheet files"
 msgstr ""
 
-#: top-window.cpp:232
+#: top-window.cpp:231
 msgid "rcr for Gnome"
 msgstr ""
 
-#: top-window.cpp:242
+#: top-window.cpp:241
 msgid "Custom build"
 msgstr ""
 
-#: top-window.cpp:247
+#: top-window.cpp:246
 msgid ""
 "2023 Yu.G. Shafer Institute of Cosmophysical Research and Aeronomy of "
 "Siberian Branch of the Russian Academy of Sciences"
 msgstr ""
 
-#: top-window.cpp:248
+#: top-window.cpp:247
 msgid "In memory of Konstantin Zolotovsky"
 msgstr ""
 
-#: top-window.cpp:255
+#: top-window.cpp:254
 msgid "Andrei Ivanov andrey.ivanov@ikfia.ysn.ru"
 msgstr ""
 
-#: top-window.cpp:256
+#: top-window.cpp:255
 msgid ""
 "Yu.G. Shafer Institute of Cosmophysical Research and Aeronomy http://ikfia."
 "ysn.ru/"
 msgstr ""
 
-#: top-window.cpp:257
+#: top-window.cpp:256
 msgid "ICU https://icu.unicode.org/"
 msgstr ""
 
-#: top-window.cpp:258
+#: top-window.cpp:257
 msgid "xlnt https://github.com/tfussell/xlnt"
 msgstr ""
 
-#: top-window.cpp:259
+#: top-window.cpp:258
 msgid "gRPC https://grpc.io/"
 msgstr ""
 
-#: top-window.cpp:396
+#: top-window.cpp:395
 msgid "Selected box "
 msgstr ""
 
-#: top-window.cpp:572 top-window.cpp:729
-msgid "Import "
-msgstr ""
-
-#: top-window.cpp:572 top-window.cpp:729
-msgid " to box "
-msgstr ""
-
-#: top-window.cpp:579 top-window.cpp:736
-msgid "Import"
-msgstr ""
-
-#: top-window.cpp:753
-msgid "Wrong box specified"
-msgstr ""
-
-#: top-window.cpp:761
-msgid "Error import Excel files"
-msgstr ""
-
-#: top-window.cpp:766
-msgid "Excel files imported successfully"
-msgstr ""
-
-#: top-window.cpp:772
-msgid "Error import Excel file"
-msgstr ""
-
-#: top-window.cpp:777
+#: top-window.cpp:450
 msgid "Excel file imported successfully"
 msgstr ""
 
-#: top-window.cpp:800
+#: top-window.cpp:451
+msgid "Error import Excel file"
+msgstr ""
+
+#: top-window.cpp:460
+msgid "Excel files imported successfully"
+msgstr ""
+
+#: top-window.cpp:461
+msgid "Error import Excel files"
+msgstr ""
+
+#: top-window.cpp:596 top-window.cpp:753
+msgid "Import "
+msgstr ""
+
+#: top-window.cpp:596 top-window.cpp:753
+msgid " to box "
+msgstr ""
+
+#: top-window.cpp:603 top-window.cpp:760
+msgid "Import"
+msgstr ""
+
+#: top-window.cpp:777
+msgid "Wrong box specified"
+msgstr ""
+
+#: top-window.cpp:806
 msgid "Delete box "
 msgstr ""
 
@@ -232,14 +308,14 @@ msgstr ""
 msgid "Confirm"
 msgstr ""
 
-#: rcr-gnome.glade:37 rcr-gnome.glade:161 rcr-gnome.glade:325
-#: rcr-gnome.glade:1359 rcr-gnome.glade:1521 rcr-gnome.glade:1644
-#: rcr-gnome.glade:1956
+#: rcr-gnome.glade:37 rcr-gnome.glade:161 rcr-gnome.glade:328
+#: rcr-gnome.glade:1360 rcr-gnome.glade:1522 rcr-gnome.glade:1645
+#: rcr-gnome.glade:1957
 msgid "Cancel"
 msgstr ""
 
-#: rcr-gnome.glade:68 rcr-gnome.glade:119 rcr-gnome.glade:470
-#: rcr-gnome.glade:1006 rcr-gnome.glade:1123
+#: rcr-gnome.glade:68 rcr-gnome.glade:119 rcr-gnome.glade:473
+#: rcr-gnome.glade:1008 rcr-gnome.glade:1125
 msgid "Box"
 msgstr ""
 
@@ -247,7 +323,7 @@ msgstr ""
 msgid "Number in file name"
 msgstr ""
 
-#: rcr-gnome.glade:133 rcr-gnome.glade:1493
+#: rcr-gnome.glade:133 rcr-gnome.glade:1494
 msgid "Delete"
 msgstr ""
 
@@ -259,219 +335,215 @@ msgstr ""
 msgid "Box name (optional)"
 msgstr ""
 
-#: rcr-gnome.glade:286
+#: rcr-gnome.glade:288
 msgid "Card"
 msgstr ""
 
-#: rcr-gnome.glade:301 rcr-gnome.glade:1507 rcr-gnome.glade:1942
+#: rcr-gnome.glade:304 rcr-gnome.glade:1508 rcr-gnome.glade:1943
 msgid "Save"
 msgstr ""
 
-#: rcr-gnome.glade:313 rcr-gnome.glade:1222
+#: rcr-gnome.glade:316 rcr-gnome.glade:1223
 msgid "Remove"
 msgstr ""
 
-#: rcr-gnome.glade:360
+#: rcr-gnome.glade:363
 msgid "Component"
 msgstr ""
 
-#: rcr-gnome.glade:393 rcr-gnome.glade:1093
+#: rcr-gnome.glade:396 rcr-gnome.glade:1095
 msgid "Nominal"
 msgstr ""
 
-#: rcr-gnome.glade:445 rcr-gnome.glade:1078 rcr-gnome.glade:1280
+#: rcr-gnome.glade:448 rcr-gnome.glade:1080 rcr-gnome.glade:1281
 msgid "Name"
 msgstr ""
 
-#: rcr-gnome.glade:495 rcr-gnome.glade:1137
+#: rcr-gnome.glade:498 rcr-gnome.glade:1139
 msgid "Quantity"
 msgstr ""
 
-#: rcr-gnome.glade:557
+#: rcr-gnome.glade:560
 msgid "Property list"
 msgstr ""
 
-#: rcr-gnome.glade:570 rcr-gnome.glade:827 rcr-gnome.glade:1208
+#: rcr-gnome.glade:573 rcr-gnome.glade:829 rcr-gnome.glade:1209
 msgid "Add"
 msgstr ""
 
-#: rcr-gnome.glade:584 rcr-gnome.glade:1250 rcr-gnome.glade:1809
+#: rcr-gnome.glade:587 rcr-gnome.glade:1251 rcr-gnome.glade:1810
 msgid "Close"
 msgstr ""
 
-#: rcr-gnome.glade:616 rcr-gnome.glade:1553
+#: rcr-gnome.glade:619 rcr-gnome.glade:1554
 msgid "Key"
 msgstr ""
 
-#: rcr-gnome.glade:627 rcr-gnome.glade:1578
+#: rcr-gnome.glade:630 rcr-gnome.glade:1579
 msgid "Description"
 msgstr ""
 
-#: rcr-gnome.glade:668
-msgid "Boxes & cards"
-msgstr ""
-
-#: rcr-gnome.glade:685
+#: rcr-gnome.glade:687
 msgid "_File"
 msgstr ""
 
-#: rcr-gnome.glade:695
+#: rcr-gnome.glade:697
 msgid "Log in"
 msgstr ""
 
-#: rcr-gnome.glade:697
+#: rcr-gnome.glade:699
 msgid "_Login"
 msgstr ""
 
-#: rcr-gnome.glade:706
+#: rcr-gnome.glade:708
 msgid "Register new user"
 msgstr ""
 
-#: rcr-gnome.glade:708
+#: rcr-gnome.glade:710
 msgid "_Register"
 msgstr ""
 
-#: rcr-gnome.glade:723
+#: rcr-gnome.glade:725
 msgid "Import .xlsx Excel file"
 msgstr ""
 
-#: rcr-gnome.glade:725
+#: rcr-gnome.glade:727
 msgid "Import Excel _file"
 msgstr ""
 
-#: rcr-gnome.glade:734
+#: rcr-gnome.glade:736
 msgid "Import Excel files from directory"
 msgstr ""
 
-#: rcr-gnome.glade:736
+#: rcr-gnome.glade:738
 msgid "Import Excel _directory"
 msgstr ""
 
-#: rcr-gnome.glade:752
+#: rcr-gnome.glade:754
 msgid "_Quit"
 msgstr ""
 
-#: rcr-gnome.glade:765
+#: rcr-gnome.glade:767
 msgid "_Box"
 msgstr ""
 
-#: rcr-gnome.glade:776
+#: rcr-gnome.glade:778
 msgid "_Edit selected box"
 msgstr ""
 
-#: rcr-gnome.glade:785
+#: rcr-gnome.glade:787
 msgid "_New empty box"
 msgstr ""
 
-#: rcr-gnome.glade:794
+#: rcr-gnome.glade:796
 msgid "_Delete selected box"
 msgstr ""
 
-#: rcr-gnome.glade:806
+#: rcr-gnome.glade:808
 msgid "_User"
 msgstr ""
 
-#: rcr-gnome.glade:817
+#: rcr-gnome.glade:819
 msgid "List"
 msgstr ""
 
-#: rcr-gnome.glade:836 rcr-gnome.glade:1236
+#: rcr-gnome.glade:838 rcr-gnome.glade:1237
 msgid "Boxes"
 msgstr ""
 
-#: rcr-gnome.glade:849
+#: rcr-gnome.glade:851
 msgid "_Options"
 msgstr ""
 
-#: rcr-gnome.glade:860
+#: rcr-gnome.glade:862
 msgid "_Properties"
 msgstr ""
 
-#: rcr-gnome.glade:876
+#: rcr-gnome.glade:878
 msgid "_Connect"
 msgstr ""
 
-#: rcr-gnome.glade:892
+#: rcr-gnome.glade:894
 msgid "_Preferences"
 msgstr ""
 
-#: rcr-gnome.glade:904
+#: rcr-gnome.glade:906
 msgid "_Help"
 msgstr ""
 
-#: rcr-gnome.glade:915
+#: rcr-gnome.glade:917
 msgid "_Statistics"
 msgstr ""
 
-#: rcr-gnome.glade:924
+#: rcr-gnome.glade:926
 msgid "_About"
 msgstr ""
 
-#: rcr-gnome.glade:1108
+#: rcr-gnome.glade:1110
 msgid "Properties"
 msgstr ""
 
-#: rcr-gnome.glade:1195
+#: rcr-gnome.glade:1196
 msgid "User list"
 msgstr ""
 
-#: rcr-gnome.glade:1292
+#: rcr-gnome.glade:1293
 msgid "Rights"
 msgstr ""
 
-#: rcr-gnome.glade:1303 rcr-gnome.glade:1416 rcr-gnome.glade:1703
-#: rcr-gnome.glade:2015
+#: rcr-gnome.glade:1304 rcr-gnome.glade:1417 rcr-gnome.glade:1704
+#: rcr-gnome.glade:2016
 msgid "Password"
 msgstr ""
 
-#: rcr-gnome.glade:1331 rcr-gnome.glade:1345 rcr-gnome.glade:1764
+#: rcr-gnome.glade:1332 rcr-gnome.glade:1346 rcr-gnome.glade:1765
 msgid "Login"
 msgstr ""
 
-#: rcr-gnome.glade:1391 rcr-gnome.glade:1678 rcr-gnome.glade:1990
+#: rcr-gnome.glade:1392 rcr-gnome.glade:1679 rcr-gnome.glade:1991
 msgid "User name"
 msgstr ""
 
-#: rcr-gnome.glade:1448 rcr-gnome.glade:1630
+#: rcr-gnome.glade:1449 rcr-gnome.glade:1631
 msgid "Register"
 msgstr ""
 
-#: rcr-gnome.glade:1479
+#: rcr-gnome.glade:1480
 msgid "Property"
 msgstr ""
 
-#: rcr-gnome.glade:1615
+#: rcr-gnome.glade:1616
 msgid "Register a new user"
 msgstr ""
 
-#: rcr-gnome.glade:1731
+#: rcr-gnome.glade:1732
 msgid "Re-type password"
 msgstr ""
 
-#: rcr-gnome.glade:1762
+#: rcr-gnome.glade:1763
 msgid "Switch to login"
 msgstr ""
 
-#: rcr-gnome.glade:1796
+#: rcr-gnome.glade:1797
 msgid "Statistics"
 msgstr ""
 
-#: rcr-gnome.glade:1842
+#: rcr-gnome.glade:1843
 msgid "Components"
 msgstr ""
 
-#: rcr-gnome.glade:1856
+#: rcr-gnome.glade:1857
 msgid "Total"
 msgstr ""
 
-#: rcr-gnome.glade:1869 rcr-gnome.glade:1883
+#: rcr-gnome.glade:1870 rcr-gnome.glade:1884
 msgid "0"
 msgstr ""
 
-#: rcr-gnome.glade:1928
+#: rcr-gnome.glade:1929
 msgid "User"
 msgstr ""
 
-#: rcr-gnome.glade:2046 rcr-gnome.glade:2048
+#: rcr-gnome.glade:2047 rcr-gnome.glade:2049
 msgid "Admin"
 msgstr ""
