@@ -7,9 +7,11 @@
 
 #include <gtkmm.h>
 #include "GRcrClient.h"
+#include "PropertyDialog.h"
 
 class CardWindow: public Gtk::Window {
 private:
+    PropertyDialog *propertyDialog;
     Glib::RefPtr<Gtk::Builder> mRefBuilder;
     Glib::RefPtr<Gtk::ListStore> mRefListStoreComponent;
     Glib::RefPtr<Gtk::ListStore> mRefListStoreMeasure;
@@ -29,6 +31,7 @@ protected:
     void onCardSave();
     void onCardRm();
     void onCardCancel();
+    void onAddProperty();
     void onSymbolSelected();
     bool confirmDeleteCard();
 public:
@@ -51,6 +54,7 @@ public:
     Gtk::Entry* refEntryNominal;
 
     Gtk::TreeView* refTreeViewProperty;
+    Gtk::Button *refButtonPropertyAdd;
 
     CardWindow(BaseObjectType*, const Glib::RefPtr<Gtk::Builder>&);
     virtual ~CardWindow();
@@ -59,7 +63,8 @@ public:
         uint64_t packageId,
         uint64_t boxId,
         const std::string &BoxName,
-        const std::string &propertiesString
+        const std::string &propertiesString,
+        PropertyDialog *propertyDialog
     );
 
     COMPONENT getSelectedComponent();

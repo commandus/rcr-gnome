@@ -19,6 +19,7 @@
 #include "StatisticsDialog.h"
 #include "PropertyTypeDialog.h"
 #include "PropertyTypeEditDialog.h"
+#include "PropertyDialog.h"
 
 class TopWindow: public Gtk::Window, public ServiceStateIntf {
 public:
@@ -43,6 +44,8 @@ public:
     // Property type
     PropertyTypeDialog *propertyTypeDialog;
     PropertyTypeEditDialog *propertyTypeEditDialog;
+    // Property
+    PropertyDialog *propertyDialog;
 
     virtual ~TopWindow();
 

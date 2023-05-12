@@ -508,6 +508,7 @@ void TopWindow::createDialogs() {
     mRefBuilder->get_widget_derived("statisticsDialog", statisticsDialog);
     mRefBuilder->get_widget_derived("propertyTypeDialog", propertyTypeDialog);
     mRefBuilder->get_widget_derived("propertyTypeEditDialog", propertyTypeEditDialog);
+    mRefBuilder->get_widget_derived("propertyDialog", propertyDialog);
 }
 
 void TopWindow::onHideCardWindow(Gtk::Window *window) {
@@ -564,7 +565,7 @@ void TopWindow::editCard(
     cardWindow->refEntryName->set_text(name);
     cardWindow->refEntryNominal->set_text(nominal);
     cardWindow->refEntryQuantity->set_text(std::to_string(qty));
-    cardWindow->setBox(packageId, boxId, boxName, properties);
+    cardWindow->setBox(packageId, boxId, boxName, properties, propertyDialog);
 }
 
 bool TopWindow::confirmBox(

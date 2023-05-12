@@ -42,7 +42,9 @@ void CardWindow::bindWidgets() {
     mRefBuilder->get_widget("bCardSave", mRefButtonCardSave);
     mRefBuilder->get_widget("bCardCancel", mRefButtonCardCancel);
     mRefBuilder->get_widget("bCardRm", mRefButtonCardRm);
+    mRefBuilder->get_widget("bPropertyAdd", refButtonPropertyAdd);
     mRefBuilder->get_widget("tvProperty", refTreeViewProperty);
+
     mRefBuilder->get_widget("lNominal", mRefLabelNominal);
     mRefBuilder->get_widget("lName", mRefLabelName);
     mTreeViewSelectionProperty = Glib::RefPtr<Gtk::TreeSelection>::cast_static(mRefBuilder->get_object("tvsProperty"));
@@ -51,6 +53,7 @@ void CardWindow::bindWidgets() {
     mRefActionGroup->add_action("cardsave", sigc::mem_fun(*this, &CardWindow::onCardSave));
     mRefActionGroup->add_action("cardrm", sigc::mem_fun(*this, &CardWindow::onCardRm));
     mRefActionGroup->add_action("cardcancel", sigc::mem_fun(*this, &CardWindow::onCardCancel));
+    mRefActionGroup->add_action("addProperty", sigc::mem_fun(*this, &CardWindow::onAddProperty));
 
     insert_action_group("rcr", mRefActionGroup);
 }
@@ -100,7 +103,8 @@ bool CardWindow::confirmDeleteCard() {
 
 void CardWindow::onCardRm()
 {
-    if (confirmDeleteCard()) {
+    if (confirmDeleteCard())
+    {
         rcr::Card card;
         card.set_id(id);
         client->rmCardPackage(card, packageId);
@@ -108,8 +112,21 @@ void CardWindow::onCardRm()
     hide();
 }
 
-void CardWindow::onCardCancel() {
+void CardWindow::onCardCancel()
+{
     hide();
+}
+
+void CardWindow::onAddProperty()
+{
+    // show dialog
+    if (!propertyDialog)
+        return;
+    propertyDialog->setClient(client);
+    propertyDialog->set("", "");
+    int r = propertyDialog->run();
+    if (r != Gtk::RESPONSE_OK)
+        return;
 }
 
 /**
@@ -146,18 +163,23 @@ void CardWindow::setBox(
     uint64_t aPackageId,
     uint64_t aBoxId,
     const std::string &aBoxName,
-    const std::string &propertiesString
+    const std::string &propertiesString,
+    PropertyDialog *aPropertyDialog
 ) {
     packageId = aPackageId;
     boxId = aBoxId;
     boxName = aBoxName;
     refEntryBox->set_text(StockOperation::boxes2string(boxId));
     properties = propertiesString;
+    propertyDialog = aPropertyDialog;
 }
 
 bool CardWindow::on_key_press_event(GdkEventKey* event)
 {
     switch (event->keyval) {
+        case GDK_KEY_Escape:
+            hide();
+            break;
         case GDK_KEY_Delete:
         case GDK_KEY_minus:
         case GDK_KEY_KP_Subtract:
