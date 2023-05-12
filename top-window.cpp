@@ -452,6 +452,9 @@ void TopWindow::onCallFinished(
         case OP_SAVE_CARD:
             reflectChangesCard();
             break;
+        case OP_RM_CARD:
+            reflectRemoveCard();
+            break;
         case OP_IMPORT_FILE:
             reloadBoxTree();
             {
@@ -853,4 +856,10 @@ void TopWindow::reflectChangesCard() {
     row.set_value(6, box);
     row.set_value(7, symbolId);
     row.set_value(8, packageId);
+}
+
+void TopWindow::reflectRemoveCard()
+{
+    // after card edit reflect changes
+    doQuery();
 }

@@ -183,6 +183,8 @@ private:
     bool confirmDeleteBox(
         Gtk::TreeModel::Row &row
     );
+
+    void reflectRemoveCard();
 };
 
 #endif
