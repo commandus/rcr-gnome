@@ -432,6 +432,7 @@ void TopWindow::onCallStarted(
     const std::string &message
 )
 {
+    mLabelMessage->set_text(message);
     mProgressBar->pulse();
 }
 
@@ -442,7 +443,15 @@ void TopWindow::onCallFinished(
 )
 {
     mProgressBar->set_fraction(0.0f);
+    mLabelMessage->set_text(message);
+    g_timeout_add_seconds(3, [](void *label){
+        ((Gtk::Label *) label)->set_text("");
+        return (gboolean) false;
+    }, mLabelMessage);
     switch (module) {
+        case OP_SAVE_CARD:
+            reflectChangesCard();
+            break;
         case OP_IMPORT_FILE:
             reloadBoxTree();
             {
@@ -808,4 +817,40 @@ bool TopWindow::confirmDeleteBox(
     dlg.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
     dlg.set_secondary_text(_("Press Ok to delete. This operation Can not be undone"));
     return dlg.run() == GTK_RESPONSE_OK;
+}
+
+void TopWindow::reflectChangesCard() {
+    // after card edit reflect changes
+    Gtk::TreeModel::iterator iter = mTreeViewSelectionCard->get_selected();
+    if (!iter)
+        return;
+    Gtk::TreeModel::Row row = *iter;
+    uint64_t id = cardWindow->id;
+    uint64_t symbolId = cardWindow->symbolId;
+    std::string name = cardWindow->refEntryName->get_text();
+    std::string sNominal = cardWindow->refEntryNominal->get_text();
+    uint64_t nominal = std::strtoull(sNominal.c_str(), nullptr, 10);
+
+    std::string sQty = cardWindow->refEntryQuantity->get_text();
+    uint64_t qty = std::strtoull(sQty.c_str(), nullptr, 10);
+
+    uint64_t box = cardWindow->boxId;
+    uint64_t packageId = cardWindow->packageId;
+    std::string boxName = cardWindow->boxName;
+    std::string properties = cardWindow->properties;
+
+    row.set_value(0, name);
+
+    sNominal = MeasureUnit::value(ML_RU, cardWindow->getSelectedComponent(), nominal);
+    if (sNominal.find('0') == 0)
+        sNominal = "";
+    row.set_value(1, sNominal);
+
+    row.set_value(2, properties);
+    row.set_value(3, boxName);
+    row.set_value(4, qty);
+    row.set_value(5, id);
+    row.set_value(6, box);
+    row.set_value(7, symbolId);
+    row.set_value(8, packageId);
 }

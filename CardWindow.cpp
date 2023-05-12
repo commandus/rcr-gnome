@@ -9,6 +9,7 @@
 #include "MeasureUnit.h"
 #include "StockOperation.h"
 #include "string-helper.h"
+#include "rcr-gnome.h"
 
 CardWindow::CardWindow(
     BaseObjectType* cobject,
@@ -63,10 +64,7 @@ void CardWindow::onCardSave() {
     if (!it)
         return;
     // get symbol
-    uint64_t symbolId;
-    std::string sym;
     it->get_value(1, symbolId);
-    it->get_value(2, sym);
 
     std::string name = refEntryName->get_text();
     std::string sNominal = refEntryNominal->get_text();
@@ -91,10 +89,22 @@ void CardWindow::onCardSave() {
     hide();
 }
 
-void CardWindow::onCardRm() {
-    rcr::Card card;
-    card.set_id(id);
-    client->rmCardPackage(card, packageId);
+bool CardWindow::confirmDeleteCard() {
+    std::stringstream ss;
+    ss << _("Delete card ") << boxName << "?";
+    Gtk::MessageDialog dlg(ss.str());
+    dlg.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
+    dlg.set_secondary_text(_("Press Ok to delete. This operation Can not be undone"));
+    return dlg.run() == GTK_RESPONSE_OK;
+}
+
+void CardWindow::onCardRm()
+{
+    if (confirmDeleteCard()) {
+        rcr::Card card;
+        card.set_id(id);
+        client->rmCardPackage(card, packageId);
+    }
     hide();
 }
 
@@ -104,11 +114,11 @@ void CardWindow::onCardCancel() {
 
 /**
  * Change component type
+ * Reflect in UI nominal and measurement unit widgets
  */
 void CardWindow::onSymbolSelected() {
     std::string sym;
-    refCBSymbol->get_active()->get_value(2, sym);
-    COMPONENT c = getComponentBySymbol(sym);
+    COMPONENT c = getSelectedComponent();
     std::vector<std::string> measureNParticles;
     measureNParticles.reserve(MAX_POW10);
     listUnitNParticle(measureNParticles, ML_RU, c);
@@ -135,11 +145,36 @@ void CardWindow::onSymbolSelected() {
 void CardWindow::setBox(
     uint64_t aPackageId,
     uint64_t aBoxId,
-    const std::string &aName,
+    const std::string &aBoxName,
     const std::string &propertiesString
 ) {
     packageId = aPackageId;
     boxId = aBoxId;
-    name = aName;
+    boxName = aBoxName;
     refEntryBox->set_text(StockOperation::boxes2string(boxId));
+    properties = propertiesString;
+}
+
+bool CardWindow::on_key_press_event(GdkEventKey* event)
+{
+    switch (event->keyval) {
+        case GDK_KEY_Delete:
+        case GDK_KEY_minus:
+        case GDK_KEY_KP_Subtract:
+            onCardRm();
+            break;
+        case GDK_KEY_Return:
+        case GDK_KEY_KP_Enter:
+            onCardSave();
+            break;
+        default:
+            return Gtk::Window::on_key_press_event(event);
+    }
+    return FALSE;
+}
+
+COMPONENT CardWindow::getSelectedComponent() {
+    std::string sym;
+    refCBSymbol->get_active()->get_value(2, sym);
+    return getComponentBySymbol(sym);
 }

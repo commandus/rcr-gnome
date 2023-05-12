@@ -47,7 +47,6 @@ public:
     virtual ~TopWindow();
 
     void loadSettings();
-
     void saveSettings();
 
 private:
@@ -79,65 +78,60 @@ private:
     void onHelpAbout();
 
     void onHelpStatistics();
-
     void onFileQuit();
-
     void onFileConnect();
-
     void onBoxSelected(Glib::RefPtr<Gtk::TreeSelection> selection);
-
     void onSymbolSelected();
-
     void onCardSelected(Glib::RefPtr<Gtk::TreeSelection> selection);
-
     void onAboutDialogResponse(int responseId);
-
     void onStartImportFile();
-
     void onStartImportDirectory();
-
     void onLogin();
-
     void onRegister();
-
     void onUserList();
-
     void onUserAdd();
-
     void onUserBox();
-
     void onBoxEdit();
-
     void onBoxNew();
-
     void onBoxDelete();
-
     void onProperties();
-
     void selectSymbol(
             Gtk::ComboBox *cb,
             const std::string &symbol
     );
-
     void selectSymbolId(
             Gtk::ComboBox *cb,
             uint64_t symbold
     );
 
-    void selectBox(const uint64_t boxId);
-
-    void searchCard(const std::string &query, const std::string &symbol);
+    void selectBox(
+        const uint64_t boxId
+    );
+    void searchCard(
+        const std::string &query,
+        const std::string &symbol
+    );
 
     void bindWidgets();
-
     void doQuery();
+    void onCallStarted(
+        int module,
+        const std::string &message = ""
+    ) override;
 
-    void onCallStarted(int module, const std::string &message = "") override;
+    void onCallFinished(
+        int module,
+        int code,
+        const std::string &message = ""
+    ) override;
 
-    void onCallFinished(int module, int code, const std::string &message = "") override;
+    void reflectChangesCard();
 
     // Not used yet
-    void onProgress(int pos, int total) override;
+    void onProgress(
+        int pos,
+        int total
+    ) override;
 
     // dialogs
     void createDialogs();

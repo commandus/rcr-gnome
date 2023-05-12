@@ -545,8 +545,10 @@ bool GRcrClient::updateCardPackage(
         chCardRequest.mutable_value()->set_id(card.id());
     } else
         chCardRequest.set_operationsymbol("+");
-    chCardRequest.mutable_value()->set_name(card.name());
+
+    *chCardRequest.mutable_value() = card;
     chCardRequest.mutable_value()->set_uname(toUpperCase(card.name()));
+
     rcr::Package *p = chCardRequest.add_packages();
     p->set_card_id(card.id());
     p->set_id(packageId);

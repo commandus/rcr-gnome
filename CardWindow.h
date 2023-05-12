@@ -11,30 +11,35 @@
 class CardWindow: public Gtk::Window {
 private:
     Glib::RefPtr<Gtk::Builder> mRefBuilder;
-
     Glib::RefPtr<Gtk::ListStore> mRefListStoreComponent;
     Glib::RefPtr<Gtk::ListStore> mRefListStoreMeasure;
     Glib::RefPtr<Gtk::ListStore> mRefListStoreProperty;
-
     Glib::RefPtr<Gio::SimpleActionGroup> mRefActionGroup;
-
 protected:
     Gtk::ToolButton* mRefButtonCardSave;
     Gtk::ToolButton* mRefButtonCardCancel;
     Gtk::ToolButton* mRefButtonCardRm;
-
     Gtk::Label* mRefLabelNominal;
     Gtk::Label* mRefLabelName;
-
     Glib::RefPtr<Gtk::TreeSelection> mTreeViewSelectionProperty;
 
+    bool on_key_press_event(GdkEventKey* event);
+
+    void bindWidgets();
+    void onCardSave();
+    void onCardRm();
+    void onCardCancel();
+    void onSymbolSelected();
+    bool confirmDeleteCard();
 public:
     GRcrClient *client;
     // save prev values
+    uint64_t symbolId;
     uint64_t id;
     uint64_t boxId;
     uint64_t packageId;
-    std::string name;
+    std::string boxName;
+    std::string properties;
     bool isNew;
 
     Gtk::ComboBox* refCBSymbol;
@@ -53,16 +58,11 @@ public:
     void setBox(
         uint64_t packageId,
         uint64_t boxId,
-        const std::string &name,
+        const std::string &BoxName,
         const std::string &propertiesString
     );
 
-protected:
-    void bindWidgets();
-    void onCardSave();
-    void onCardRm();
-    void onCardCancel();
-    void onSymbolSelected();
+    COMPONENT getSelectedComponent();
 };
 
 #endif //RCR_GNOME_CARDWINDOW_H
