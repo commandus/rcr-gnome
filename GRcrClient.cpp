@@ -202,7 +202,10 @@ COMPONENT GRcrClient::findSymbol(
 )
 {
     // TODO fix somehow
-    return (COMPONENT) (symbolId - 1);
+    if (symbolId)
+        return (COMPONENT) (symbolId - 1);
+    else
+        return (COMPONENT) symbolId;
 }
 
 void GRcrClient::query(
@@ -230,12 +233,13 @@ void GRcrClient::query(
         finish(OP_QUERY, status.error_code(), _("Executing query completed with errors"));
         return;
     }
-
+#if CMAKE_BUILD_TYPE == Debug
+    std::cerr << pb2JsonString(response) << std::endl;
+#endif
     listStore->clear();
     reorderCards(response);
-
-    for (auto it = response.cards().cards().begin(); it != response.cards().cards().end(); ++it) {
-        for (auto p = it->packages().begin(); p != it->packages().end(); ++p) {
+    for (auto it = response.cards().cards().begin(); it != response.cards().cards().end(); it++) {
+        for (auto p = it->packages().begin(); p != it->packages().end(); p++) {
             std::string nominal = MeasureUnit::value(ML_RU, findSymbol(it->card().symbol_id()), it->card().nominal());
             if (nominal.find('0') == 0)
                 nominal = "";

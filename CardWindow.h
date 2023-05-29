@@ -54,7 +54,7 @@ public:
     Gtk::Entry* refEntryNominal;
 
     Gtk::TreeView* refTreeViewProperty;
-    Gtk::Button *refButtonPropertyAdd;
+    Gtk::ToolButton *refButtonPropertyAdd;
 
     CardWindow(BaseObjectType*, const Glib::RefPtr<Gtk::Builder>&);
     virtual ~CardWindow();
