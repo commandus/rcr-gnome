@@ -72,10 +72,8 @@ void BoxDialog::onDelete()
 void BoxDialog::onConfirm()
 {
     if (client) {
-        uint64_t boxId;
-        std::string bid = entryBoxId->get_text();
-        StockOperation::parseBoxes(boxId, bid, 0, bid.size());
-        client->saveBox(id, boxId, entryBoxId->get_text());
+        uint64_t boxId = StockOperation::parseBoxes(entryBoxId->get_text());
+        client->saveBox(id, srcBoxId, boxId, entryBoxId->get_text());
     }
     hide();
 }
@@ -99,8 +97,17 @@ void BoxDialog::set(
 )
 {
     id = aId;
-    entryBoxId->set_text(StockOperation::boxes2string(aBoxId));
-    entryBoxName->set_text(aName);
+    srcBoxId = aBoxId;
+    std::string bn = StockOperation::boxes2string(aBoxId);
+    if (bn == "0")
+        bn = "";
+    entryBoxId->set_text(bn);
+    std::string name;
+    if (aName == bn)
+        name = "";
+    else
+        name = aName;
+    entryBoxName->set_text(name);
 }
 
 bool BoxDialog::confirmDelete() {

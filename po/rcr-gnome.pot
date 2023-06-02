@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-12 15:44+0900\n"
+"POT-Creation-Date: 2023-06-02 14:36+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,12 +17,12 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: BoxDialog.cpp:107
+#: BoxDialog.cpp:114
 msgid "Delete box?"
 msgstr ""
 
-#: BoxDialog.cpp:109 CardWindow.cpp:100 PropertyDialog.cpp:114
-#: PropertyTypeDialog.cpp:147 PropertyTypeEditDialog.cpp:107 top-window.cpp:822
+#: BoxDialog.cpp:116 CardWindow.cpp:100 PropertyDialog.cpp:114
+#: PropertyTypeDialog.cpp:147 PropertyTypeEditDialog.cpp:107 top-window.cpp:860
 msgid "Press Ok to delete. This operation Can not be undone"
 msgstr ""
 
@@ -50,127 +50,127 @@ msgstr ""
 msgid "Loading dictionaries"
 msgstr ""
 
-#: GRcrClient.cpp:145 GRcrClient.cpp:150
+#: GRcrClient.cpp:145 GRcrClient.cpp:152
 msgid "Loading dictionaries completed successfully"
 msgstr ""
 
-#: GRcrClient.cpp:160
+#: GRcrClient.cpp:161
 msgid "Loading symbols"
 msgstr ""
 
-#: GRcrClient.cpp:182
+#: GRcrClient.cpp:183
 msgid "Loading symbols completed successfully"
 msgstr ""
 
-#: GRcrClient.cpp:213
+#: GRcrClient.cpp:217
 msgid "Executing query"
 msgstr ""
 
-#: GRcrClient.cpp:230
+#: GRcrClient.cpp:234
 msgid "Executing query completed with errors"
 msgstr ""
 
-#: GRcrClient.cpp:254
+#: GRcrClient.cpp:260
 msgid "Executing query completed successfully"
 msgstr ""
 
-#: GRcrClient.cpp:311 GRcrClient.cpp:344
+#: GRcrClient.cpp:317 GRcrClient.cpp:356
 msgid "Import boxes"
 msgstr ""
 
-#: GRcrClient.cpp:330 GRcrClient.cpp:370
+#: GRcrClient.cpp:336 GRcrClient.cpp:341 GRcrClient.cpp:382 GRcrClient.cpp:387
 msgid "Import boxes failed"
 msgstr ""
 
-#: GRcrClient.cpp:333 GRcrClient.cpp:334 GRcrClient.cpp:373
+#: GRcrClient.cpp:345 GRcrClient.cpp:346 GRcrClient.cpp:390
 msgid "Import boxes completed successfully"
 msgstr ""
 
-#: GRcrClient.cpp:383
+#: GRcrClient.cpp:400
 msgid "Loading users"
 msgstr ""
 
-#: GRcrClient.cpp:399
+#: GRcrClient.cpp:416
 msgid "Loading users completed successfully"
 msgstr ""
 
-#: GRcrClient.cpp:410
+#: GRcrClient.cpp:427
 msgid "Getting statistics"
 msgstr ""
 
-#: GRcrClient.cpp:417
+#: GRcrClient.cpp:434
 msgid "Getting statistics completed successfully"
 msgstr ""
 
-#: GRcrClient.cpp:442
+#: GRcrClient.cpp:459
 msgid "Saving property type"
 msgstr ""
 
-#: GRcrClient.cpp:446
+#: GRcrClient.cpp:463 GRcrClient.cpp:468
 msgid "Save property type with errors"
 msgstr ""
 
-#: GRcrClient.cpp:449
+#: GRcrClient.cpp:472
 msgid "Save property type successfully"
 msgstr ""
 
-#: GRcrClient.cpp:466
+#: GRcrClient.cpp:489
 msgid "Removing property type"
 msgstr ""
 
-#: GRcrClient.cpp:470
+#: GRcrClient.cpp:493 GRcrClient.cpp:498
 msgid "Removed property type with errors"
 msgstr ""
 
-#: GRcrClient.cpp:473
+#: GRcrClient.cpp:501
 msgid "Removed property type successfully"
 msgstr ""
 
-#: GRcrClient.cpp:489
+#: GRcrClient.cpp:517
 msgid "Removing box"
 msgstr ""
 
-#: GRcrClient.cpp:493
+#: GRcrClient.cpp:521 GRcrClient.cpp:526
 msgid "Removed box with errors"
 msgstr ""
 
-#: GRcrClient.cpp:496
+#: GRcrClient.cpp:529
 msgid "Removed box successfully"
 msgstr ""
 
-#: GRcrClient.cpp:516
+#: GRcrClient.cpp:554
 msgid "Saving box"
 msgstr ""
 
-#: GRcrClient.cpp:520
+#: GRcrClient.cpp:558 GRcrClient.cpp:563
 msgid "Save box with errors"
 msgstr ""
 
-#: GRcrClient.cpp:523
+#: GRcrClient.cpp:567
 msgid "Save box successfully"
 msgstr ""
 
-#: GRcrClient.cpp:559
+#: GRcrClient.cpp:603
 msgid "Saving card"
 msgstr ""
 
-#: GRcrClient.cpp:563
+#: GRcrClient.cpp:607 GRcrClient.cpp:612
 msgid "Save card with errors"
 msgstr ""
 
-#: GRcrClient.cpp:566
+#: GRcrClient.cpp:616
 msgid "Save card successfully"
 msgstr ""
 
-#: GRcrClient.cpp:584
+#: GRcrClient.cpp:634
 msgid "Removing card"
 msgstr ""
 
-#: GRcrClient.cpp:588
+#: GRcrClient.cpp:638 GRcrClient.cpp:643
 msgid "Remove card with errors"
 msgstr ""
 
-#: GRcrClient.cpp:591
+#: GRcrClient.cpp:647
 msgid "Remove card successfully"
 msgstr ""
 
@@ -220,87 +220,99 @@ msgid ""
 "THE SOFTWARE."
 msgstr ""
 
-#: top-window.cpp:136
+#: top-window.cpp:138
 msgid "Excel spreadsheet files"
 msgstr ""
 
-#: top-window.cpp:231
+#: top-window.cpp:233
 msgid "rcr for Gnome"
 msgstr ""
 
-#: top-window.cpp:241
+#: top-window.cpp:243
 msgid "Custom build"
 msgstr ""
 
-#: top-window.cpp:246
+#: top-window.cpp:248
 msgid ""
 "2023 Yu.G. Shafer Institute of Cosmophysical Research and Aeronomy of "
 "Siberian Branch of the Russian Academy of Sciences"
 msgstr ""
 
-#: top-window.cpp:247
+#: top-window.cpp:249
 msgid "In memory of Konstantin Zolotovsky"
 msgstr ""
 
-#: top-window.cpp:254
+#: top-window.cpp:256
 msgid "Andrei Ivanov andrey.ivanov@ikfia.ysn.ru"
 msgstr ""
 
-#: top-window.cpp:255
+#: top-window.cpp:257
 msgid ""
 "Yu.G. Shafer Institute of Cosmophysical Research and Aeronomy http://ikfia."
 "ysn.ru/"
 msgstr ""
 
-#: top-window.cpp:256
+#: top-window.cpp:258
 msgid "ICU https://icu.unicode.org/"
 msgstr ""
 
-#: top-window.cpp:257
+#: top-window.cpp:259
 msgid "xlnt https://github.com/tfussell/xlnt"
 msgstr ""
 
-#: top-window.cpp:258
+#: top-window.cpp:260
 msgid "gRPC https://grpc.io/"
 msgstr ""
 
-#: top-window.cpp:395
+#: top-window.cpp:397
 msgid "Selected box "
 msgstr ""
 
-#: top-window.cpp:462
+#: top-window.cpp:473
 msgid "Excel file imported successfully"
 msgstr ""
 
-#: top-window.cpp:463
+#: top-window.cpp:474
 msgid "Error import Excel file"
 msgstr ""
 
-#: top-window.cpp:472
+#: top-window.cpp:483
 msgid "Excel files imported successfully"
 msgstr ""
 
-#: top-window.cpp:473
+#: top-window.cpp:484
 msgid "Error import Excel files"
 msgstr ""
 
-#: top-window.cpp:609 top-window.cpp:766
+#: top-window.cpp:625 top-window.cpp:797
 msgid "Import "
 msgstr ""
 
-#: top-window.cpp:609 top-window.cpp:766
+#: top-window.cpp:625 top-window.cpp:797
 msgid " to box "
 msgstr ""
 
-#: top-window.cpp:616 top-window.cpp:773
+#: top-window.cpp:637 top-window.cpp:809
 msgid "Import"
 msgstr ""
 
-#: top-window.cpp:790
+#: top-window.cpp:724
+msgid "No box selected"
+msgstr ""
+
+#: top-window.cpp:773
+msgid "Error delete box"
+msgstr ""
+
+#: top-window.cpp:774
+msgid "Can not delete selected box"
+msgstr ""
+
+#: top-window.cpp:828
 msgid "Wrong box specified"
 msgstr ""
 
-#: top-window.cpp:819
+#: top-window.cpp:857
 msgid "Delete box "
 msgstr ""
 

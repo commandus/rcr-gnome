@@ -99,12 +99,12 @@ private:
     void onBoxDelete();
     void onProperties();
     void selectSymbol(
-            Gtk::ComboBox *cb,
-            const std::string &symbol
+        Gtk::ComboBox *cb,
+        const std::string &symbol
     );
     void selectSymbolId(
-            Gtk::ComboBox *cb,
-            uint64_t symbold
+        Gtk::ComboBox *cb,
+        uint64_t symbold
     );
 
     void selectBox(
@@ -117,6 +117,14 @@ private:
 
     void bindWidgets();
     void doQuery();
+
+    void showMessageTimeout(
+        int module,
+        int code,
+        const std::string &message,
+        const int timeout = 0
+    );
+
     void onCallStarted(
         int module,
         const std::string &message = ""
@@ -162,21 +170,21 @@ private:
     );
 
     bool confirmBox(
-            uint64_t &box_id,
-            bool numberInFileName
+        uint64_t &box_id,
+        bool &numberInFileName
     );
 
     void onCardActivated(
-            const Gtk::TreeModel::Path &path,
-            Gtk::TreeViewColumn *column
+        const Gtk::TreeModel::Path &path,
+        Gtk::TreeViewColumn *column
     );
 
     void runImportExcel(
-            const std::string &symbol,
-            const std::string &path,
-            uint64_t box,
-            bool isDirectory = false,
-            bool numberInFileName = true
+        const std::string &symbol,
+        const std::string &path,
+        uint64_t box,
+        bool isDirectory = false,
+        bool numberInFileName = true
     );
 
     void reloadBoxTree();

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-12 15:43+0900\n"
+"POT-Creation-Date: 2023-06-02 14:35+0900\n"
 "PO-Revision-Date: 2023-04-21 10:00+0900\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -18,12 +18,12 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
-#: BoxDialog.cpp:107
+#: BoxDialog.cpp:114
 msgid "Delete box?"
 msgstr "Удалить коробку?"
 
-#: BoxDialog.cpp:109 CardWindow.cpp:100 PropertyDialog.cpp:114
-#: PropertyTypeDialog.cpp:147 PropertyTypeEditDialog.cpp:107 top-window.cpp:822
+#: BoxDialog.cpp:116 CardWindow.cpp:100 PropertyDialog.cpp:114
+#: PropertyTypeDialog.cpp:147 PropertyTypeEditDialog.cpp:107 top-window.cpp:860
 msgid "Press Ok to delete. This operation Can not be undone"
 msgstr "Нажмите Ok для удаления. Это удаление необратимо."
 
@@ -51,127 +51,127 @@ msgstr "Коробки загружены"
 msgid "Loading dictionaries"
 msgstr "Загружаются словари"
 
-#: GRcrClient.cpp:145 GRcrClient.cpp:150
+#: GRcrClient.cpp:145 GRcrClient.cpp:152
 msgid "Loading dictionaries completed successfully"
 msgstr "Словари успешно загружены"
 
-#: GRcrClient.cpp:160
+#: GRcrClient.cpp:161
 msgid "Loading symbols"
 msgstr "Загружаются компоненты"
 
-#: GRcrClient.cpp:182
+#: GRcrClient.cpp:183
 msgid "Loading symbols completed successfully"
 msgstr "Компоненты загружены"
 
-#: GRcrClient.cpp:213
+#: GRcrClient.cpp:217
 msgid "Executing query"
 msgstr "Выполняется запрос"
 
-#: GRcrClient.cpp:230
+#: GRcrClient.cpp:234
 msgid "Executing query completed with errors"
 msgstr "Запрос выполнен с ошибками"
 
-#: GRcrClient.cpp:254
+#: GRcrClient.cpp:260
 msgid "Executing query completed successfully"
 msgstr "Запрос выполнен"
 
-#: GRcrClient.cpp:311 GRcrClient.cpp:344
+#: GRcrClient.cpp:317 GRcrClient.cpp:356
 msgid "Import boxes"
 msgstr "Импорт коробок"
 
-#: GRcrClient.cpp:330 GRcrClient.cpp:370
+#: GRcrClient.cpp:336 GRcrClient.cpp:341 GRcrClient.cpp:382 GRcrClient.cpp:387
 msgid "Import boxes failed"
 msgstr "Ошибка импорта коробок"
 
-#: GRcrClient.cpp:333 GRcrClient.cpp:334 GRcrClient.cpp:373
+#: GRcrClient.cpp:345 GRcrClient.cpp:346 GRcrClient.cpp:390
 msgid "Import boxes completed successfully"
 msgstr "Коробки импортированы"
 
-#: GRcrClient.cpp:383
+#: GRcrClient.cpp:400
 msgid "Loading users"
 msgstr "Загружаются пользователи"
 
-#: GRcrClient.cpp:399
+#: GRcrClient.cpp:416
 msgid "Loading users completed successfully"
 msgstr "Пользователи загружены"
 
-#: GRcrClient.cpp:410
+#: GRcrClient.cpp:427
 msgid "Getting statistics"
 msgstr "Чтение статистики"
 
-#: GRcrClient.cpp:417
+#: GRcrClient.cpp:434
 msgid "Getting statistics completed successfully"
 msgstr "Статистика собрана"
 
-#: GRcrClient.cpp:442
+#: GRcrClient.cpp:459
 msgid "Saving property type"
 msgstr "Сохранение саойства"
 
-#: GRcrClient.cpp:446
+#: GRcrClient.cpp:463 GRcrClient.cpp:468
 msgid "Save property type with errors"
 msgstr "Ошибка сохранен6ия свойства"
 
-#: GRcrClient.cpp:449
+#: GRcrClient.cpp:472
 msgid "Save property type successfully"
 msgstr "Свойство успешно сохранено"
 
-#: GRcrClient.cpp:466
+#: GRcrClient.cpp:489
 msgid "Removing property type"
 msgstr "Удаление свойства"
 
-#: GRcrClient.cpp:470
+#: GRcrClient.cpp:493 GRcrClient.cpp:498
 msgid "Removed property type with errors"
 msgstr "Ошибка удаления свойства"
 
-#: GRcrClient.cpp:473
+#: GRcrClient.cpp:501
 msgid "Removed property type successfully"
 msgstr "Свойство успешно удалено"
 
-#: GRcrClient.cpp:489
+#: GRcrClient.cpp:517
 msgid "Removing box"
 msgstr "Удаляются коробки"
 
-#: GRcrClient.cpp:493
+#: GRcrClient.cpp:521 GRcrClient.cpp:526
 msgid "Removed box with errors"
 msgstr "Ошибка удаления коробки"
 
-#: GRcrClient.cpp:496
+#: GRcrClient.cpp:529
 msgid "Removed box successfully"
 msgstr "Коробки успешно удалены"
 
-#: GRcrClient.cpp:516
+#: GRcrClient.cpp:554
 msgid "Saving box"
 msgstr "Сохранение коробки"
 
-#: GRcrClient.cpp:520
+#: GRcrClient.cpp:558 GRcrClient.cpp:563
 msgid "Save box with errors"
 msgstr "Ошибка сохранения коробки"
 
-#: GRcrClient.cpp:523
+#: GRcrClient.cpp:567
 msgid "Save box successfully"
 msgstr "Коробки успешно сохранены"
 
-#: GRcrClient.cpp:559
+#: GRcrClient.cpp:603
 msgid "Saving card"
 msgstr "Сохраняются карточки"
 
-#: GRcrClient.cpp:563
+#: GRcrClient.cpp:607 GRcrClient.cpp:612
 msgid "Save card with errors"
 msgstr "Ошиьбка удаления карточки"
 
-#: GRcrClient.cpp:566
+#: GRcrClient.cpp:616
 msgid "Save card successfully"
 msgstr "Карточка успешно сохранена"
 
-#: GRcrClient.cpp:584
+#: GRcrClient.cpp:634
 msgid "Removing card"
 msgstr "Удаление карточки"
 
-#: GRcrClient.cpp:588
+#: GRcrClient.cpp:638 GRcrClient.cpp:643
 msgid "Remove card with errors"
 msgstr "Ошибка удаления карточки"
 
-#: GRcrClient.cpp:591
+#: GRcrClient.cpp:647
 msgid "Remove card successfully"
 msgstr "Карточка успешно удалена"
 
@@ -250,19 +250,19 @@ msgstr ""
 "ПРОГРАММНОГО ОБЕСПЕЧЕНИЯ ИЛИ ИНЫХ ДЕЙСТВИЙ С ПРОГРАММНЫМ\n"
 "ОБЕСПЕЧЕНИЕМ."
 
-#: top-window.cpp:136
+#: top-window.cpp:138
 msgid "Excel spreadsheet files"
 msgstr "Файлы Excel"
 
-#: top-window.cpp:231
+#: top-window.cpp:233
 msgid "rcr for Gnome"
 msgstr "rcr версия Gnome"
 
-#: top-window.cpp:241
+#: top-window.cpp:243
 msgid "Custom build"
 msgstr "Специальная сборка без версии"
 
-#: top-window.cpp:246
+#: top-window.cpp:248
 msgid ""
 "2023 Yu.G. Shafer Institute of Cosmophysical Research and Aeronomy of "
 "Siberian Branch of the Russian Academy of Sciences"
@@ -270,15 +270,15 @@ msgstr ""
 "2023 Институт космофизических исследований и аэрономии им. Ю.Г. Шафера "
 "Сибирского отделения Российской академии наук"
 
-#: top-window.cpp:247
+#: top-window.cpp:249
 msgid "In memory of Konstantin Zolotovsky"
 msgstr "В память о Константине Золотовском"
 
-#: top-window.cpp:254
+#: top-window.cpp:256
 msgid "Andrei Ivanov andrey.ivanov@ikfia.ysn.ru"
 msgstr "А. Иванов andrey.ivanov@ikfia.ysn.ru"
 
-#: top-window.cpp:255
+#: top-window.cpp:257
 msgid ""
 "Yu.G. Shafer Institute of Cosmophysical Research and Aeronomy http://ikfia."
 "ysn.ru/"
@@ -286,55 +286,67 @@ msgstr ""
 "2023 Институт космофизических исследований и аэрономии им. Ю.Г. Шафера  "
 "http://ikfia.ysn.ru/"
 
-#: top-window.cpp:256
-msgid "ICU https://icu.unicode.org/"
-msgstr ""
-
-#: top-window.cpp:257
-msgid "xlnt https://github.com/tfussell/xlnt"
-msgstr ""
-
 #: top-window.cpp:258
-msgid "gRPC https://grpc.io/"
-msgstr ""
+msgid "ICU https://icu.unicode.org/"
+msgstr "ICU https://icu.unicode.org/"
 
-#: top-window.cpp:395
+#: top-window.cpp:259
+msgid "xlnt https://github.com/tfussell/xlnt"
+msgstr "xlnt https://github.com/tfussell/xlnt"
+
+#: top-window.cpp:260
+msgid "gRPC https://grpc.io/"
+msgstr "gRPC https://grpc.io/"
+
+#: top-window.cpp:397
 msgid "Selected box "
 msgstr "Выбрана коробка "
 
-#: top-window.cpp:462
+#: top-window.cpp:473
 msgid "Excel file imported successfully"
 msgstr "Excel файл успешно импортирован"
 
-#: top-window.cpp:463
+#: top-window.cpp:474
 msgid "Error import Excel file"
 msgstr "Ошибка импорта Excel файла"
 
-#: top-window.cpp:472
+#: top-window.cpp:483
 msgid "Excel files imported successfully"
 msgstr "Excel файлы успешно импортированы"
 
-#: top-window.cpp:473
+#: top-window.cpp:484
 msgid "Error import Excel files"
 msgstr "Ошибка импорта Excel файла"
 
-#: top-window.cpp:609 top-window.cpp:766
+#: top-window.cpp:625 top-window.cpp:797
 msgid "Import "
 msgstr "Импорт "
 
-#: top-window.cpp:609 top-window.cpp:766
+#: top-window.cpp:625 top-window.cpp:797
 msgid " to box "
 msgstr " в коробку "
 
-#: top-window.cpp:616 top-window.cpp:773
+#: top-window.cpp:637 top-window.cpp:809
 msgid "Import"
 msgstr "Импорт"
 
-#: top-window.cpp:790
+#: top-window.cpp:724
+msgid "No box selected"
+msgstr "Не выбрана коробка"
+
+#: top-window.cpp:773
+msgid "Error delete box"
+msgstr "Ошибка удаления коробки"
+
+#: top-window.cpp:774
+msgid "Can not delete selected box"
+msgstr "Не удалось удалить коробку"
+
+#: top-window.cpp:828
 msgid "Wrong box specified"
 msgstr "Указана неверная коробка"
 
-#: top-window.cpp:819
+#: top-window.cpp:857
 msgid "Delete box "
 msgstr "Удалить коробку "
 
@@ -585,7 +597,7 @@ msgstr "Всего"
 
 #: rcr-gnome.glade:2046 rcr-gnome.glade:2060
 msgid "0"
-msgstr ""
+msgstr "0"
 
 #: rcr-gnome.glade:2105
 msgid "User"

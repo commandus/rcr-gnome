@@ -26,6 +26,7 @@ class BoxDialog : public Gtk::Dialog {
     bool confirmDelete();
 protected:
     uint64_t id;
+    uint64_t srcBoxId; // previous box id
 public:
     BoxDialog(
         BaseObjectType* cobject,

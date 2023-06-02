@@ -32,6 +32,14 @@ RcrSettings::RcrSettings(
     selected = 0;
 }
 
+rcr::ServiceSettings * RcrSettings::selectedServiceSettings()
+{
+    if (selected < settings.service_size())
+        return settings.mutable_service(selected);
+    else
+        return nullptr;
+}
+
 void RcrSettings::save() {
     google::protobuf::util::JsonPrintOptions formattingOptions;
     formattingOptions.add_whitespace = true;

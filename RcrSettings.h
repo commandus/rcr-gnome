@@ -20,7 +20,7 @@ public:
     std::string fileName;
     int selected;
     rcr::Settings settings;
-
+    rcr::ServiceSettings *selectedServiceSettings();
     void save();
 };
 

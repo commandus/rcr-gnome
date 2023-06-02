@@ -126,7 +126,8 @@ public:
 
     bool saveBox(
         uint64_t id,
-        uint64_t boxId,
+        uint64_t srcBoxId,
+        uint64_t targetBoxId,
         const std::string &name
     );
 

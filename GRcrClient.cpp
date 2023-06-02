@@ -143,12 +143,13 @@ void GRcrClient::loadDictionaries()
     if (!status.ok()) {
         std::cerr << "Error: " << status.error_code() << " " << status.error_message() << std::endl;
         finish(OP_LOAD_DICTIONARIES, status.error_code(), _("Loading dictionaries completed successfully"));
-    } else {
-        // before do it, unbind GUI elements first
-        // just make sure does symbols ordered
-        reorderDisctionaries(dictionaries);
-        finish(OP_LOAD_DICTIONARIES, 0, _("Loading dictionaries completed successfully"));
+        return;
     }
+
+    // before do it, unbind GUI elements first
+    // just make sure does symbols ordered
+    reorderDisctionaries(dictionaries);
+    finish(OP_LOAD_DICTIONARIES, 0, _("Loading dictionaries completed successfully"));
 }
 
 void GRcrClient::bindSymbols(
@@ -233,6 +234,7 @@ void GRcrClient::query(
         finish(OP_QUERY, status.error_code(), _("Executing query completed with errors"));
         return;
     }
+
 #if CMAKE_BUILD_TYPE == Debug
     std::cerr << pb2JsonString(response) << std::endl;
 #endif
@@ -334,6 +336,12 @@ bool GRcrClient::importFile(
         finish(OP_IMPORT_FILE, status.error_code(), _("Import boxes failed"));
         return false;
     }
+    if (response.code()) {
+        std::cerr << "Error: " << response.code() << " " << response.description() << std::endl;
+        finish(OP_IMPORT_FILE, response.code(), _("Import boxes failed"));
+        return false;
+    }
+
     finish(OP_IMPORT_FILE, 0, _("Import boxes completed successfully"));
     std::cerr << _("Import boxes completed successfully") << std::endl;
     return true;
@@ -372,6 +380,11 @@ bool GRcrClient::importDirectory(
     if (!status.ok()) {
         std::cerr << "Error: " << status.error_code() << " " << status.error_message() << std::endl;
         finish(OP_IMPORT_DIR, status.error_code(), _("Import boxes failed"));
+        return false;
+    }
+    if (response.code()) {
+        std::cerr << "Error: " << response.code() << " " << response.description() << std::endl;
+        finish(OP_RM_BOX, response.code(), _("Import boxes failed"));
         return false;
     }
     finish(OP_IMPORT_DIR, 0, _("Import boxes completed successfully"));
@@ -450,6 +463,12 @@ bool GRcrClient::savePropertyType(
         finish(OP_SAVE_PROPERTY_TYPE, status.error_code(), _("Save property type with errors"));
         return false;
     }
+    if (response.code()) {
+        std::cerr << "Error: " << response.code() << " " << response.description() << std::endl;
+        finish(OP_SAVE_PROPERTY_TYPE, response.code(), _("Save property type with errors"));
+        return false;
+    }
+
     finish(OP_SAVE_PROPERTY_TYPE, status.error_code(), _("Save property type successfully"));
     // reload dictionaries
     loadDictionaries();
@@ -472,6 +491,11 @@ bool GRcrClient::rmPropertyType(
     if (!status.ok()) {
         std::cerr << "Error: " << status.error_code() << " " << status.error_message() << std::endl;
         finish(OP_RM_PROPERTY_TYPE, status.error_code(), _("Removed property type with errors"));
+        return false;
+    }
+    if (response.code()) {
+        std::cerr << "Error: " << response.code() << " " << response.description() << std::endl;
+        finish(OP_RM_BOX, response.code(), _("Removed property type with errors"));
         return false;
     }
     finish(OP_RM_PROPERTY_TYPE, 0, _("Removed property type successfully"));
@@ -497,13 +521,19 @@ bool GRcrClient::rmBox(
         finish(OP_RM_BOX, status.error_code(), _("Removed box with errors"));
         return false;
     }
+    if (response.code()) {
+        std::cerr << "Error: " << response.code() << " " << response.description() << std::endl;
+        finish(OP_RM_BOX, response.code(), _("Removed box with errors"));
+        return false;
+    }
     finish(OP_RM_BOX, 0, _("Removed box successfully"));
     return true;
 }
 
 bool GRcrClient::saveBox(
     uint64_t id,
-    uint64_t boxId,
+    uint64_t srcBoxId,
+    uint64_t targetBoxId,
     const std::string &name
 ) {
     grpc::ClientContext context;
@@ -512,8 +542,12 @@ bool GRcrClient::saveBox(
     chBoxRequest.mutable_user()->set_name(username);
     chBoxRequest.mutable_user()->set_password(password);
     if (id) {
-        chBoxRequest.set_operationsymbol("=");
-        chBoxRequest.mutable_value()->set_id(id);
+        // exists already
+        chBoxRequest.set_operationsymbol(srcBoxId == targetBoxId ? "=" : ">");
+        if (srcBoxId != targetBoxId)
+            chBoxRequest.mutable_value()->set_id(id);
+        else
+            chBoxRequest.mutable_value()->set_id(targetBoxId);  // sorry
     } else
         chBoxRequest.set_operationsymbol("+");
     chBoxRequest.mutable_value()->set_name(name);
@@ -524,6 +558,12 @@ bool GRcrClient::saveBox(
         finish(OP_SAVE_BOX, status.error_code(), _("Save box with errors"));
         return false;
     }
+    if (response.code()) {
+        std::cerr << "Error: " << response.code() << " " << response.description() << std::endl;
+        finish(OP_SAVE_BOX, response.code(), _("Save box with errors"));
+        return false;
+    }
+
     finish(OP_SAVE_BOX, 0, _("Save box successfully"));
     return true;
 }
@@ -567,6 +607,12 @@ bool GRcrClient::updateCardPackage(
         finish(OP_SAVE_CARD, status.error_code(), _("Save card with errors"));
         return false;
     }
+    if (response.code()) {
+        std::cerr << "Error: " << response.code() << " " << response.description() << std::endl;
+        finish(OP_SAVE_CARD, response.code(), _("Save card with errors"));
+        return false;
+    }
+
     finish(OP_SAVE_CARD, 0, _("Save card successfully"));
     return true;
 }
@@ -592,6 +638,12 @@ bool GRcrClient::rmCardPackage(
         finish(OP_RM_CARD, status.error_code(), _("Remove card with errors"));
         return false;
     }
+    if (response.code()) {
+        std::cerr << "Error: " << response.code() << " " << response.description() << std::endl;
+        finish(OP_RM_CARD, response.code(), _("Remove card with errors"));
+        return false;
+    }
+
     finish(OP_RM_CARD, 0, _("Remove card successfully"));
     return true;
 }

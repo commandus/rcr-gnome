@@ -86,6 +86,8 @@ void TopWindow::loadSettings() {
         return;
     }
     mEntryQuery->set_text(settings->settings.service(settings->selected).last_query());
+    // dialog simetines is not visible to user, I dont know how to fix it right now
+    settings->selectedServiceSettings()->set_show_dialog_on_import_finish(false);
 }
 
 void TopWindow::saveSettings() {
@@ -149,7 +151,7 @@ void TopWindow::onBoxSelected(
         uint64_t b;
         row.get_value(2, b);
         // save
-        settings->settings.mutable_service(settings->selected)->set_last_box(b);
+        settings->selectedServiceSettings()->set_last_box(b);
         // saveSettings();
         doQuery();
         // doQuery or reload card tree view if not- uncomment below line
@@ -227,7 +229,7 @@ void TopWindow::onHelpAbout()
 	mAboutDialog = new Gtk::AboutDialog();
     mAboutDialog->set_size_request(640, 480);
 	mAboutDialog->set_transient_for(*this);
-	mAboutDialog->set_logo(Gdk::Pixbuf::create_from_resource("/icons/data/icons/48x48/apps/rcr.png", -1, 40, true));
+	mAboutDialog->set_logo(Gdk::Pixbuf::create_from_resource("/icons/rcr.gnome.svg", -1, 40, true));
 	mAboutDialog->set_program_name(_("rcr for Gnome"));
 	std::string v;
 #ifdef HAVE_CONFIG_H
@@ -401,7 +403,7 @@ void TopWindow::selectBox(
 void TopWindow::onSymbolSelected() {
     std::string sym;
     mComboBoxSymbol->get_active()->get_value(2, sym);
-    settings->settings.mutable_service(settings->selected)->set_last_component_symbol(sym);
+    settings->selectedServiceSettings()->set_last_component_symbol(sym);
 }
 
 void TopWindow::searchCard(
@@ -424,7 +426,7 @@ void TopWindow::searchCard(
         client->query(qs, symbol, mRefListStoreCard);
 
     mTreeViewCard->set_model(Glib::RefPtr<Gtk::TreeModelSort>(Gtk::TreeModelSort::create(mRefTreeModelFilterCard)));
-    settings->settings.mutable_service(settings->selected)->set_last_query(q);
+    settings->selectedServiceSettings()->set_last_query(q);
 }
 
 void TopWindow::onCallStarted(
@@ -436,6 +438,19 @@ void TopWindow::onCallStarted(
     mProgressBar->pulse();
 }
 
+void TopWindow::showMessageTimeout(
+    int module,
+    int code,
+    const std::string &message,
+    const int timeOut
+) {
+    mLabelMessage->set_text(message);
+    g_timeout_add_seconds(timeOut, [](void *label){
+        ((Gtk::Label *) label)->set_text("");
+        return (gboolean) false;
+    }, mLabelMessage);
+}
+
 void TopWindow::onCallFinished(
     int module,
     int code,
@@ -443,11 +458,7 @@ void TopWindow::onCallFinished(
 )
 {
     mProgressBar->set_fraction(0.0f);
-    mLabelMessage->set_text(message);
-    g_timeout_add_seconds(3, [](void *label){
-        ((Gtk::Label *) label)->set_text("");
-        return (gboolean) false;
-    }, mLabelMessage);
+    showMessageTimeout(module, code, message, 3);
     switch (module) {
         case OP_SAVE_CARD:
             reflectChangesCard();
@@ -457,7 +468,7 @@ void TopWindow::onCallFinished(
             break;
         case OP_IMPORT_FILE:
             reloadBoxTree();
-            {
+            if (settings->selectedServiceSettings()->show_dialog_on_import_finish()) {
                 Gtk::MessageDialog dialog(*this, code == 0 ?
                     _("Excel file imported successfully") :
                     _("Error import Excel file"));
@@ -467,7 +478,7 @@ void TopWindow::onCallFinished(
             break;
         case OP_IMPORT_DIR:
             reloadBoxTree();
-            {
+            if (settings->selectedServiceSettings()->show_dialog_on_import_finish()) {
                 Gtk::MessageDialog dialog(*this, code == 0 ?
                     _("Excel files imported successfully") :
                     _("Error import Excel files"));
@@ -570,7 +581,7 @@ void TopWindow::editCard(
 
 bool TopWindow::confirmBox(
     uint64_t &box_id,
-    bool numberInFileName
+    bool &numberInFileName
 )
 {
     boxConfirmDialog->setBox(box_id);
@@ -579,6 +590,7 @@ bool TopWindow::confirmBox(
     if (r != Gtk::RESPONSE_OK)
         return false;
     box_id = boxConfirmDialog->box();
+    numberInFileName = boxConfirmDialog->numberInFileName();
     // uncomment if create box in the root denied
     // return (StockOperation::parseBoxes(box_id, sb, 0, sb.size()) > 0 && box_id);
     return true;
@@ -594,22 +606,31 @@ void TopWindow::onCardActivated(
 
 void TopWindow::onStartImportFile()
 {
-    uint64_t b = settings->settings.mutable_service(settings->selected)->last_box();
-    bool numberInFileName = settings->settings.mutable_service(settings->selected)->number_in_filename();
+    rcr::ServiceSettings *s = settings->selectedServiceSettings();
+    std::string symbol = s->last_component_symbol();
+    COMPONENT c = getComponentBySymbol(symbol);
+
+    uint64_t b = s->last_import_box();
+    bool numberInFileName = s->number_in_filename();
     if (!confirmBox(b, numberInFileName))
         return;
-    settings->settings.mutable_service(settings->selected)->set_number_in_filename(numberInFileName);
+    s->set_number_in_filename(numberInFileName);
+    s->set_last_import_box(b);
     settings->save();
 
-    std::string symbol = settings->settings.service(settings->selected).last_component_symbol();
-    COMPONENT c = getComponentBySymbol(symbol);
+
     std::string cn = MeasureUnit::description(ML_RU, c);
 
     std::stringstream ss;
     ss << _("Import ") << cn << _(" to box ") << StockOperation::boxes2string(b);
     std::string t = ss.str();
 
+    std::string p = s->last_excel_file();
     Gtk::FileChooserDialog dialog(t, Gtk::FILE_CHOOSER_ACTION_OPEN);
+    if (!p.empty()) {
+        dialog.set_current_folder_file(Gio::File::create_for_path(p)->get_parent());
+    }
+
     dialog.set_transient_for(*this);
     // Add response buttons the the dialog:
     dialog.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
@@ -619,6 +640,8 @@ void TopWindow::onStartImportFile()
     // Handle the response:
     if (result == Gtk::RESPONSE_OK) {
         std::string fn = dialog.get_filename();
+        s->set_last_excel_file(fn);
+        settings->save();
         runImportExcel(symbol, fn, b, false, numberInFileName);
     }
 }
@@ -697,21 +720,23 @@ void TopWindow::onBoxEdit()
 {
     // edit selected box
     Gtk::TreeModel::iterator iter = mTreeViewSelectionBox->get_selected();
-    if (iter) {
-        Gtk::TreeModel::Row row = *iter;
-        if (client) {
-            uint64_t id, boxId;
-            std::string name;
-            row.get_value(0, name);
-            row.get_value(1, id);
-            row.get_value(2, boxId);
-            boxDialog->setClient(client);
-            boxDialog->set(id, boxId, name);
-            int r = boxDialog->run();
-            if (r == Gtk::RESPONSE_OK || r == Gtk::RESPONSE_REJECT) {
-                // reload box tree on edit or remove
-                reloadBoxTree();
-            }
+    if (!iter) {
+        showMessageTimeout(0, 0, _("No box selected"), 3);
+        return;
+    }
+    Gtk::TreeModel::Row row = *iter;
+    if (client) {
+        uint64_t id, boxId;
+        std::string name;
+        row.get_value(0, name);
+        row.get_value(1, id);
+        row.get_value(2, boxId);
+        boxDialog->setClient(client);
+        boxDialog->set(id, boxId, name);
+        int r = boxDialog->run();
+        if (r == Gtk::RESPONSE_OK || r == Gtk::RESPONSE_REJECT) {
+            // reload box tree on edit or remove
+            reloadBoxTree();
         }
     }
 }
@@ -744,6 +769,10 @@ void TopWindow::onBoxDelete()
                 if (client->rmBox(boxid)) {
                     // reload box tree
                     reloadBoxTree();
+                } else {
+                    Gtk::MessageDialog dialog(*this, _("Error delete box"));
+                    dialog.set_secondary_text(_("Can not delete selected box"));
+                    dialog.run();
                 }
             }
         }
@@ -752,11 +781,13 @@ void TopWindow::onBoxDelete()
 
 void TopWindow::onStartImportDirectory()
 {
-    uint64_t b = settings->settings.mutable_service(settings->selected)->last_box();
-    bool numberInFileName = settings->settings.mutable_service(settings->selected)->number_in_filename();
+    rcr::ServiceSettings *s = settings->selectedServiceSettings();
+    uint64_t b = s->last_import_box();
+    bool numberInFileName = settings->selectedServiceSettings()->number_in_filename();
     if (!confirmBox(b, numberInFileName))
         return;
-    settings->settings.mutable_service(settings->selected)->set_number_in_filename(numberInFileName);
+    s->set_number_in_filename(numberInFileName);
+    s->set_last_import_box(b);
     settings->save();
     std::string symbol = settings->settings.service(settings->selected).last_component_symbol();
     COMPONENT c = getComponentBySymbol(symbol);
@@ -766,15 +797,22 @@ void TopWindow::onStartImportDirectory()
     ss << _("Import ") << cn << _(" to box ") << StockOperation::boxes2string(b);
     std::string t = ss.str();
 
+    std::string p = s->last_excel_dir();
+
     Gtk::FileChooserDialog dialog(t, Gtk::FILE_CHOOSER_ACTION_SELECT_FOLDER);
+    if (!p.empty()) {
+        dialog.set_current_folder_file(Gio::File::create_for_path(p));
+    }
     dialog.set_transient_for(*this);
     // Add response buttons the the dialog:
     dialog.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
     dialog.add_button(_("Import"), Gtk::RESPONSE_OK);
     int result = dialog.run();
-    // Handle the response:
+    // Handle the response
     if (result == Gtk::RESPONSE_OK) {
         std::string fn = dialog.get_filename();
+        s->set_last_excel_dir(fn);
+        settings->save();
         runImportExcel(symbol, fn, b, true, numberInFileName);
     }
 }
