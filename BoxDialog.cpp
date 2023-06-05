@@ -73,7 +73,7 @@ void BoxDialog::onConfirm()
 {
     if (client) {
         uint64_t boxId = StockOperation::parseBoxes(entryBoxId->get_text());
-        client->saveBox(id, srcBoxId, boxId, entryBoxId->get_text());
+        client->saveBox(id, srcBoxId, boxId, entryBoxName->get_text());
     }
     hide();
 }

@@ -77,9 +77,9 @@ bool GRcrClient::loadBoxes(
     Gtk::TreeModel::Row topRows[5];
     // root element
     topRows[0] = *treeStore->append();
-    topRows[0].set_value <Glib::ustring>(0, DEF_NAME_ALL);
-    topRows[0].set_value(1, 0);
-    topRows[0].set_value(2, 0);
+    topRows[0].set_value <Glib::ustring>(0, DEF_NAME_ALL);  // 0- name
+    topRows[0].set_value(1, 0);                             // 1- id
+    topRows[0].set_value(2, 0);                             // 2- box
 
     grpc::ClientContext context;
     rcr::BoxRequest request;
@@ -119,7 +119,11 @@ bool GRcrClient::loadBoxes(
                 // 0xffffffffffffffff
                 uint64_t b = bid & (0xffffffffffffffff << (16 * i));
                 const Gtk::TreeModel::iterator &bb = treeStore->append(topRows[3 - i].children());
-                bb->set_value(0, StockOperation::boxes2string(b));
+                std::string name = StockOperation::boxes2string(b);
+                if (!it->name().empty())
+                    name = name + " " + it->name();
+
+                bb->set_value(0, name);
                 bb->set_value(1, 0);
                 bb->set_value(2, b);
                 topRows[4 - i] = *bb;
@@ -541,13 +545,17 @@ bool GRcrClient::saveBox(
     rcr::OperationResponse response;
     chBoxRequest.mutable_user()->set_name(username);
     chBoxRequest.mutable_user()->set_password(password);
+    chBoxRequest.mutable_value()->set_box_id(targetBoxId);
     if (id) {
         // exists already
-        chBoxRequest.set_operationsymbol(srcBoxId == targetBoxId ? "=" : ">");
-        if (srcBoxId != targetBoxId)
+        if (srcBoxId == targetBoxId) {
             chBoxRequest.mutable_value()->set_id(id);
-        else
+            chBoxRequest.set_operationsymbol( "=");
+
+        } else {
             chBoxRequest.mutable_value()->set_id(targetBoxId);  // sorry
+            chBoxRequest.set_operationsymbol(">");
+        }
     } else
         chBoxRequest.set_operationsymbol("+");
     chBoxRequest.mutable_value()->set_name(name);

@@ -1,5 +1,5 @@
 #!/bin/sh
-if [ -z $? ] ; then
+if [ -z $1 ] ; then
   CMAKE_CURRENT_SOURCE_DIR="."
 else
   CMAKE_CURRENT_SOURCE_DIR=$1

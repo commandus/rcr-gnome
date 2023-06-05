@@ -193,9 +193,8 @@ bool TopWindow::on_key_press_event(GdkEventKey* event)
 {
 	switch (event->keyval) {
         case GDK_KEY_F4:
-            if (mTreeViewBox->has_focus()) {
+            if (mTreeViewBox->has_focus())
                 onBoxEdit();
-            }
             break;
         case GDK_KEY_Delete:
         case GDK_KEY_minus:
@@ -215,7 +214,10 @@ bool TopWindow::on_key_press_event(GdkEventKey* event)
             if (mTreeViewCard->is_focus()) {
                 editCard();
             } else {
-                doQuery();
+                if (mTreeViewBox->has_focus())
+                    onBoxEdit();
+                else
+                    doQuery();
             }
 			break;
 		default:
