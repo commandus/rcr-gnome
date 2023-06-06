@@ -124,7 +124,7 @@ bool GRcrClient::loadBoxes(
                     name = name + " " + it->name();
 
                 bb->set_value(0, name);
-                bb->set_value(1, 0);
+                bb->set_value(1, it->id());
                 bb->set_value(2, b);
                 topRows[4 - i] = *bb;
                 lastBox.a[i] = currentBox.a[i];
@@ -554,7 +554,8 @@ bool GRcrClient::saveBox(
 
         } else {
             chBoxRequest.mutable_value()->set_id(targetBoxId);  // sorry
-            chBoxRequest.set_operationsymbol(">");
+            chBoxRequest.mutable_value()->set_box_id(srcBoxId);
+            chBoxRequest.set_operationsymbol("/");
         }
     } else
         chBoxRequest.set_operationsymbol("+");
