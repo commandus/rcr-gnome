@@ -77,9 +77,10 @@ bool GRcrClient::loadBoxes(
     Gtk::TreeModel::Row topRows[5];
     // root element
     topRows[0] = *treeStore->append();
-    topRows[0].set_value <Glib::ustring>(0, DEF_NAME_ALL);  // 0- name
+    topRows[0].set_value <Glib::ustring>(0, DEF_NAME_ALL);  // 0- box & name
     topRows[0].set_value(1, 0);                             // 1- id
     topRows[0].set_value(2, 0);                             // 2- box
+    topRows[0].set_value <Glib::ustring>(3, "");            // 3- name
 
     grpc::ClientContext context;
     rcr::BoxRequest request;
@@ -126,6 +127,7 @@ bool GRcrClient::loadBoxes(
                 bb->set_value(0, name);
                 bb->set_value(1, it->id());
                 bb->set_value(2, b);
+                bb->set_value(3, it->name());
                 topRows[4 - i] = *bb;
                 lastBox.a[i] = currentBox.a[i];
                 forceFill = true;

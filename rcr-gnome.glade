@@ -2091,12 +2091,14 @@
   </object>
   <object class="GtkTreeStore" id="treestoreBox">
     <columns>
-      <!-- column-name name -->
+      <!-- column-name boxname -->
       <column type="gchararray"/>
       <!-- column-name id -->
       <column type="gulong"/>
       <!-- column-name box -->
       <column type="gulong"/>
+      <!-- column-name name -->
+      <column type="gchararray"/>
     </columns>
   </object>
   <object class="GtkDialog" id="userDialog">

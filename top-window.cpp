@@ -730,7 +730,8 @@ void TopWindow::onBoxEdit()
     if (client) {
         uint64_t id, boxId;
         std::string name;
-        row.get_value(0, name);
+        // row.get_value(0, boxNname);
+        row.get_value(3, name);
         row.get_value(1, id);
         row.get_value(2, boxId);
         boxDialog->setClient(client);
