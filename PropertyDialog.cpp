@@ -56,7 +56,8 @@ bool PropertyDialog::on_key_press_event(GdkEventKey* event)
 
 void PropertyDialog::onDelete()
 {
-    if (client) {
+    response(Gtk::RESPONSE_REJECT);
+     if (client) {
         if (confirmDelete()) {
             // TODO
         }
@@ -66,14 +67,17 @@ void PropertyDialog::onDelete()
 
 void PropertyDialog::onSave()
 {
+    response(Gtk::RESPONSE_OK);
     if (client) {
         // TODO
+
     }
     hide();
 }
 
 void PropertyDialog::onCancel()
 {
+    response(Gtk::RESPONSE_CANCEL);
     hide();
 }
 
@@ -82,6 +86,18 @@ void PropertyDialog::setClient(
 )
 {
     client = aClient;
+}
+
+std::string PropertyDialog::key()
+{
+    std::string r;
+    cbPropertyKey->get_active()->get_value(1, r);
+    return r;
+}
+
+std::string PropertyDialog::value()
+{
+    return entryPropertyValue->get_text();
 }
 
 void PropertyDialog::set(

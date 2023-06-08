@@ -571,14 +571,9 @@ void TopWindow::editCard(
     bool isNew
 ) {
     cardWindow->client = aClient;
-    cardWindow->id = id;
-    cardWindow->isNew = isNew;
+    cardWindow->propertyDialog = propertyDialog;
+    cardWindow->setCard(id, isNew, symbolId, name, nominal, qty, packageId, boxId, boxName, properties);
     cardWindow->show_all();
-    selectSymbolId(cardWindow->refCBSymbol, symbolId);
-    cardWindow->refEntryName->set_text(name);
-    cardWindow->refEntryNominal->set_text(nominal);
-    cardWindow->refEntryQuantity->set_text(std::to_string(qty));
-    cardWindow->setBox(packageId, boxId, boxName, properties, propertyDialog);
 }
 
 bool TopWindow::confirmBox(

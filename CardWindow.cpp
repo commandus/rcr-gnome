@@ -10,6 +10,8 @@
 #include "StockOperation.h"
 #include "string-helper.h"
 #include "rcr-gnome.h"
+#include "QueryProperties.h"
+#include "utilstring.h"
 
 CardWindow::CardWindow(
     BaseObjectType* cobject,
@@ -55,6 +57,8 @@ void CardWindow::bindWidgets() {
     mRefActionGroup->add_action("cardcancel", sigc::mem_fun(*this, &CardWindow::onCardCancel));
     mRefActionGroup->add_action("addProperty", sigc::mem_fun(*this, &CardWindow::onAddProperty));
 
+    refTreeViewProperty->signal_row_activated().connect(sigc::mem_fun(*this, &CardWindow::onCardActivated), refTreeViewProperty);
+
     insert_action_group("rcr", mRefActionGroup);
 }
 
@@ -72,10 +76,6 @@ void CardWindow::onCardSave() {
     std::string name = refEntryName->get_text();
     std::string sNominal = refEntryNominal->get_text();
     uint64_t nominal = std::strtoull(sNominal.c_str(), nullptr, 10);
-
-    // properties
-    std::string properties;
-    //getProperties(properties);
 
     std::string sQty = refEntryQuantity->get_text();
     uint64_t qty = std::strtoull(sQty.c_str(), nullptr, 10);
@@ -127,6 +127,40 @@ void CardWindow::onAddProperty()
     int r = propertyDialog->run();
     if (r != Gtk::RESPONSE_OK)
         return;
+    // add property
+    setProperty(propertyDialog->key(), propertyDialog->value());
+}
+
+void CardWindow::onCardActivated(
+    const Gtk::TreeModel::Path& path,
+    Gtk::TreeViewColumn* column
+)
+{
+    editProperty();
+}
+
+void CardWindow::editProperty()
+{
+    Gtk::TreeModel::iterator iter = mTreeViewSelectionProperty->get_selected();
+    if (!iter)
+        return;
+    Gtk::TreeModel::Row row = *iter;
+    uint64_t id;
+    std::string key;
+    std::string value;
+    row.get_value(0, id);
+    row.get_value(1, key);
+    row.get_value(2, value);
+    // show dialog
+    if (!propertyDialog)
+        return;
+    propertyDialog->setClient(client);
+    propertyDialog->set(key, value);
+    int r = propertyDialog->run();
+    if (r != Gtk::RESPONSE_OK)
+        return;
+    // add property
+    setProperty(propertyDialog->key(), propertyDialog->value());
 }
 
 /**
@@ -159,21 +193,6 @@ void CardWindow::onSymbolSelected() {
     refCBMeasure->set_active(0);
 }
 
-void CardWindow::setBox(
-    uint64_t aPackageId,
-    uint64_t aBoxId,
-    const std::string &aBoxName,
-    const std::string &propertiesString,
-    PropertyDialog *aPropertyDialog
-) {
-    packageId = aPackageId;
-    boxId = aBoxId;
-    boxName = aBoxName;
-    refEntryBox->set_text(StockOperation::boxes2string(boxId));
-    properties = propertiesString;
-    propertyDialog = aPropertyDialog;
-}
-
 bool CardWindow::on_key_press_event(GdkEventKey* event)
 {
     switch (event->keyval) {
@@ -199,4 +218,76 @@ COMPONENT CardWindow::getSelectedComponent() {
     std::string sym;
     refCBSymbol->get_active()->get_value(2, sym);
     return getComponentBySymbol(sym);
+}
+
+void CardWindow::selectSymbolId(
+    uint64_t symbolId
+) {
+    auto children = refCBSymbol->get_model()->children();
+    auto c = 0;
+    for (auto iter = children.begin(), end = children.end(); iter != end; ++iter) {
+        uint64_t id;
+        iter->get_value(1, id);
+        if (id == symbolId)
+            break;
+        c++;
+    }
+    refCBSymbol->set_active(c);
+}
+
+void CardWindow::setCard(
+    uint64_t aId,
+    bool aIsNew,
+    uint64_t aSymbolId,
+    const std::string &aName,
+    const std::string &aNominal,
+    uint64_t aQty,
+    uint64_t aPackageId,
+    uint64_t aBoxId,
+    const std::string &aBoxName,
+    const std::string &aProperties
+)
+{
+    id = aId;
+    isNew = aIsNew;
+    selectSymbolId(aSymbolId);
+    refEntryName->set_text(aName);
+    refEntryNominal->set_text(aNominal);
+    refEntryQuantity->set_text(std::to_string(aQty));
+
+    packageId = aPackageId;
+    boxId = aBoxId;
+    boxName = aBoxName;
+    refEntryBox->set_text(StockOperation::boxes2string(aBoxId));
+    properties = aProperties;
+    listProperties();
+}
+
+void CardWindow::listProperties()
+{
+    mRefListStoreProperty->clear();
+    std::map <std::string, std::string> mP;
+    size_t pp = 0;
+    QueryProperties::parse(properties, pp, mP);
+    for (auto mit = mP.begin(); mit != mP.end(); mit++) {
+        const Gtk::TreeModel::iterator &p = mRefListStoreProperty->append();
+        p->set_value(1, mit->first);
+        p->set_value(2, mit->second);
+    }
+}
+
+void CardWindow::setProperty(
+    const std::string &key,
+    const std::string &value
+) {
+    std::map <std::string, std::string> mP;
+    size_t pp = 0;
+    QueryProperties::parse(properties, pp, mP);
+    std::string v(value);
+    v = trim(v);
+    std::replace_if(v.begin(), v.end(), ::isspace, '_');
+    if (!v.empty())
+        mP[key] = v;
+    properties = QueryProperties::toString(mP);
+    listProperties();
 }

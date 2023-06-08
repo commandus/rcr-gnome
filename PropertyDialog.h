@@ -30,10 +30,13 @@ public:
     );
     virtual ~PropertyDialog();
     void setClient(GRcrClient *client);
+    std::string key();
+    std::string value();
     void set(
         const std::string &key,
         const std::string &value
     );
+
     void selectPropertyKey(
         const std::string &key
     );

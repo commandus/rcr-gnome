@@ -11,7 +11,6 @@
 
 class CardWindow: public Gtk::Window {
 private:
-    PropertyDialog *propertyDialog;
     Glib::RefPtr<Gtk::Builder> mRefBuilder;
     Glib::RefPtr<Gtk::ListStore> mRefListStoreComponent;
     Glib::RefPtr<Gtk::ListStore> mRefListStoreMeasure;
@@ -26,16 +25,19 @@ protected:
     Glib::RefPtr<Gtk::TreeSelection> mTreeViewSelectionProperty;
 
     bool on_key_press_event(GdkEventKey* event);
+    void onCardActivated(const Gtk::TreeModel::Path& path, Gtk::TreeViewColumn* column);
 
     void bindWidgets();
     void onCardSave();
     void onCardRm();
     void onCardCancel();
     void onAddProperty();
+    void editProperty();
     void onSymbolSelected();
     bool confirmDeleteCard();
 public:
     GRcrClient *client;
+    PropertyDialog *propertyDialog;
     // save prev values
     uint64_t symbolId;
     uint64_t id;
@@ -59,15 +61,28 @@ public:
     CardWindow(BaseObjectType*, const Glib::RefPtr<Gtk::Builder>&);
     virtual ~CardWindow();
 
-    void setBox(
+    COMPONENT getSelectedComponent();
+    void selectSymbolId(uint64_t symbolId);
+
+    void setCard(
+        uint64_t id,
+        bool isNew,
+        uint64_t symbolId,
+        const std::string &name,
+        const std::string &nominal,
+        uint64_t qty,
         uint64_t packageId,
         uint64_t boxId,
-        const std::string &BoxName,
-        const std::string &propertiesString,
-        PropertyDialog *propertyDialog
+        const std::string &boxName,
+        const std::string &properties
     );
 
-    COMPONENT getSelectedComponent();
+    void listProperties();
+
+    void setProperty(
+        const std::string &key,
+        const std::string &value
+    );
 };
 
 #endif //RCR_GNOME_CARDWINDOW_H

@@ -135,7 +135,7 @@ public:
         bool isNew,
         const rcr::Card &card,
         uint64_t packageId,
-        std::string &propertiies,
+        std::string &properties,
         uint64_t boxId,
         const std::string &boxName,
         uint64_t qty

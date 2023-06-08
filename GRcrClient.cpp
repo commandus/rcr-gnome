@@ -9,6 +9,7 @@
 #include "utilstring.h"
 #include "utilfile.h"
 #include "rcr-gnome.h"
+#include "QueryProperties.h"
 
 #define DEF_NAME_ALL _("All")
 
@@ -610,6 +611,24 @@ bool GRcrClient::updateCardPackage(
     p->set_box(boxId);
     p->set_box_name(boxName);
     p->set_qty(qty);
+
+
+    // properties
+    std::map <std::string, std::string> mP;
+    size_t pp = 0;
+    QueryProperties::parse(properties, pp, mP);
+    for (auto mit = mP.begin(); mit != mP.end(); mit++) {
+        // find out property type identifier
+        auto f = std::find_if(dictionaries.property_type().begin(), dictionaries.property_type().end(), [mit](rcr::PropertyType pt) {
+            return pt.key() == mit->first;
+        });
+        if (f == dictionaries.property_type().end())
+            continue;
+        rcr::Property *prop = chCardRequest.add_properties();
+        prop->set_card_id(card.id());
+        prop->set_property_type_id(f->id());
+        prop->set_value(mit->second);
+    }
 
     start(OP_SAVE_CARD, _("Saving card"));
     grpc::Status status = stub->chCard(&context, chCardRequest, &response);
