@@ -274,7 +274,7 @@ std::string GRcrClient::properties2string(
 {
     std::stringstream ss;
     for (auto p = properties.begin(); p != properties.end(); ++p) {
-        ss << p->value() <<  " ";
+        ss << p->property_type() << ":" << p->value() <<  " ";
     }
     return ss.str();
 }
