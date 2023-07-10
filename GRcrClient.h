@@ -18,8 +18,7 @@
 class GRcrClient {
 private:
     ServiceStateIntf *state;
-    std::string username;
-    std::string password;
+    rcr::User user;
 
     void start(
         int module,
@@ -36,13 +35,12 @@ public:
     rcr::DictionariesResponse dictionaries;
     
     GRcrClient(
-        std::shared_ptr<grpc::Channel> channel,
-        const std::string &username,
-        const std::string &password
+        std::shared_ptr<grpc::Channel> channel
     );
     GRcrClient(
         const std::string &host
     );
+    void setUser(const rcr::User &user);
     virtual ~GRcrClient();
     void loadDictionaries();
     void bindSymbols(

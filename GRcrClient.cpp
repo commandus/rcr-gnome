@@ -37,16 +37,12 @@ void GRcrClient::finish(
 }
 
 GRcrClient::GRcrClient(
-    std::shared_ptr<grpc::Channel> aChannel,
-    const std::string &aUserName,
-    const std::string &aPassword
+    std::shared_ptr<grpc::Channel> aChannel
 )
     : state(nullptr)
 {
     channel = aChannel;
     stub = rcr::Rcr::NewStub(aChannel);
-    username = aUserName;
-    password = aPassword;
 }
 
 GRcrClient::GRcrClient(
@@ -59,6 +55,13 @@ GRcrClient::GRcrClient(
     std::string target(ss.str());
     channel = grpc::CreateChannel(target, grpc::InsecureChannelCredentials());
     stub = rcr::Rcr::NewStub(channel);
+}
+
+void GRcrClient::setUser(
+    const rcr::User &user
+)
+{
+    this->user = user;
 }
 
 GRcrClient::~GRcrClient()
@@ -453,8 +456,7 @@ bool GRcrClient::savePropertyType(
     grpc::ClientContext context;
     rcr::ChPropertyTypeRequest chPropertyTypeRequest;
     rcr::OperationResponse response;
-    chPropertyTypeRequest.mutable_user()->set_name(username);
-    chPropertyTypeRequest.mutable_user()->set_password(password);
+    *chPropertyTypeRequest.mutable_user() = user;
     if (id == 0) {
         chPropertyTypeRequest.set_operationsymbol("+");
     } else {
@@ -489,8 +491,7 @@ bool GRcrClient::rmPropertyType(
     grpc::ClientContext context;
     rcr::ChPropertyTypeRequest chPropertyTypeRequest;
     rcr::OperationResponse response;
-    chPropertyTypeRequest.mutable_user()->set_name(username);
-    chPropertyTypeRequest.mutable_user()->set_password(password);
+    *chPropertyTypeRequest.mutable_user() = user;
     chPropertyTypeRequest.set_operationsymbol("-");
     chPropertyTypeRequest.mutable_value()->set_id(id);
     start(OP_RM_PROPERTY_TYPE, _("Removing property type"));
@@ -517,8 +518,7 @@ bool GRcrClient::rmBox(
     grpc::ClientContext context;
     rcr::ChBoxRequest chBoxRequest;
     rcr::OperationResponse response;
-    chBoxRequest.mutable_user()->set_name(username);
-    chBoxRequest.mutable_user()->set_password(password);
+    *chBoxRequest.mutable_user() = user;
     chBoxRequest.set_operationsymbol("-");
     chBoxRequest.mutable_value()->set_box_id(boxId);
     start(OP_RM_BOX, _("Removing box"));
@@ -546,8 +546,7 @@ bool GRcrClient::saveBox(
     grpc::ClientContext context;
     rcr::ChBoxRequest chBoxRequest;
     rcr::OperationResponse response;
-    chBoxRequest.mutable_user()->set_name(username);
-    chBoxRequest.mutable_user()->set_password(password);
+    *chBoxRequest.mutable_user() = user;
     chBoxRequest.mutable_value()->set_box_id(targetBoxId);
     if (id) {
         // exists already
@@ -593,8 +592,7 @@ bool GRcrClient::updateCardPackage(
 
     rcr::ChCardRequest chCardRequest;
     rcr::OperationResponse response;
-    chCardRequest.mutable_user()->set_name(username);
-    chCardRequest.mutable_user()->set_password(password);
+    *chCardRequest.mutable_user() = user;
     chCardRequest.set_package_id(packageId);
     if (!isNew) {
         chCardRequest.set_operationsymbol("=");
@@ -655,8 +653,7 @@ bool GRcrClient::rmCardPackage(
 
     rcr::ChCardRequest chCardRequest;
     rcr::OperationResponse response;
-    chCardRequest.mutable_user()->set_name(username);
-    chCardRequest.mutable_user()->set_password(password);
+    *chCardRequest.mutable_user() = user;
     chCardRequest.set_package_id(packageId);
     chCardRequest.set_operationsymbol("-");
     chCardRequest.mutable_value()->set_id(card.id());
