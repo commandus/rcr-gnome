@@ -112,7 +112,8 @@ private:
     );
     void searchCard(
         const std::string &query,
-        const std::string &symbol
+        const std::string &symbol,
+        uint64_t box
     );
 
     void bindWidgets();

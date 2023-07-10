@@ -410,7 +410,8 @@ void TopWindow::onSymbolSelected() {
 
 void TopWindow::searchCard(
     const std::string &q,
-    const std::string &symbol
+    const std::string &symbol,
+    uint64_t box
 )
 {
     COMPONENT component;
@@ -422,9 +423,9 @@ void TopWindow::searchCard(
     mTreeViewCard->unset_model();
 
     std::string qs = query.toString();
-    uint64_t b = settings->settings.service(settings->selected).last_box();
-    if (b)
-        qs += " " + StockOperation::boxes2string(b);
+    if (box)
+        qs += " " + StockOperation::boxes2string(box);
+std::cerr << q << ":" << qs << std::endl;
         client->query(qs, symbol, mRefListStoreCard);
 
     mTreeViewCard->set_model(Glib::RefPtr<Gtk::TreeModelSort>(Gtk::TreeModelSort::create(mRefTreeModelFilterCard)));
@@ -502,7 +503,11 @@ void TopWindow::onProgress(
 }
 
 void TopWindow::doQuery() {
-    searchCard(mEntryQuery->get_text(), settings->settings.service(settings->selected).last_component_symbol());
+    searchCard(
+        mEntryQuery->get_text(),
+        settings->settings.service(settings->selected).last_component_symbol(),
+        settings->settings.service(settings->selected).last_box()
+    );
 }
 
 void TopWindow::createDialogs() {

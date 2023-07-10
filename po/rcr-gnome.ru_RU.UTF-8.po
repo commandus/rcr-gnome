@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-07 14:47+0900\n"
+"POT-Creation-Date: 2023-07-03 14:26+0900\n"
 "PO-Revision-Date: 2023-04-21 10:00+0900\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -23,7 +23,7 @@ msgid "Delete box?"
 msgstr "Удалить коробку?"
 
 #: BoxDialog.cpp:116 CardWindow.cpp:100 PropertyDialog.cpp:130
-#: PropertyTypeDialog.cpp:147 PropertyTypeEditDialog.cpp:107 top-window.cpp:863
+#: PropertyTypeDialog.cpp:147 PropertyTypeEditDialog.cpp:107 top-window.cpp:858
 msgid "Press Ok to delete. This operation Can not be undone"
 msgstr "Нажмите Ok для удаления. Это удаление необратимо."
 
@@ -31,147 +31,147 @@ msgstr "Нажмите Ok для удаления. Это удаление не�
 msgid "Delete card "
 msgstr "Удалить карточку"
 
-#: GRcrClient.cpp:13 top-window.cpp:10
+#: GRcrClient.cpp:14 top-window.cpp:10
 msgid "All"
 msgstr "Все"
 
-#: GRcrClient.cpp:74
+#: GRcrClient.cpp:75
 msgid "Loading boxes"
 msgstr "Загружаются коробки"
 
-#: GRcrClient.cpp:97
+#: GRcrClient.cpp:98
 msgid "Loading boxes error"
 msgstr "Ошибка загрузки коробок"
 
-#: GRcrClient.cpp:137
+#: GRcrClient.cpp:138
 msgid "Loading boxes completed successfully"
 msgstr "Коробки загружены"
 
-#: GRcrClient.cpp:143
+#: GRcrClient.cpp:144
 msgid "Loading dictionaries"
 msgstr "Загружаются словари"
 
-#: GRcrClient.cpp:151 GRcrClient.cpp:158
+#: GRcrClient.cpp:152 GRcrClient.cpp:159
 msgid "Loading dictionaries completed successfully"
 msgstr "Словари успешно загружены"
 
-#: GRcrClient.cpp:167
+#: GRcrClient.cpp:168
 msgid "Loading symbols"
 msgstr "Загружаются компоненты"
 
-#: GRcrClient.cpp:189
+#: GRcrClient.cpp:190
 msgid "Loading symbols completed successfully"
 msgstr "Компоненты загружены"
 
-#: GRcrClient.cpp:223
+#: GRcrClient.cpp:224
 msgid "Executing query"
 msgstr "Выполняется запрос"
 
-#: GRcrClient.cpp:240
+#: GRcrClient.cpp:241
 msgid "Executing query completed with errors"
 msgstr "Запрос выполнен с ошибками"
 
-#: GRcrClient.cpp:266
+#: GRcrClient.cpp:267
 msgid "Executing query completed successfully"
 msgstr "Запрос выполнен"
 
-#: GRcrClient.cpp:323 GRcrClient.cpp:362
+#: GRcrClient.cpp:324 GRcrClient.cpp:363
 msgid "Import boxes"
 msgstr "Импорт коробок"
 
-#: GRcrClient.cpp:342 GRcrClient.cpp:347 GRcrClient.cpp:388 GRcrClient.cpp:393
+#: GRcrClient.cpp:343 GRcrClient.cpp:348 GRcrClient.cpp:389 GRcrClient.cpp:394
 msgid "Import boxes failed"
 msgstr "Ошибка импорта коробок"
 
-#: GRcrClient.cpp:351 GRcrClient.cpp:352 GRcrClient.cpp:396
+#: GRcrClient.cpp:352 GRcrClient.cpp:353 GRcrClient.cpp:397
 msgid "Import boxes completed successfully"
 msgstr "Коробки импортированы"
 
-#: GRcrClient.cpp:406
+#: GRcrClient.cpp:407
 msgid "Loading users"
 msgstr "Загружаются пользователи"
 
-#: GRcrClient.cpp:422
+#: GRcrClient.cpp:423
 msgid "Loading users completed successfully"
 msgstr "Пользователи загружены"
 
-#: GRcrClient.cpp:433
+#: GRcrClient.cpp:434
 msgid "Getting statistics"
 msgstr "Чтение статистики"
 
-#: GRcrClient.cpp:440
+#: GRcrClient.cpp:441
 msgid "Getting statistics completed successfully"
 msgstr "Статистика собрана"
 
-#: GRcrClient.cpp:465
+#: GRcrClient.cpp:466
 msgid "Saving property type"
 msgstr "Сохранение саойства"
 
-#: GRcrClient.cpp:469 GRcrClient.cpp:474
+#: GRcrClient.cpp:470 GRcrClient.cpp:475
 msgid "Save property type with errors"
 msgstr "Ошибка сохранен6ия свойства"
 
-#: GRcrClient.cpp:478
+#: GRcrClient.cpp:479
 msgid "Save property type successfully"
 msgstr "Свойство успешно сохранено"
 
-#: GRcrClient.cpp:495
+#: GRcrClient.cpp:496
 msgid "Removing property type"
 msgstr "Удаление свойства"
 
-#: GRcrClient.cpp:499 GRcrClient.cpp:504
+#: GRcrClient.cpp:500 GRcrClient.cpp:505
 msgid "Removed property type with errors"
 msgstr "Ошибка удаления свойства"
 
-#: GRcrClient.cpp:507
+#: GRcrClient.cpp:508
 msgid "Removed property type successfully"
 msgstr "Свойство успешно удалено"
 
-#: GRcrClient.cpp:523
+#: GRcrClient.cpp:524
 msgid "Removing box"
 msgstr "Удаляются коробки"
 
-#: GRcrClient.cpp:527 GRcrClient.cpp:532
+#: GRcrClient.cpp:528 GRcrClient.cpp:533
 msgid "Removed box with errors"
 msgstr "Ошибка удаления коробки"
 
-#: GRcrClient.cpp:535
+#: GRcrClient.cpp:536
 msgid "Removed box successfully"
 msgstr "Коробки успешно удалены"
 
-#: GRcrClient.cpp:565
+#: GRcrClient.cpp:566
 msgid "Saving box"
 msgstr "Сохранение коробки"
 
-#: GRcrClient.cpp:569 GRcrClient.cpp:574
+#: GRcrClient.cpp:570 GRcrClient.cpp:575
 msgid "Save box with errors"
 msgstr "Ошибка сохранения коробки"
 
-#: GRcrClient.cpp:578
+#: GRcrClient.cpp:579
 msgid "Save box successfully"
 msgstr "Коробки успешно сохранены"
 
-#: GRcrClient.cpp:614
+#: GRcrClient.cpp:633
 msgid "Saving card"
 msgstr "Сохраняются карточки"
 
-#: GRcrClient.cpp:618 GRcrClient.cpp:623
+#: GRcrClient.cpp:637 GRcrClient.cpp:642
 msgid "Save card with errors"
 msgstr "Ошиьбка удаления карточки"
 
-#: GRcrClient.cpp:627
+#: GRcrClient.cpp:646
 msgid "Save card successfully"
 msgstr "Карточка успешно сохранена"
 
-#: GRcrClient.cpp:645
+#: GRcrClient.cpp:664
 msgid "Removing card"
 msgstr "Удаление карточки"
 
-#: GRcrClient.cpp:649 GRcrClient.cpp:654
+#: GRcrClient.cpp:668 GRcrClient.cpp:673
 msgid "Remove card with errors"
 msgstr "Ошибка удаления карточки"
 
-#: GRcrClient.cpp:658
+#: GRcrClient.cpp:677
 msgid "Remove card successfully"
 msgstr "Карточка успешно удалена"
 
@@ -318,35 +318,35 @@ msgstr "Excel файлы успешно импортированы"
 msgid "Error import Excel files"
 msgstr "Ошибка импорта Excel файла"
 
-#: top-window.cpp:627 top-window.cpp:800
+#: top-window.cpp:622 top-window.cpp:795
 msgid "Import "
 msgstr "Импорт "
 
-#: top-window.cpp:627 top-window.cpp:800
+#: top-window.cpp:622 top-window.cpp:795
 msgid " to box "
 msgstr " в коробку "
 
-#: top-window.cpp:639 top-window.cpp:812
+#: top-window.cpp:634 top-window.cpp:807
 msgid "Import"
 msgstr "Импорт"
 
-#: top-window.cpp:726
+#: top-window.cpp:721
 msgid "No box selected"
 msgstr "Не выбрана коробка"
 
-#: top-window.cpp:776
+#: top-window.cpp:771
 msgid "Error delete box"
 msgstr "Ошибка удаления коробки"
 
-#: top-window.cpp:777
+#: top-window.cpp:772
 msgid "Can not delete selected box"
 msgstr "Не удалось удалить коробку"
 
-#: top-window.cpp:831
+#: top-window.cpp:826
 msgid "Wrong box specified"
 msgstr "Указана неверная коробка"
 
-#: top-window.cpp:860
+#: top-window.cpp:855
 msgid "Delete box "
 msgstr "Удалить коробку "
 

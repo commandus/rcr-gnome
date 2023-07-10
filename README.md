@@ -19,6 +19,15 @@ echo $XDG_DATA_DIRS
 /usr/share/ubuntu:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop
 ```
 
+Установить Glade:
+
+```
+sudo apt install libgtkmm-3.0-dev
+sudo apt install glade
+```
+
+заодно с Glade устанавливается glib-compile-resources, вызываемый из CMake
+
 ## Third party libraries
 
 [The International Components for Unicode (ICU) libraries](https://icu.unicode.org/)
