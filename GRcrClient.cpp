@@ -413,15 +413,16 @@ void GRcrClient::loadUsers(
     rcr::UserRequest request;
     *request.mutable_user() = user;
     grpc::ClientContext context;
-    std::unique_ptr< ::grpc::ClientReader< ::rcr::User>> reader = stub->lsUser(&context, request);
+    rcr::UserResponse response;
+    stub->lsUser(&context, request, &response);
     rcr::User u;
-    while (reader->Read(&u)) {
+    for (int i = 0; i < response.user_size(); i++) {
         Gtk::TreeModel::Row row = *listStore->append();
-        row.set_value(0, u.name());
-        row.set_value(1, u.rights());
-        row.set_value(2, u.password());
-        row.set_value(3, u.token());
-        row.set_value(4, u.id());
+        row.set_value(0, response.user(i).name());
+        row.set_value(1, response.user(i).rights());
+        row.set_value(2, response.user(i).password());
+        row.set_value(3, response.user(i).token());
+        row.set_value(4, response.user(i).id());
     }
     finish(OP_LOAD_USERS, 0, _("Loading users completed successfully"));
 }
